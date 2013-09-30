@@ -154,15 +154,17 @@
 }
 
 /*******************************************************MODAL*******************************************************/
-.modal-dialog {
-    width:750px;
+
+#newBookingModal .modal-dialog {
+    width:960px;
     border-radius:0;
     border: 5px solid #1d2826;
     padding: 0;
-    margin-top: 50px;
+    margin-top:30px;
      -webkit-overflow-scrolling: touch;
 }
-    .modal-dialog .modal-content {
+
+#newBookingModal .modal-dialog .modal-content {
         border-radius:0;
         border:0;
         background:#2c3432;
@@ -172,14 +174,32 @@
         -webkit-overflow-scrolling: touch;
     }
 
-        .modal-dialog .modal-content #modalTabs.nav-tabs {
+#birdsEyeModal .modal-dialog {
+    width:750px;
+    border-radius:0;
+    border: 5px solid #1d2826;
+    padding: 0;
+    margin-top: 50px;
+     -webkit-overflow-scrolling: touch;
+}
+    #birdsEyeModal .modal-dialog .modal-content {
+        border-radius:0;
+        border:0;
+        background:#2c3432;
+        color:#f9f9f9;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        line-height:18px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+        #birdsEyeModal .modal-dialog .modal-content #modalTabs.nav-tabs {
             display:table !important;
 	        border-collapse: separate;
 	        margin-bottom: 0px;
             border:0;
         }
         
-        .modal-dialog .modal-content #modalTabs.nav-tabs li {
+        #birdsEyeModal .modal-dialog .modal-content #modalTabs.nav-tabs li {
 	        background-color: #131313;
 	        display:table-cell;
 	        width:20%;
@@ -189,7 +209,7 @@
             padding:0;
         }
 
-            .modal-dialog .modal-content #modalTabs.nav-tabs li a {
+            #birdsEyeModal .modal-dialog .modal-content #modalTabs.nav-tabs li a {
                 border-radius:0;
                 color:#f9f9f9;
                 font-size:14px;
@@ -198,17 +218,17 @@
                 font-family: 'Montserrat', sans-serif;
             }
 
-        .modal-dialog .modal-content #modalTabs.nav-tabs li a:hover, #modalTabs.nav-tabs li:hover {
+        #birdsEyeModal .modal-dialog .modal-content #modalTabs.nav-tabs li a:hover, #modalTabs.nav-tabs li:hover {
 	        background-color: #d21d1d;
 	        border:none;
         }
 
-        .modal-dialog .modal-content #modalTabs.nav-tabs li.active a, #modalTabs.nav-tabs li.active {
+        #birdsEyeModal .modal-dialog .modal-content #modalTabs.nav-tabs li.active a, #modalTabs.nav-tabs li.active {
 	        background-color: #26ae90;
 	        border:none;
 	        border-bottom:2px solid #26ae90;	
         }
-        .modal-dialog .modal-content .tab-content {
+        #birdsEyeModal .modal-dialog .modal-content .tab-content {
 	        border-top:none;
 	        padding:20px 0 10px 0;
 	        color:#f9f9f9;
@@ -217,12 +237,12 @@
             -webkit-overflow-scrolling: touch !important;
         }
 
-            .modal-dialog .modal-content .tab-content .row {
+            #birdsEyeModal .modal-dialog .modal-content .tab-content .row {
                 margin:0;
                 -webkit-overflow-scrolling: touch;
             }
 
-            .modal-dialog .modal-content .tab-content .modalHero {
+            #birdsEyeModal .modal-dialog .modal-content .tab-content .modalHero {
                 width: 100px;
                 height: 110px;
                 display: table-cell;
@@ -241,7 +261,7 @@
                 margin-bottom:10px;
             }
 
-            .modal-dialog .modal-content .tab-content .modalHeroName {
+            #birdsEyeModal .modal-dialog .modal-content .tab-content .modalHeroName {
                 font-size: 18px;
                 line-height: 30px;
                 color: #26AE90;
@@ -253,14 +273,14 @@
                 font-weight: 800;
             }
 
-            .modal-dialog .modal-content .tab-content .modalSectionHead {
+            #birdsEyeModal .modal-dialog .modal-content .tab-content .modalSectionHead {
 	                padding:0px;
 	                border-bottom: 2px solid #26ae90;
 	                margin: 5px 0;
 	                font-weight: 700;
 	                font-size: 14px;
                 }
-            .modal-dialog .modal-content .tab-content .modalSectionHead .modalSectionHeadName {
+            #birdsEyeModal .modal-dialog .modal-content .tab-content .modalSectionHead .modalSectionHeadName {
                 margin: 0;
                 font-family: 'Montserrat', sans-serif;
                 margin-left: 10px;
@@ -272,7 +292,7 @@
                 box-shadow: inset 0 1px 2px  #3D3D3D; 
             }
 
-            .modal-dialog .modal-content .tab-content .modalTable {
+            #birdsEyeModal .modal-dialog .modal-content .tab-content .modalTable {
 	            border-collapse: separate;
 	            *border-collapse: collapse;
 	            border-left: 0;
@@ -281,17 +301,17 @@
             }
 
 
-            .modal-dialog .modal-content .tab-content #chartPlaceHolder {
+            #birdsEyeModal .modal-dialog .modal-content .tab-content #chartPlaceHolder {
                 width:480px;height: 175px;margin-bottom:10px;
                 }
-.modal-dialog .modal-content .tab-content .modalTable thead {
+#birdsEyeModal .modal-dialog .modal-content .tab-content .modalTable thead {
 	background-color:#28AE90;
 	color:white;
 	border:none;
 }
 
-.modal-dialog .modal-content .tab-content .modalTable th,
-.modal-dialog .modal-content .tab-content .modalTable td {
+#birdsEyeModal .modal-dialog .modal-content .tab-content .modalTable th,
+#birdsEyeModal .modal-dialog .modal-content .tab-content .modalTable td {
 	border-bottom:1px solid #26AE90;	
 	border-left: 1px solid #28AE90;
 	height: 30px;
@@ -299,11 +319,11 @@
 	text-align: left;
 }
 
-.modal-dialog .modal-content .tab-content .modalTable tbody tr > td:last-child { 
+#birdsEyeModal .modal-dialog .modal-content .tab-content .modalTable tbody tr > td:last-child { 
 	border-right:1px solid #26AE90;
 }
 
-.modal-dialog .modal-content .tab-content .chartTimelineButton .btn{
+#birdsEyeModal .modal-dialog .modal-content .tab-content .chartTimelineButton .btn{
     color:#f9f9f9;
     border:0;
 }
@@ -397,6 +417,19 @@
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25),inset 0 -1px 0 rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25),inset 0 -1px 0 rgba(0, 0, 0, 0.1);
      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25),inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+#newBookingToggle {
+    float:right;
+    height: 40px;
+   font-size:16px;
+    background-color:#1d2826;
+    padding: 5px 10px;
+    line-height: 30px;
+    color: #FFF;
+    font-family: 'Montserrat', sans-serif;
+    text-transform:uppercase;
+    margin:5px;
 }
 
 .expandCollapseLeft, .expandCollapseRight {
@@ -1672,22 +1705,22 @@ a:hover {
         height:120px;
     }
 
-    .modal-dialog .modal-content #modalTabs.nav-tabs {
+    #birdsEyeModal .modal-dialog .modal-content #modalTabs.nav-tabs {
         display:none !important;
     }
 
 
-    .modal-dialog {
+    #birdsEyeModal .modal-dialog {
         width:310px;
         margin-top:5px;
          -webkit-overflow-scrolling: touch;
     }
 
-    .modal-dialog .modal-content .tab-content #chartPlaceHolder {
+    #birdsEyeModal .modal-dialog .modal-content .tab-content #chartPlaceHolder {
                 width:280px;height: 175px;margin-bottom:0px;
                 }
 
-    .modal-dialog .modal-content .documentViewer {
+    #birdsEyeModal .modal-dialog .modal-content .documentViewer {
 	-moz-box-shadow:inset 0 0 20px #000000;
 	-webkit-box-shadow: inset 0 0 20px #000000;
 	box-shadow: inset 0 0 20px #000000;
@@ -1700,16 +1733,16 @@ a:hover {
     margin:10px 0;
     }
 
-    .modal-dialog .modal-content .flipContainer {
+    #birdsEyeModal .modal-dialog .modal-content .flipContainer {
         margin-top:20px;
         width:270px;
     }
 
-    .modal-dialog .modal-content .flip {
+    #birdsEyeModal .modal-dialog .modal-content .flip {
         width:270px;
     }
 
-    .modal-dialog .modal-content .flipContainer form {
+    #birdsEyeModal .modal-dialog .modal-content .flipContainer form {
         width:90% !important;
     }
 }

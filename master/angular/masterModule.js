@@ -18,7 +18,7 @@ app.controller('MasterController', function ($scope, $q) {
     //$scope.company = Company.get();
 
     $scope.dismiss = function (e) {
-        if ($(e.srcElement)[0] == $('#myModal')[0] || $(e.srcElement)[0] == $('.closePopOver')[0]) {
+        if ($(e.srcElement)[0] == $('#birdsEyeModal')[0] || $(e.srcElement)[0] == $('.closePopOver')[0]) {
             $scope.modal = { name: '', url: null };
         };
     };

@@ -413,7 +413,7 @@ app.directive('locationSearchAdv', function (Location, $filter) {
                         });
                         scope.types = $filter('GetGroupsForData')(scope.locations, scope.grouping, scope.sorting);
                     });
-                    scope.gService.getPlacePredictions({ input: newValue }, function (data, status) {
+                    scope.gService.getPlacePredictions({ input: newValue, componentRestrictions: { country: 'gb' } }, function (data, status) {
                         if (status = google.maps.places.PlacesServiceStatus.OK) {
                             scope.locations = scope.locations.where(function (value) { return (value.Type != "Google Results") });
                             angular.forEach(data, function (result) {
@@ -539,36 +539,6 @@ app.directive('locationSearchAdv', function (Location, $filter) {
             };
         }
     };
-});
-
-app.directive('datetimepicker', function () {
-    return {
-        restrict: 'A',
-        template:
-            ' <input type="text" ng-model="dateTime" style="width:100%"/>'
-            + ' <div></div>'
-            + ' <div class="popover bottom" style="position:absolute; top: 20px; left:15px; right:15px; max-width: none">'
-            + '     <div class="arrow"></div>'
-            + '     <div class="popover-content">'
-            + '         <div>Test</div>'
-            + '     </div>'
-            + ' </div>',
-        link: function(scope, elem, attrs) {
-            elem.css("position", "relative");
-
-            var PickerFocus = function () {
-                elem.children('input').one('blur', PickerBlur);
-                elem.children('.popover').show();
-            }
-
-            var PickerBlur = function () {
-                elem.children('input').one('focus', PickerFocus);
-                elem.children('.popover').hide();
-            }
-
-            elem.children('input').one('focus', PickerFocus);
-        }
-    }
 });
 
 app.directive('phoneSearch', function ($filter) {

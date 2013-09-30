@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GoogleMapsApi">
-      <HintPath>..\..\..\Cab9\Cab9\Cab9\bin\GoogleMapsApi.dll</HintPath>
+      <HintPath>..\..\Cab9Temp\Cab9\bin\GoogleMapsApi.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>packages\Microsoft.AspNet.SignalR.Core.2.0.0-rc1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
@@ -229,7 +229,6 @@
     <Content Include="master\angular\masterModule.js" />
     <Content Include="packages.config" />
     <Content Include="drivers\partials\.DS_Store" />
-    <Content Include="includes\.DS_Store" />
     <Content Include="includes\as3\lib\AlivePDF.swc" />
     <Content Include="includes\as3\ZeroClipboard.as" />
     <Content Include="includes\as3\ZeroClipboardPdf.as" />
@@ -303,9 +302,6 @@
     <Content Include="vehicles\default.aspx" />
     <Content Include="vehicles\partials\vehicles-cards.html" />
     <Content Include="vehicles\VehicleModule.js" />
-    <Content Include="xxx\LocationSearchScript.js" />
-    <Content Include="xxx\LocationSearchTextBox.aspx" />
-    <Content Include="xxx\Test.aspx" />
     <Content Include="Uploads\Driver\71\0-Upload.jpg" />
     <Content Include="Uploads\Driver\72\3-Upload.jpg" />
     <Content Include="Uploads\Driver\73\4-Upload.jpg" />
@@ -501,20 +497,6 @@
     </Compile>
     <Compile Include="vehicles\default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="xxx\LocationSearchTextBox.aspx.cs">
-      <DependentUpon>LocationSearchTextBox.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="xxx\LocationSearchTextBox.aspx.designer.cs">
-      <DependentUpon>LocationSearchTextBox.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="xxx\Test.aspx.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="xxx\Test.aspx.designer.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

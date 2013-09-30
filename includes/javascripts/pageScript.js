@@ -26,6 +26,18 @@ $('.expandCollapseRight').on('click', function () {
     $('#sidebarRight').find('.section').css("border-bottom", ($("#sidebarRight").css("width") == "250px" ? "1px solid rgba(100, 100, 100, 0.5)" : "5px solid rgba(100, 100, 100, 0.5)"));
 });
 
+$('#newBookingToggle').on('click', function () {
+    $('#sidebarLeft').css("-webkit-filter", "blur(3px)");
+    $('#content').css("-webkit-filter", "blur(3px)");
+    $('#sidebarRight').css("-webkit-filter", "blur(3px)");
+});
+
+$('#newBookingModal').on('click', function () {
+    $('#sidebarLeft').css("-webkit-filter", "blur(0px)");
+    $('#content').css("-webkit-filter", "blur(0px)");
+    $('#sidebarRight').css("-webkit-filter", "blur(0px)");
+});
+
 $('.expandCollapsePhoneLeft').on('click', function () {
     $('#sidebarLeft').css("left", ($('#sidebarLeft').css("left") == "-200px" ? "0px" : "-200px"));
     $('#content').css("left", ($('#content').css("left") == "200px" ? "0px" : "200px"));

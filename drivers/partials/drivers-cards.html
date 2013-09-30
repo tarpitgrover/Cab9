@@ -13,9 +13,9 @@
             <div class="cardHero" style="height:100px;background-image:-webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%), url(/api/image?imagetype=Profile&ownertype=driver&ownerid={{driver.ID}});" ng-click="fetchDriverInModal($event)" data-toggle="modal" href="#myModal">
                 <!--<img ng-src="/includes/img/glare.png" />-->
             </div>
-<!--	        <div class="cardHero" cardtext="{{driver.Forename + ' ' + driver.Surname}}" url="{{driver.ImageUrl}}" profile-hero ng-click="fetchDriverInModal($event)" data-toggle="modal" href="#myModal"></div>-->
+<!--	        <div class="cardHero" cardtext="{{driver.Forename + ' ' + driver.Surname}}" url="{{driver.ImageUrl}}" profile-hero ng-click="fetchDriverInModal($event)" data-toggle="modal" href="#birdsEyeModal"></div>-->
 	        <div class="cardStatus {{driver.Status}}"></div>
-	        <div class="cardInfo" ng-click="fetchDriverInModal($event)" data-toggle="modal" href="#myModal">
+	        <div class="cardInfo" ng-click="fetchDriverInModal($event)" data-toggle="modal" href="#birdsEyeModal">
 	            <span class="cardName">{{driver.Forename + ' ' + driver.Surname | Truncate:12}}</span>
 	        </div>
 	    </div>
