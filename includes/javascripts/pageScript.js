@@ -27,9 +27,9 @@ $('.expandCollapseRight').on('click', function () {
 });
 
 $('#newBookingToggle').on('click', function () {
-    $('#sidebarLeft').css("-webkit-filter", "blur(3px)");
-    $('#content').css("-webkit-filter", "blur(3px)");
-    $('#sidebarRight').css("-webkit-filter", "blur(3px)");
+    $('#sidebarLeft').css("-webkit-filter", "blur(2px)");
+    $('#content').css("-webkit-filter", "blur(2px)");
+    $('#sidebarRight').css("-webkit-filter", "blur(2px)");
 });
 
 $('#newBookingModal').on('click', function () {

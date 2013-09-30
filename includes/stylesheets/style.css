@@ -172,6 +172,7 @@
         font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
         line-height:18px;
         -webkit-overflow-scrolling: touch;
+        padding:10px;
     }
 
 #birdsEyeModal .modal-dialog {
