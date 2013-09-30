@@ -5,28 +5,100 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using Cab9.Model;
 using Cab9.Hubs.Common;
+using Cab9.Geography;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
+using System.Web.Security;
 
 namespace Cab9.Hubs
 {
-    public class DriverHub : MasterHub
+    public class DriverHub : Hub
     {
-        public void SendLocation(int driverid, decimal latitude, decimal longitude)
+        private Identity _user { get; set; }
+        public Identity user
         {
-            Driver driver = Driver.SelectByID(driverid);
-            driver.LastKnownPosition = new Geography.Point(latitude, longitude);
-
-            if (driver.CurrentShiftID.HasValue)
+            //TODO: May need to get from Cookie
+            get
             {
-                DriverShift shift = DriverShift.SelectByID(driver.CurrentShiftID.Value);
-                shift.AddNewPoint(new Geography.Point(latitude, longitude));
-                shift.Update(false);
-                Clients.All.PositionUpdate(new { 
-                    DriverID = driver.ID,
-                    Point = new Geography.Point(latitude, longitude)
-                });
+                if (_user == null && Context.RequestCookies.ContainsKey(FormsAuthentication.FormsCookieName))
+                    _user = new Identity(User.FromTicket(Context.RequestCookies[FormsAuthentication.FormsCookieName].Value));
+                return _user;
             }
-
-            driver.Update();
         }
+
+        private static ConcurrentDictionary<string, SignalrUser> SignalrUsers = new ConcurrentDictionary<string, SignalrUser>();
+
+        public override Task OnConnected()
+        {
+            //if (user == null)
+            //    throw new SecurityException("User is not logged in");
+
+            //string connection = Context.ConnectionId;
+
+            //var sUser = SignalrUsers.GetOrAdd(user.Name, new SignalrUser(user.Name, user.CompanyID));
+
+            //lock (sUser.ConnectionIds)
+            //{
+            //    sUser.ConnectionIds.Add(connection);
+            //}
+
+            Groups.Add(Context.ConnectionId, "1");
+
+            return base.OnConnected();
+        }
+
+        public override Task OnDisconnected()
+        {
+            //if (user == null)
+            //    throw new SecurityException("User is not logged in");
+
+            Groups.Remove(Context.ConnectionId, "1");
+
+            //SignalrUser sUser;
+            //SignalrUsers.TryGetValue(user.Name, out sUser);
+
+            //if (sUser != null)
+            //{
+
+            //    lock (sUser.ConnectionIds)
+            //    {
+
+            //        sUser.ConnectionIds.RemoveWhere(cid => cid.Equals(Context.ConnectionId));
+
+            //        if (!sUser.ConnectionIds.Any())
+            //        {
+            //            SignalrUser removedUser;
+            //            SignalrUsers.TryRemove(user.Name, out removedUser);
+            //        }
+            //    }
+            //}
+
+            return base.OnDisconnected();
+        }
+
+        public override Task OnReconnected()
+        {
+            return base.OnReconnected();
+        }
+
+        public void SendUpdate(int shiftid, decimal? latitude, decimal? longitude, decimal? accuracy, decimal? speed, decimal? heading)
+        {
+            if (user == null) return;
+
+            var shift = DriverShift.SelectByID(shiftid);
+
+            if (shift != null && shift.CompanyID == user.CompanyID && latitude.HasValue && longitude.HasValue) 
+                shift.AddNewPoint(new Point(latitude.Value, longitude.Value));
+        }
+
+        public void AcceptBookingOffer(long offerid)
+        {
+
+        }
+
+        public void RejectBookingOffer(long offerid, string reason)
+        {
+        }
+
     }
 }

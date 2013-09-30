@@ -15,7 +15,7 @@ using System.Web.Security;
 
 namespace Cab9.Hubs
 {
-    public class DispatchHub : Hub
+    public class OfficeHub : Hub
     {
         private Identity _user { get; set; }
         public Identity user
@@ -29,23 +29,21 @@ namespace Cab9.Hubs
             }
         }
 
-        //public static ConcurrentDictionary<string, SignalrUser> SignalrUsers = new ConcurrentDictionary<string, SignalrUser>();
+        private static ConcurrentDictionary<string, SignalrUser> SignalrUsers = new ConcurrentDictionary<string, SignalrUser>();
 
         public override Task OnConnected()
         {
             //if (user == null)
             //    throw new SecurityException("User is not logged in");
 
-            Groups.Add(Context.ConnectionId, "1");
+            string connection = Context.ConnectionId;
 
-            //string connection = Context.ConnectionId;
+            var sUser = SignalrUsers.GetOrAdd(user.Name, new SignalrUser(user.Name, user.CompanyID));
 
-            //var sUser = SignalrUsers.GetOrAdd(user.Name, new SignalrUser(user.Name, user.CompanyID));
-
-            //lock (sUser.ConnectionIds)
-            //{
-            //    sUser.ConnectionIds.Add(connection);
-            //}
+            lock (sUser.ConnectionIds)
+            {
+                sUser.ConnectionIds.Add(connection);
+            }
 
             return base.OnConnected();
         }
@@ -57,24 +55,24 @@ namespace Cab9.Hubs
 
             Groups.Remove(Context.ConnectionId, "1");
 
-            //SignalrUser sUser;
-            //SignalrUsers.TryGetValue(user.Name, out sUser);
+            SignalrUser sUser;
+            SignalrUsers.TryGetValue(user.Name, out sUser);
 
-            //if (sUser != null)
-            //{
+            if (sUser != null)
+            {
 
-            //    lock (sUser.ConnectionIds)
-            //    {
+                lock (sUser.ConnectionIds)
+                {
 
-            //        sUser.ConnectionIds.RemoveWhere(cid => cid.Equals(Context.ConnectionId));
+                    sUser.ConnectionIds.RemoveWhere(cid => cid.Equals(Context.ConnectionId));
 
-            //        if (!sUser.ConnectionIds.Any())
-            //        {
-            //            SignalrUser removedUser;
-            //            SignalrUsers.TryRemove(user.Name, out removedUser);
-            //        }
-            //    }
-            //}
+                    if (!sUser.ConnectionIds.Any())
+                    {
+                        SignalrUser removedUser;
+                        SignalrUsers.TryRemove(user.Name, out removedUser);
+                    }
+                }
+            }
 
 
             return base.OnDisconnected();
@@ -83,15 +81,6 @@ namespace Cab9.Hubs
         public override Task OnReconnected()
         {
             return base.OnReconnected();
-        }
-
-        public void AcceptBookingOffer(long offerid)
-        {
-
-        }
-
-        public void RejectBookingOffer(long offerid, string reason)
-        {
         }
     }
 }

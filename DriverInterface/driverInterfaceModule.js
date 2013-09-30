@@ -1,6 +1,4 @@
 ﻿/// <reference path='../includes/js/angular.js' />
-var useSignalR = true;
-var DEBUG = true;
 
 var app = angular.module('DriverInterface', ['ngResource', 'ngRoute', 'ngSanitize']);
 
@@ -45,7 +43,7 @@ app.run(function () {
 
 });
 
-app.controller('DIController', ['$rootScope', '$scope', '$location', '$timeout', 'APIBackup', 'TrackingService', 'DispatchService', function (root, scope, Location, Delay, Fallback, Tracking, Dispatch) {
+app.controller('DIController', ['$rootScope', '$scope', '$location', '$timeout', 'HubService', function (root, scope, Location, Delay, Hub) {
     root.current = {
         offers: [],
         booking: null,
@@ -58,7 +56,7 @@ app.controller('DIController', ['$rootScope', '$scope', '$location', '$timeout',
     /// Debugging 
     if (DEBUG = true) {
         scope.TestPush = function () {
-            root.$broadcast('NewBookingOffer', {
+            root.$broadcast('BookingOffered', {
                 ID: 20,
                 DriverID: 14,
                 BookingID: 2001,
@@ -72,7 +70,7 @@ app.controller('DIController', ['$rootScope', '$scope', '$location', '$timeout',
                     BookedDateTime: '2013-09-27T15:00:22'
                 }
             })
-            root.$broadcast('NewBookingOffer', {
+            root.$broadcast('BookingOffered', {
                 ID: 21,
                 DriverID: 14,
                 BookingID: 2001,
@@ -86,7 +84,7 @@ app.controller('DIController', ['$rootScope', '$scope', '$location', '$timeout',
                     BookedDateTime: '2013-09-27T15:30:22'
                 }
             })
-            root.$broadcast('NewBookingOffer', {
+            root.$broadcast('BookingOffered', {
                 ID: 22,
                 DriverID: 14,
                 BookingID: 2001,
@@ -116,51 +114,33 @@ app.controller('DIController', ['$rootScope', '$scope', '$location', '$timeout',
             scope.backText = '';
     });
 
-
-    /// Tracking Hub
-    var LocationDelay = null;
+    /// Hub
+    var LocationPromise = null;
     var SendLocation = function () {
-        if (useSignalR == true && Tracking.running == true) {
             navigator.geolocation.getCurrentPosition(function (location) {
                 root.current.location = location;
-                Tracking.SendUpdate(location)
-                LocationDelay = Delay(SendLocation, 1000);
+                Hub.SendUpdate(location)
+                LocationPromise = Delay(SendLocation, 8000);
             });        
-        } else {
-            navigator.geolocation.getCurrentPosition(function (location) {
-                root.current.location = location;
-                Fallback.SendUpdate({
-                    shiftid: root.current.shift.ID,
-                    latitude: location.coords.latitude,
-                    longitude: location.longitude
-                }, function () {
-                    LocationDelay = Delay(SendLocation, 1000);
-                });
-            });
-        }
     };
 
     scope.$on('ShiftStarted', function (event) {
-        if (useSignalR == true) {
-            Tracking.initalise(function () { SendLocation(); });
-        } else {
-            SendLocation();
-        }
+        Hub.initalise(function () { SendLocation(); });
     });
-
-    ///Dispatch Hub
    
-    scope.$on('NewBookingOffer', function (event, offer) {
+    scope.$on('BookingOffered', function (event, offer) {
         if (root.current.driver.Status == 'Available') {
-            root.current.offers.push(offer);
-            if (root.include != 'partials/offer.html') {
-                $('#content').css('-webkit-filter', 'blur(2px)')
-                root.include = 'partials/offer.html';
-            }
+            scope.$apply(function(){
+                root.current.offers.push(offer);
+                if (root.include != 'partials/offer.html') {
+                    $('#content').css('-webkit-filter', 'blur(2px)')
+                    root.include = 'partials/offer.html';
+                }
+            })
         } else if (root.current.driver.Status == 'Clearing') {
 
         } else {
-            Dispatch.rejectBooking(offer.ID, 'UNAVAILABLE');
+            Hub.rejectBooking(offer.ID, 'UNAVAILABLE');
         }
     });
 
@@ -198,7 +178,8 @@ app.controller('DIController', ['$rootScope', '$scope', '$location', '$timeout',
     }, true);
 
     scope.Logout = function () {
-        if (LocationDelay) Delay.cancel(LocationDelay);
+        if (LocationPromise) Delay.cancel(LocationPromise);
+        Hub.stop(function () { });
         root.current = {
             offers: [],
             booking: null,
@@ -227,7 +208,7 @@ app.controller('LoginViewController', ['$rootScope', '$scope', '$location', 'Use
                         function (data) {
                             if (data.CurrentShiftID)
                             {
-                                root.current.shift = DriverShift.get({ id: data.CurrentShiftID });
+                                root.current.shift = DriverShift.get({ id: data.CurrentShiftID }, function () { root.$broadcast('ShiftStarted'); });
                             }
                             Location.path('/menu');
                         }
@@ -309,9 +290,9 @@ app.controller('StartShiftController', ['$rootScope', '$scope', '$location', 'Dr
     scope.Submit = function () {
         scope.shift.$start(
             function (data) {
-                root.$broadcast("ShiftStarted");
                 root.current.driver.Status = 'Available';
                 root.current.shift = data;
+                root.$broadcast("ShiftStarted");
                 Location.path('/menu-shifts');
             }
         );
@@ -322,7 +303,7 @@ app.controller('StartShiftController', ['$rootScope', '$scope', '$location', 'Dr
     }
 }]);
 
-app.controller('BookingOfferController', ['$rootScope', '$scope', '$timeout', 'DispatchService', function (root, scope, Delay, Dispatch) {
+app.controller('BookingOfferController', ['$rootScope', '$scope', '$timeout', 'HubService', function (root, scope, Delay, Hub) {
     scope.time = 30;
     scope.currentdelay = null;
 
@@ -346,20 +327,19 @@ app.controller('BookingOfferController', ['$rootScope', '$scope', '$timeout', 'D
 
     scope.Accept = function () {
         Delay.cancel(scope.currentdelay);
-        Dispatch.acceptBooking(scope.offer.ID);
+        Hub.acceptBooking(scope.offer.ID);
         angular.forEach(root.current.offers, function (offer) {
             if (offer.ID != scope.offer.ID)
-                Dispatch.rejectBooking(scope.offer.ID, 'ONJOB');
+                Hub.rejectBooking(offer.ID, 'NO LONGER AVAILABLE');
         });
-        root.current.booking = scope.offer;
+        root.current.booking = Booking.get({ id: scope.offer.BookingID });
         root.current.offers = [];
-
     };
 
     scope.Reject = function () {
         Delay.cancel(scope.currentdelay);
         var Reason = prompt('Reject Reason:')
-        Dispatch.rejectBooking(scope.offer.ID, Reason);
+        Hub.rejectBooking(scope.offer.ID, Reason);
         root.current.offers.splice(0, 1);
         if (root.current.offers.length > 0) {
             scope.time = 30;
@@ -373,7 +353,7 @@ app.controller('BookingOfferController', ['$rootScope', '$scope', '$timeout', 'D
 
     scope.Timeout = function () {
         var Reason = 'TIMEOUT';
-        Dispatch.rejectBooking(scope.offer.ID, Reason);
+        Hub.rejectBooking(scope.offer.ID, Reason);
         root.current.offers.splice(0, 1);
         if (root.current.offers.length > 0) {
             scope.time = 30;
@@ -476,15 +456,60 @@ app.factory('APIBackup', ['$resource', function (Resource) {
     return result;
 }]);
 
-app.factory('DispatchService', ['signalR', '$rootScope', function (signalR, root) {
+//app.factory('DispatchService', ['signalR', '$rootScope', function (signalR, root) {
+//    var service = {
+//        hub: null,
+//        running: false,
+//        initalise: function (callback) {
+//            this.initialiseCallback = callback;
+//            this.hub = signalR.connection.dispatchHub;
+//            this.hub.client.offerBooking = function (driverid, booking) {
+//                if (driverid == root.current.driver.ID)
+//                    root.$broadcast('BookingOffered', booking);
+//            };
+//            signalR.connection.hub.disconnected(function () {
+//                service.running = false;
+//            });
+//            signalR.connection.hub.reconnected(function () {
+//                service.running = true;
+//            });
+//            signalR.connection.hub.start(this.initialiseCompletion);
+//        },
+//        initialiseCallback: function () { },
+//        initialiseCompletion: function () {
+//            service.running = true;
+//            service.initialiseCallback();
+//        },
+//        stop: function (callback) {
+//            this.stopCallback = callback;
+//            signalR.connection.hub.stop();
+//            service.stopCompletion();
+//        },
+//        stopCallback: function () { },
+//        stopCompletion: function () {
+//            service.running = false;
+//            service.stopCallback();
+//        },
+//        acceptBooking: function (offerId) {
+//            this.hub.server.acceptBookingOffer(offerId)
+//        },
+//        rejectBooking: function (offerId, reason) {
+//            this.hub.server.rejectBookingOffer(offerId, reason)
+//        }
+//    }
+//    return service;
+//}]);
+
+app.factory('HubService', ['signalR', '$rootScope', function (signalR, root) {
     var service = {
         hub: null,
         running: false,
         initalise: function (callback) {
             this.initialiseCallback = callback;
-            this.hub = signalR.connection.dispatchHub;
-            this.hub.client.NewBookingOffer = function (booking) {
-                root.$broadcast('BookingOffered', booking);
+            this.hub = signalR.connection.driverHub;
+            this.hub.client.offerBooking = function (driverid, booking) {
+                if (driverid == root.current.driver.ID)
+                    root.$broadcast('BookingOffered', booking);
             };
             signalR.connection.hub.disconnected(function () {
                 service.running = false;
@@ -501,40 +526,6 @@ app.factory('DispatchService', ['signalR', '$rootScope', function (signalR, root
         },
         stop: function (callback) {
             this.stopCallback = callback;
-            signalR.connection.hub.stop();
-            service.stopCompletion();
-        },
-        stopCallback: function () { },
-        stopCompletion: function () {
-            service.running = false;
-            service.stopCallback();
-        },
-        acceptBooking: function (offerId) {
-            //this.hub.server.acceptBooking(bookingId)
-        },
-        rejectBooking: function (offerId, reason) {
-            //this.hub.server.rejectBooking(bookingId, reason)
-        }
-    }
-    return service;
-}]);
-
-app.factory('TrackingService', ['signalR', '$rootScope', function (signalR, root) {
-    var service = {
-        hub: null,
-        running: false,
-        initalise: function (callback) {
-            this.initialiseCallback = callback;
-            this.hub = signalR.connection.trackingHub;
-            signalR.connection.hub.start(this.initialiseCompletion);
-        },
-        initialiseCallback: function () { },
-        initialiseCompletion: function () {
-            service.running = true;
-            service.initialiseCallback();
-        },
-        stop: function (callback) {
-            this.stopCallback = callback;
             signalR.connection.hub.stop(this.stopCompletion());
         },
         stopCallback: function () { },
@@ -542,8 +533,14 @@ app.factory('TrackingService', ['signalR', '$rootScope', function (signalR, root
             service.running = false;
             service.stopCallback();
         },
+        acceptBooking: function (offerId) {
+            this.hub.server.acceptBookingOffer(offerId)
+        },
+        rejectBooking: function (offerId, reason) {
+            this.hub.server.rejectBookingOffer(offerId, reason)
+        },
         SendUpdate: function (location) {
-            service.hub.server.SendUpdate(root.current.shift.ID, location.coords.latitude, location.coords.longitude, location.coords.accuracy, location.coords.speed, location.coords.heading);
+            service.hub.server.sendUpdate(root.current.shift.ID, location.coords.latitude, location.coords.longitude, location.coords.accuracy, location.coords.speed, location.coords.heading);
         }
     }
     return service;

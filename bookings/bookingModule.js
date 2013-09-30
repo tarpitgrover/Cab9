@@ -48,6 +48,8 @@ app.controller('BookingTableViewController', function ($scope) {
     $scope.$parent.appStatus = 'Loading';
     $scope.$parent.$parent.currentView = 'TableView';
 
+    $scope.selected = {};
+
     $scope.currentBookings = Booking.query({
         bookedFrom: new Date().addPeriod(-1, "days").toJSON(),
         bookedTo: new Date().addPeriod(1, "days").toJSON()
@@ -65,6 +67,10 @@ app.controller('BookingTableViewController', function ($scope) {
                     driver.$points = record[0].total;
             });
         });
+    };
+
+    $scope.push = function () {
+        Booking.pushTo({ driverid: $scope.selected.Driver.ID, bookingid: $scope.selected.Booking.ID })
     };
 
     $scope.$parent.appStatus = 'Ready';
@@ -166,17 +172,6 @@ app.controller("NewBookingController", function ($scope) {
         }
         $scope.GetRouteAndQuote();
     }, true);
-
-    //$scope.$watch('selectedName', function (newValue) {
-    //    if (newValue) {
-    //        $scope.booking.PassengerName = newValue.PassengerName
-    //        $scope.previous = Booking.getPrevious({ number: null, name: newValue.PassengerName })
-    //        $scope.bookingsFor = newValue.PassengerName;
-
-    //    } else {
-    //        $scope.booking.PassengerName = '';
-    //    }
-    //});
 
     $scope.$watch('selectedNumber', function (newValue) {
         if (newValue) {
@@ -541,36 +536,6 @@ app.directive('locationSearchAdv', function (Location, $filter) {
     };
 });
 
-app.directive('datetimepicker', function () {
-    return {
-        restrict: 'A',
-        template:
-            ' <input type="text" ng-model="dateTime" style="width:100%"/>'
-            + ' <div></div>'
-            + ' <div class="popover bottom" style="position:absolute; top: 20px; left:15px; right:15px; max-width: none">'
-            + '     <div class="arrow"></div>'
-            + '     <div class="popover-content">'
-            + '         <div>Test</div>'
-            + '     </div>'
-            + ' </div>',
-        link: function(scope, elem, attrs) {
-            elem.css("position", "relative");
-
-            var PickerFocus = function () {
-                elem.children('input').one('blur', PickerBlur);
-                elem.children('.popover').show();
-            }
-
-            var PickerBlur = function () {
-                elem.children('input').one('focus', PickerFocus);
-                elem.children('.popover').hide();
-            }
-
-            elem.children('input').one('focus', PickerFocus);
-        }
-    }
-});
-
 app.directive('phoneSearch', function ($filter) {
     return {
         restrict: 'A',
@@ -686,126 +651,6 @@ app.directive('phoneSearch', function ($filter) {
                                     ContactNumber: elem.children('input')[0].value
                                 };
                             }
-                        });
-                    }
-                }
-            };
-        }
-    };
-});
-
-app.directive('nameSearch', function ($filter) {
-    return {
-        restrict: 'A',
-        scope: {
-            selected: '='
-        },
-        template:
-              ' <input type="text" ng-model="searchText" placeholder="Search previous passengers.." style="width:100%"/>'
-            + ' <div></div>'
-            + ' <div class="popover bottom" style="position:absolute; top: 20px; left:15px; right:15px; max-width: none">'
-            + '     <div class="arrow"></div>'
-            + '     <div class="popover-content">'
-            + '         <div ng-show="searching">Searching...</div>'
-            + '         <div ng-show="!searching && !names.length">No Results Found</div>'
-            + '         <div ng-repeat="n in names" ng-click="Select(n)" class="repeaterItemCount">'
-            + '             {{ n.PassengerName }} ({{ n.ContactNumber }})'
-            + '         </div>'
-            + '     </div>'
-            + ' </div>',
-        link: function (scope, elem, attrs) {
-            elem.css("position", "relative");
-
-            scope.names = [];
-
-            scope.searchText = "";
-            scope.$watch("searchText", function (newValue, oldValue) {
-                if (newValue && newValue.length > 2) {
-                    scope.highlighted = -1;
-                    elem.children('.popover').show();
-                    scope.searching = true;
-                    Booking.getPrevious({ name: newValue }, function (data) {
-                        scope.searching = false;
-                        scope.names = data;
-                    })
-                    scope.selected = null;
-                } else {
-                    elem.children('.popover').hide();
-                    scope.names = [];
-                    scope.selected = null;
-                }
-            });
-
-            scope.Select = function (name) {
-                elem.children('input')[0].value = name.PassengerName;
-                elem.children('.popover').hide();
-                if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
-                    scope.names = [];
-                    scope.selected = name;
-                } else {
-                    scope.$root.$apply(function () {
-                        scope.names = [];
-                        scope.selected = name;
-                    });
-                }
-            }
-
-            scope.highlighted = -1;
-            elem.children('input')[0].onkeydown = function (event) {
-                if (event.keyIdentifier == "Down") {
-                    scope.highlighted += 1;
-                    if (scope.highlighted > scope.names.length - 1)
-                        scope.highlighted = scope.names.length - 1;
-                    $('.repeaterItemCount.Selected').removeClass('Selected');
-                    $('.repeaterItemCount').addClass(function (index) {
-                        if (index == scope.highlighted)
-                            return 'Selected';
-                    });
-                    event.preventDefault();
-                }
-                if (event.keyIdentifier == "Up") {
-                    scope.highlighted -= 1;
-                    if (scope.highlighted < 0)
-                        scope.highlighted = 0;
-                    $('.repeaterItemCount.Selected').removeClass('Selected');
-                    $('.repeaterItemCount').addClass(function (index) {
-                        if (index == scope.highlighted)
-                            return 'Selected';
-                    });
-                    event.preventDefault();
-                }
-                if (event.keyIdentifier == "Enter") {
-                    scope.Select($('.repeaterItemCount.Selected').scope().n);
-                }
-                if (event.keyIdentifier == "U+001B") {
-                    elem.children('.popover').hide();
-                    if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
-                        scope.names = [];
-                        scope.selected = {
-                            PassengerName: elem.children('input')[0].value
-                        };
-                    } else {
-                        scope.$root.$apply(function () {
-                            scope.names = [];
-                            scope.selected = {
-                                PassengerName: elem.children('input')[0].value
-                            };
-                        });
-                    }
-                }
-                if (event.keyIdentifier == "U+0009") {
-                    elem.children('.popover').hide();
-                    if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
-                        scope.names = [];
-                        scope.selected = {
-                            PassengerName: elem.children('input')[0].value
-                        };
-                    } else {
-                        scope.$root.$apply(function () {
-                            scope.names = [];
-                            scope.selected = {
-                                PassengerName: elem.children('input')[0].value
-                            };
                         });
                     }
                 }

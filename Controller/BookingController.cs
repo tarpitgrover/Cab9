@@ -14,6 +14,7 @@ using GoogleMapsApi;
 using GoogleMapsApi.Entities.Directions.Response;
 using GoogleMapsApi.Entities.Directions.Request;
 using Cab9.Geography;
+using Newtonsoft.Json.Linq;
 
 namespace Cab9.Controller
 {
@@ -29,7 +30,6 @@ namespace Cab9.Controller
             
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
-
 
         [HttpGet]
         [ActionName("GetByID")]
@@ -64,6 +64,17 @@ namespace Cab9.Controller
             value.CompanyID = CompanyID.Value;
             value.Timestamp = DateTime.Now;
             value.LeadTime = DateTime.Now;
+            value.Status = BookingStatus.Confirmed;
+
+            Driver driver = null;
+            if (value.DriverID.HasValue)
+            {
+                driver = Driver.SelectByID(value.DriverID.Value);
+                if (driver == null) return Request.CreateResponse(HttpStatusCode.BadRequest, "Driver not found supplied.");
+                if (driver.CompanyID != CompanyID.Value) return Request.CreateResponse(HttpStatusCode.BadRequest, "Driver not found supplied.");
+            }
+
+            value.DriverID = null;
 
             var success = value.Insert();
             if (success)
@@ -218,6 +229,26 @@ namespace Cab9.Controller
             var result = Booking.Search(CompanyID.Value, name, number);
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+        [HttpPost]
+        public HttpResponseMessage Push(JObject obj)
+        {
+            
+
+            if (obj.HasValues)
+            {
+                int driverid = obj.Value<int>("driverid");
+                long bookingid = obj.Value<long>("bookingid");
+
+                var booking = Booking.SelectByID(bookingid);
+                if (booking != null)
+                {
+                    booking.Push(driverid);
+                }                
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

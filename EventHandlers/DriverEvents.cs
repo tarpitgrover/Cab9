@@ -7,7 +7,7 @@ namespace Cab9.EventHandlers
 {
     public static class DriverEvents
     {
-        public static IHubContext Hub { get { return GlobalHost.ConnectionManager.GetHubContext<DriverHub>(); } }
+        public static IHubContext Hub { get { return GlobalHost.ConnectionManager.GetHubContext<OfficeHub>(); } }
 
         public static void SetupEvents()
         {

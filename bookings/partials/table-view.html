@@ -1,5 +1,5 @@
 ﻿<div>
-    <div class="row booking-strip" ng-repeat="b in currentBookings" ng-click="BuildQueue(b.ID)">
+    <div class="row booking-strip" ng-repeat="b in currentBookings" ng-click="selected.Booking = b" ng-class="(selected.Booking == b) ? 'Selected' : ''">
         <div class="col-sm-1">
             <div class="row">
                     <div class="col-sm-3 col-xs-2"><label>#</label></div>
@@ -50,13 +50,13 @@
         </div>
     </div>
 </div>
-
-<!--<div class="col-md-3">
-        <div ng-repeat="d in drivers | orderBy:'$points'">
+<div class="col-md-3">
+        <div ng-repeat="d in drivers" ng-click="selected.Driver = d" ng-class="(selected.Driver == d) ? 'Selected' : ''">
             {{ d.ID }} {{ d.CallSign }} {{ d.Forename }} {{ d.Surname }} {{ d.Status }} {{ d.$points }}
         </div>
-    </div>-->
-</link>
+    </div>
+
+<input type="button" ng-click="push()" value="push"/>
 <style type="text/css">
     .booking-strip {
 
@@ -72,5 +72,10 @@
 
     .booking-strip [class^="col-"]{
         padding:0px;
+    }
+
+    .Selected {
+        background: black;
+        color: white;
     }
 </style>

@@ -337,6 +337,12 @@ app.run(function ($rootScope, $resource) {
             params: {
                 action: 'Quote'
             }
+        },
+        pushTo: {
+            method: 'POST',
+            params: {
+                action: 'Push'
+            }
         }
     });
 
