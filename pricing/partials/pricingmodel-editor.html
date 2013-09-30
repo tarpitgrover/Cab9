@@ -1,0 +1,325 @@
+﻿<style type="text/css">
+    #map {
+        position: relative !important;
+        height: 700px;
+        width: 100%;
+    }
+
+        #map div.gm-style {
+            -moz-box-shadow: inset 0 1px 8px #3d3d3d;
+            -webkit-box-shadow: inset 0 1px 8px #3D3D3D;
+            box-shadow: inset 0 1px 8px #3D3D3D;
+        }
+
+        #map img {
+            max-width: none;
+        }
+
+    table tr th.slanted {
+        width: 120px;
+        height: 110px;
+        background-color: #EEEEEE !important;
+        color: black !important;
+    }
+
+        table tr th.slanted div {
+            -moz-transform-origin: right;
+            -ms-transform-origin: right;
+            -o-transform-origin: right;
+            -webkit-transform-origin: right;
+            transform-origin: right;
+            -webkit-transform: translateX(-30px) rotate(60deg);
+            -moz-transform: translateX(-30px) rotate(60deg);
+            -ms-transform: translateX(-30px) rotate(60deg);
+            -o-transform: translateX(-30px) rotate(60deg);
+            transform: translateX(-30px) rotate(60deg);
+        }
+
+    .left-column {
+        background-color: #26AE90;
+        color: white;
+        font-weight: 400 !important;
+        text-transform: uppercase;
+        cursor: pointer;
+        width: 40px;
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    .top-row {
+        width: 120px;
+        font-weight: bold !important;
+        background-color: #EEEEEE !important;
+        text-transform: none !important;
+        color: black !important;
+        cursor: default !important;
+    }
+
+    .priceZonesOnMap {
+        width: 400px;
+        display: inline-block;
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        background-color: #2C3432;
+        color: #F9F9F9;
+        padding: 20px;
+        opacity: 0.95;
+        border: 5px solid #1D2826;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class="btn-group" ng-init="activeTab = 'Settings'">
+            <input type="button" class="btn cyanBG" ng-click="activeTab = 'Settings'" value="Settings" />
+            <input type="button" class="btn cyanBG" ng-click="activeTab = 'Zones'" ng-disabled="selectedModel.$saved != true" value="Zones" />
+            <input type="button" class="btn cyanBG" ng-click="activeTab = 'FixedPrices'" ng-disabled="selectedModel.$saved != true" value="Fixed Prices" />
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="activeTab == 'Settings'">
+    <form>
+        <div class="col-md-6 col-sm-6">
+            <div class="formSectionHeader">
+                <span class="formSectionHeaderName">Basic Settings</span>
+            </div>
+            <div class="form-group">
+                <label for="pricingModelNameTextBox">Name</label>
+                <input type="text" ng-model="selectedModel.Name" id="pricingModelNameTextBox" placeholder="e.g. Pricing Model" />
+            </div>
+            <div class="form-group">
+                <label for="pricingModelDescriptionTextBox">Description</label>
+                <textarea ng-model="selectedModel.Description" id="pricingModelDescriptionTextBox" placeholder="Description about this pricing model." rows="4" style="height: 75px;" />
+            </div>
+            <div class="form-group">
+                <label for="pricingModeforZonesDropDown">Pricing Mode for Zones</label>
+                <select ng-model="selectedModel.ZoneMode" id="pricingModeforZonesDropDown" ng-options="pm.value as pm.display for pm in PricingModes">
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="pricingModelSizeModifierDropDown">Ignore Car Size?</label>
+                <select ng-model="selectedModel.UseSizeModifiers" id="pricingModelSizeModifierDropDown" ng-options="bv | BooleanValueFilter for bv in BoolValues " />
+            </div>
+            <div class="formSectionHeader">
+                <span class="formSectionHeaderName">Waiting Period Settings</span>
+            </div>
+            <div class="form-group">
+                <label for="pricingModelWaitingPeriodTextBox">Waiting Period (in mins)</label>
+                <input type="text" ng-model="selectedModel.WaitingPeriod" id="pricingModelWaitingPeriodTextBox" placeholder="e.g. 10. Please do not put min or minutes." />
+            </div>
+
+            <div class="form-group">
+                <label for="pricingModelWaitingChargeTextBox">Waiting Charge</label>
+                <input type="text" ng-model="selectedModel.WaitingCharge" id="pricingModelWaitingChargeTextBox" placeholder="e.g. £5.50. Please do not put the £ sign." />
+            </div>
+
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <div class="formSectionHeader">
+                <span class="formSectionHeaderName">Price Settings</span>
+            </div>
+            <div class="form-group">
+                <label for="pricingModelPricePerMileTextBox">Price/Mile</label>
+                <input type="text" ng-model="selectedModel.PricePerMile" id="pricingModelPricePerMileTextBox" placeholder="e.g. 3.50. Please do not put the £ sign." />
+            </div>
+            <div class="form-group">
+                <label for="pricingModelStandingChargeTextBox">Standing Charge</label>
+                <input type="text" ng-model="selectedModel.StandingCharge" id="pricingModelStandingChargeTextBox" placeholder="e.g. 2.50. Please do not put the £ sign." />
+            </div>
+            <div class="form-group">
+                <label for="pricingModelMinimumChargeTextBox">Minimum Charge</label>
+                <input type="text" ng-model="selectedModel.MinimumCharge" id="pricingModelMinimumChargeTextBox" placeholder="e.g. 5.00. Please do not put the £ sign." />
+            </div>
+            <div class="form-group">
+                <label for="pricingModelRoundToTextBox">Round To (pence)</label>
+                <input type="text" ng-model="selectedModel.RoundTo" id="pricingModelRoundToTextBox" placeholder="e.g. 500. Please enter the value in pence. " />
+            </div>
+            <div class="formSectionHeader">
+                <span class="formSectionHeaderName">Peak Time Settings</span>
+            </div>
+            <div class="form-group">
+                <label for="pricingModelPeakTimeStartTextBox">Peak Time Starts At</label>
+                <input type="text" ng-model="selectedModel.PeakStart" data-toggle="timepicker" id="pricingModelPeakTimeStartTextBox" placeholder="HH:MM:SS" />
+            </div>
+
+            <div class="form-group">
+                <label for="pricingModelPeakTimeEndTextBox">Peak Time Ends At</label>
+                <input type="text" ng-model="selectedModel.PeakEnd" data-toggle="timepicker" id="pricingModelPeakTimeEndTextBox" placeholder="HH:MM:SS" />
+            </div>
+
+            <div class="form-group">
+                <label for="pricingModelPeakTimeMultiplierTextBox">Peak Time Multiplier</label>
+                <input type="text" ng-model="selectedModel.PeakMultiplier" id="pricingModelPeakTimeMultiplierTextBox" placeholder="e.g. 5.00. Please do not put the £ sign." />
+            </div>
+
+        </div>
+        <br class="clearfix" />
+        <div class="formButtons">
+            <input type="button" class="btn cyanBG" ng-click="SavePricingModel()" value="Save" />
+            <input type="button" class="btn orangeBG" value="Cancel" onclick="history.back(-1)" />
+        </div>
+    </form>
+
+    <hr />
+    <!--<div class="alert alert-danger" ng-hide="selectedModel.$saved == true">
+                Zones and Fixed Price settings will be available when you Save the basic Settings.
+            </div>
+            <div class="alert alert-success" ng-show="selectedModel.$saved == true">
+                Settings saved you may now add Zones and Fixed Prices.
+            </div>-->
+</div>
+<div class="row" ng-show="activeTab == 'Zones'" style="position: relative;">
+
+    <div id="map" google-map start="activeTab" map-options="mapOptions" map-object="mapObject" style="border: 1px solid #26ae90; width: 100%; border-left: 5px solid #26ae90;"></div>
+    <div class="priceZonesOnMap shadow">
+        <div ng-show="mode == 'Default'">
+            <div class="sectionHead">
+                <span class="sectionHeadName">Zone Management</span>
+            </div>
+
+            <div class="form-group ">
+                <label for="existingZones">Use Existing Zone</label>
+                <select ng-model="zoneToClone" id="existingZones" ng-options="z.Title group by (z.$PricingModel.Name + ' Zones') for z in allZones" style="display: inline; width: 74%; margin-right: 0;"></select>
+                <input type="button" class="btn cyanBG inline" value="Clone" ng-click="CloneZone(zoneToClone)" style="width: 25%; margin-left: 0; height: 30px; line-height: 14px; margin-bottom: 1px;" />
+            </div>
+            <span ng-click="StartNewZone()" class="white mText"><span class="glyphicon glyphicon-plus-sign cyan"></span>Add New Zone</span>
+            <br />
+            <br />
+            <table class="darkTable">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;"></th>
+                        <th style="width: 60%;">Name</th>
+                        <th style="width: 30%;" class="text-right">PPM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="zone in currentZones">
+                        <td style="width: 10%;" class="text-center"><span class="icon-edit-sign cyan mText" data-toggle="tooltip" data-placement="bottom" title="Edit Pricing Model" ng-click="EditZone(zone)"></span></td>
+                        <td style="width: 60%;"><span class="cyan bold">{{zone.Title}}</span><br />
+                            {{zone.Description}}</td>
+                        <td style="width: 30%;" class="text-right bold">£{{zone.PricePerMile | number:2}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div ng-class="(zonemode == 'Drawing') ? 'LockInputs' : ''" ng-show="mode == 'Editing' && (zonemode == 'Cloning' || zonemode == 'Drawing' || zonemode == 'Creating' || zonemode == 'Editing')">
+            <div class="sectionHead">
+                <span class="sectionHeadName">{{(zonemode=='Creating' || zonemode=='Drawing') ? 'Add New Zone': ((zonemode=='Editing') ? 'Editing Zone' : 'Cloning Zone')}}</span>
+            </div>
+            <div ng-show="mode == 'Drawing'">
+                Please draw your zone on the map first, then configure below here.
+            </div>
+            <div ng-hide="mode == 'Drawing'">
+                You can change the shape of your zone and configure zone settings below below.
+            </div>
+
+            <div class="form-group full">
+                <label for="zoneTitleTextBox">Name</label>
+                <input type="text" ng-model="selectedZone.Title" id="zoneTitleTextBox" />
+            </div>
+
+            <div class="form-group full">
+                <label for="pricingModelRoundToTextBox">Price Per Mile</label>
+                <input type="text" ng-model="selectedZone.PricePerMile" id="zonePPMTextBox" />
+            </div>
+
+            <div class="form-group full">
+                <label for="zonePickupChargeTextBox">Pickup Charge</label>
+                <input type="text" ng-model="selectedZone.OriginCharge" id="zonePickupChargeTextBox" />
+            </div>
+
+            <div class="form-group full">
+                <label for="zoneDropOffChargeTextBox">Drop Off Charge</label>
+                <input type="text" ng-model="selectedZone.DestinationCharge" id="zoneDropOffChargeTextBox" />
+            </div>
+
+            <div class="form-group full">
+                <label for="zoneEntryChargeTextBox">Entry Charge</label>
+                <input type="text" ng-model="selectedZone.EntryCharge" id="zoneEntryChargeTextBox" />
+            </div>
+
+            <div class="form-group full">
+                <label for="zoneWaitingChargeTextBox">Waiting Charge</label>
+                <input type="text" ng-model="selectedZone.WaitingCharge" id="zoneWaitingChargeTextBox" />
+            </div>
+
+            <div class="form-group full">
+                <label for="zoneDescriptionTextBox">Description</label>
+                <textarea type="text" ng-model="selectedZone.Description" id="zoneDescriptionTextBox" cols="4" style="height: 50px" />
+            </div>
+
+            <input class="btn cyanBG" type="button" value="Save" ng-click="Save()" ng-hide="zonemode == 'Drawing'" />
+            <input class="btn orangeBG" type="button" value="Cancel" ng-click="Cancel()" />
+            <input class="btn redBG" type="button" value="Delete" ng-click="Delete()" ng-hide="zonemode != 'Editing'" />
+        </div>
+    </div>
+
+</div>
+<div class="row" ng-show="activeTab == 'FixedPrices'">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="formSectionHeader" style="width: 98%">
+                <span class="formSectionHeaderName">Fixed Prices</span>
+            </div>
+            <span ng-click="NewFixedPrice()" class="mText"><input type="button" value="+Add New Fixed Price" class="btn cyanBG" /></span>
+            <br /><br />
+            <table class="table bordered">
+                <thead class="tableViewTableHead">
+                    <tr class="table-header">
+                        <th style="width: 10%;"></th>
+                        <th style="width: 38%; vertical-align: middle;" class="">From</th>
+                        <th style="width: 38%; vertical-align: middle;">To</th>
+                        <th style="width: 20%; vertical-align: middle;" class="text-right">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-show="fixedPriceEditRowId == 0" style="background-color:#e1e1e1;">
+                        <td style="width: 5%; vertical-align: middle; cursor: pointer;" class="text-center xlText bold">
+                            <span class="icon-reply orange lText" data-toggle="tooltip" data-placement="bottom" title="Edit Pricing Model" style="cursor: pointer; margin-top: 5px;" ng-click="fixedPriceEditRowId=null"></span>
+                        </td>
+                        <td style="width: 38%; vertical-align: middle;" class="bold">
+                            <div class="form-group" style="margin-bottom:0px">
+                                <select ng-model="newFixedPrice.PricingZoneFromID" ng-options="z.ID as z.Title for z in currentZones">
+                                    <option selected="selected" value="">Please Select</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td style="width: 38%; vertical-align: middle;" class="bold">
+                            <div class="form-group" style="margin-bottom:0px">
+                                <select ng-model="newFixedPrice.PricingZoneToID" ng-options="z.ID as z.Title for z in currentZones">
+                                    <option selected="selected" value="">Please Select</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td style="width: 14%; vertical-align: middle;" class="text-right bold cyan">
+                            <input type="text" ng-model="newFixedPrice.Price" class="textBox pound short text-right" />
+                            <span class="icon-ok cyan lText" data-toggle="tooltip" data-placement="bottom" title="Save" style="cursor: pointer; margin-top: 5px;" ng-click="SaveFixedPrice(newFixedPrice)"></span>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="FixedPrice in FixedPrices">
+                        <td style="width: 5%; vertical-align: middle; cursor: pointer;" class="text-center xlText bold">
+                            <span class="icon-edit-sign cyan" data-toggle="tooltip" data-placement="bottom" title="Edit Pricing Model" style="cursor: pointer;" ng-click="$parent.fixedPriceEditRowId = FixedPrice.ID" ng-hide="fixedPriceEditRowId == FixedPrice.ID"></span>
+                            <span class="icon-remove-sign red" data-toggle="tooltip" data-placement="bottom" title="Delete Pricing Model" style="cursor: pointer;" ng-click="DeleteFixedPrice(FixedPrice)" ng-hide="fixedPriceEditRowId == FixedPrice.ID"></span>
+                            <span class="icon-reply orange lText" data-toggle="tooltip" data-placement="bottom" title="Edit Pricing Model" style="cursor: pointer; margin-top: 5px;" ng-show="fixedPriceEditRowId == FixedPrice.ID" ng-click="$parent.fixedPriceEditRowId=null"></span>
+                        </td>
+                        <td style="width: 38%; vertical-align: middle;" class="">{{fetchZoneNamefromId(FixedPrice.PricingZoneFromID)}}</td>
+                        <td style="width: 38%; vertical-align: middle;" class="">{{fetchZoneNamefromId(FixedPrice.PricingZoneToID)}}</td>
+                        <td style="width: 14%; vertical-align: middle;" class="text-right bold cyan">
+                            <span ng-hide="fixedPriceEditRowId == FixedPrice.ID">£{{FixedPrice.Price | number:2}}</span>
+                            <div ng-show="fixedPriceEditRowId == FixedPrice.ID">
+                                <input type="text" ng-model="FixedPrice.Price" class="textBox pound short text-right" />
+                                <span class="icon-ok cyan lText" data-toggle="tooltip" data-placement="bottom" title="Save" style="cursor: pointer; margin-top: 5px;" ng-click="UpdateFixedPrice(FixedPrice)"></span>
+                                
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

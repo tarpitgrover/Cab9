@@ -1,0 +1,20 @@
+﻿<div class="cardsContainer">
+	<div ng-repeat="group in groups" style="padding-left: 5px; padding-right: 5px;">
+	    <div class="{{ 'group-' + group|RemoveSpaces}} cardsViewGroup">
+	            <span class="cardsViewGroupName">{{group}}</span><br />
+	    </div>
+	    <div class="card" ng-repeat="customer in filteredCustomers | ItemsForGroup:group:grouping:sorting" ng-click="popOut($event)">
+	    	<div class="cardOptionsWrapper">
+		    	<a href="/customers/#/customer-view/{{customer.ID}}"><div class="cardOption">
+		    		<span class="e9ine-icon-untitled-37"></span>
+		    		</div></a>
+	    	</div>
+	    	<div class="cardHero" cardtext="{{customer.Name}}" url="{{customer.LogoUrl}}" profile-hero></div>
+	        <div class="cardStatus"></div>
+	        <div class="cardInfo" ng-click="popOut($event)">
+	            <span class="cardName">{{customer.Name | Truncate:12}}</span>
+	        </div>
+	    </div>
+	    <div style="clear: both" />
+	</div>
+</div>

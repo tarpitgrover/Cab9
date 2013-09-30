@@ -1,0 +1,246 @@
+﻿<!-- Added to aid development, remove before release -->
+<link href="/includes/css/bootstrap.css" rel="stylesheet" />
+<link href="/includes/css/bootstrap-responsive.css" rel="stylesheet" />
+<!-- Added to aid development, remove before release -->
+
+<style type="text/css">
+    #map {
+        position: relative !important;
+        height: 600px;
+        width: 100%;
+        border-radius: 4px;
+    }
+
+        #map div {
+            border-radius: 4px;
+        }
+
+        #map img {
+            max-width: none;
+        }
+
+    table tr th.slanted {
+        width: 120px;
+        height: 110px;
+        background-color:#EEEEEE !important;
+        color:black !important;
+    }
+
+        table tr th.slanted div {
+            -moz-transform-origin: right;
+            -ms-transform-origin: right;
+            -o-transform-origin: right;
+            -webkit-transform-origin: right;
+            transform-origin: right;
+            -webkit-transform: translateX(-30px) rotate(60deg);
+            -moz-transform: translateX(-30px) rotate(60deg);
+            -ms-transform: translateX(-30px) rotate(60deg);
+            -o-transform: translateX(-30px) rotate(60deg);
+            transform: translateX(-30px) rotate(60deg);
+        }
+
+        .left-column {
+            background-color: #26AE90;
+            color: white;
+            font-weight: 400 !important;
+            text-transform: uppercase;
+            cursor: pointer;
+            width: 40px; 
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+
+        .top-row {
+            width: 120px;
+            font-weight: bold !important;
+            background-color: #EEEEEE !important;
+            text-transform: none !important;
+            color: black !important;
+            cursor: default !important;
+        }
+</style>
+
+
+<div class="row-fluid">
+    <div class="span12 text-center">
+        <br />
+        <div class="btn-group" ng-init="activeTab = 'Settings'">
+            <input type="button" class="btn" ng-click="activeTab = 'Settings'" value="Settings" />
+            <input type="button" class="btn" ng-click="activeTab = 'Zones'" ng-disabled="selectedModel.$saved != true" value="Zones" />
+            <input type="button" class="btn" ng-click="activeTab = 'FixedPrices'" ng-disabled="selectedModel.$saved != true" value="Fixed Prices" />
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <hr />
+        <div class="row-fluid" ng-show="activeTab == 'Settings'">
+            <div class="alert alert-danger" ng-hide="selectedModel.$saved == true">
+                Zones and Fixed Price settings will be available when you Save the basic Settings.
+            </div>
+            <div class="alert alert-success" ng-show="selectedModel.$saved == true">
+                Settings saved you may now add Zones and Fixed Prices.
+            </div>
+            Name
+            <input ng-model="selectedModel.Name" type="text" class="span12" />
+            <br />
+            Description
+            <textarea ng-model="selectedModel.Description" type="text" class="span12" />
+            <br />
+            Mode
+            <select ng-model="selectedModel.Mode" type="text" class="span12" ng-options="pm.value as pm.display for pm in PricingModes" />
+            <br />
+            Use Size Modifiers?
+            <select ng-model="selectedModel.UseSizeModifiers" type="text" class="span12" ng-options="bv | BooleanValueFilter for bv in BoolValues " />
+            <br />
+            PricePerMile
+            <input ng-model="selectedModel.PricePerMile" type="text" class="span12" />
+            <br />
+            <!--            <span class="span2">{{selectedModel.PricePerMile}}</span><input ng-model="selectedModel.PricePerMile" type="range" step="0.05" min="0.00" max="25.00" class="span10"/>-->
+            StandingCharge
+            <input ng-model="selectedModel.StandingCharge" type="text" class="span12" />
+            <br />
+            MinimumCharge
+            <input ng-model="selectedModel.MinimumCharge" type="text" class="span12" />
+            <br />
+            RoundTo (pence)
+            <input ng-model="selectedModel.RoundTo" type="text" class="span12" />
+            <br />
+            PeakStart<br />
+            <div class="input-append" class="span4">
+                <input ng-model="selectedModel.PeakStart" type="text" bs-timepicker />
+                <button type="button" class="btn" data-toggle="timepicker"><i class="icon-time"></i></button>
+            </div>
+            <br />
+            PeakEnd<br />
+            <div class="input-append" class="span4">
+                <input ng-model="selectedModel.PeakEnd" type="text" bs-timepicker />
+                <button type="button" class="btn" data-toggle="timepicker"><i class="icon-time"></i></button>
+            </div>
+            <br />
+            PeakMultiplier
+            <input ng-model="selectedModel.PeakMultiplier" type="text" class="span12" />
+            <br />
+            WaitingPeriod (minutes)
+            <input ng-model="selectedModel.WaitingPeriod" type="text" class="span12" />
+            <br />
+            WaitingCharge
+            <input ng-model="selectedModel.WaitingCharge" type="text" class="span12" />
+            <br />
+            <input class="btn" type="button" value="Save" ng-click="SavePricingModel()" />
+            <input class="btn" type="button" value="Cancel" ng-click="CancelPricingModel()" />
+        </div>
+        <div class="row-fluid" ng-show="activeTab == 'Zones'">
+            <div class="span9">
+                <div id="map" google-map start="activeTab" options="options" shapes="shapes" selected-shape="selected"></div>
+            </div>
+            <div class="span3">
+                <div class="well" ng-show="mode == 'Default'">
+                    <h5>Zone Management</h5>
+                    <span>Copy Existing Zone
+                    </span>
+                    <select class="span12" ng-model="savedZone" ng-options="z.Title group by ('Model ' + z.PricingModelID + ' Zones') for z in allZones">
+                    </select>
+                    <input class="btn" type="button" value="Copy Zone" ng-click="CloneZone(savedZone)" />
+                    <input class="btn" type="button" value="New Zone" ng-click="StartNewZone()" />
+                    <hr />
+                    <div ng-repeat="zone in currentZones">
+                        {{ zone.Title }} <a ng-click="SelectZone(zone)">Select</a>
+                    </div>
+                </div>
+                <div class="well" ng-show="mode == 'DrawingZone' || mode == 'AddingZone'">
+                    <h5>New Zone</h5>
+                    <div class="alert" ng-show="mode == 'DrawingZone'">
+                        Please draw your zone on the map, then you may name it here.
+                    </div>
+                    Title
+                        <input ng-model="newZone.Title" type="text" class="span12" ng-disabled="mode != 'AddingZone'" />
+                    <br />
+                    Description
+                        <textarea ng-model="newZone.Description" class="span12" ng-disabled="mode != 'AddingZone'" />
+                    <br />
+                    Price Per Mile
+                        <input ng-model="newZone.PricePerMile" type="text" class="span12" ng-disabled="mode != 'AddingZone'" />
+                    <br />
+                    Pickup Charge
+                        <input ng-model="newZone.OriginCharge" type="text" class="span12" ng-disabled="mode != 'AddingZone'" />
+                    <br />
+                    Drop Off Charge
+                        <input ng-model="newZone.DestinationCharge" type="text" class="span12" ng-disabled="mode != 'AddingZone'" />
+                    <br />
+                    Entry Charge
+                        <input ng-model="newZone.EntryCharge" type="text" class="span12" ng-disabled="mode != 'AddingZone'" />
+                    <br />
+                    Waiting Charge
+                        <input ng-model="newZone.WaitingCharge" type="text" class="span12" ng-disabled="mode != 'AddingZone'" />
+                    <br />
+                    <input class="btn" type="button" value="Save" ng-click="SaveNewZone()" ng-disabled="mode != 'AddingZone'" />
+                    <input class="btn" type="button" value="Cancel" ng-click="CancelNewZone()" />
+                </div>
+                <div class="well" ng-show="mode == 'ConfigZone'">
+                    <h5>New Zone</h5>
+                    <div class="alert">
+                        You may edit the shape of the zone on the right and press save to confirm.
+                    </div>
+                    Title
+                        <input ng-model="selectedZone.Title" type="text" class="span12" />
+                    <br />
+                    Description
+                        <textarea ng-model="selectedZone.Description" class="span12" />
+                    <br />
+                    Price Per Mile
+                        <input ng-model="selectedZone.PricePerMile" type="text" class="span12" />
+                    <br />
+                    Pickup Charge
+                        <input ng-model="selectedZone.OriginCharge" type="text" class="span12" />
+                    <br />
+                    Drop Off Charge
+                        <input ng-model="selectedZone.DestinationCharge" type="text" class="span12" />
+                    <br />
+                    Entry Charge
+                        <input ng-model="selectedZone.EntryCharge" type="text" class="span12" />
+                    <br />
+                    Waiting Charge
+                        <input ng-model="selectedZone.WaitingCharge" type="text" class="span12" />
+                    <br />
+                    <input class="btn" type="button" value="Save" ng-click="UpdateZone()" />
+                    <input class="btn" type="button" value="Cancel" ng-click="CancelUpdate()" />
+                    <input class="btn btn-danger" type="button" value="Delete" ng-click="RemoveZone()" />
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid" ng-show="activeTab == 'FixedPrices'">
+            <div class="row-fluid">
+                <div class="span12" style="text-align:center;">
+                    <table border="1" class="table table-bordered" style="border-collapse: collapse; width: auto; margin: auto;">
+                        <thead>
+                            <tr>
+                                <th colspan="2" rowspan="2"></th>
+                                <th colspan="{{ currentZones.length + 1 }}" style="text-align: center">FROM</th>
+                            </tr>
+                            <tr>
+                                <th ng-repeat="z in currentZones" class="top-row" >
+                                    <div>{{ z.Title }}</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="oz in currentZones">
+                                <th ng-hide="$index > 0" rowspan="{{ currentZones.length }}" class="left-column">TO</th>
+                                <th style="width: 120px;">{{ oz.Title }}</th>
+                                <td ng-repeat="iz in currentZones" style="text-align:center;" ng-style="(oz.ID == iz.ID) ? {'background-color': '#CACACA'} : {}">
+                                    <div>
+                                        <span class="input-append">
+                                            <input id="{{ 't' + oz.ID + 'f' + iz.ID }}" type="text" style="width: 40px;" ng-hide="oz.ID == iz.ID" value="{{ GetValue(oz.ID, iz.ID) }}" ng-disabled="(GetValue(oz.ID, iz.ID)) ? true : false"/>
+                                            <input id="{{ 'btn-t' + oz.ID + 'f' + iz.ID }}" type="button" class="btn" ng-hide="oz.ID == iz.ID" ng-click="UpdateValue(oz.ID, iz.ID)" value="{{ (GetValue(oz.ID, iz.ID)) ? '-' : '+' }}" ng-class="(GetValue(oz.ID, iz.ID)) ? 'btn-danger' : 'btn-success'" />
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

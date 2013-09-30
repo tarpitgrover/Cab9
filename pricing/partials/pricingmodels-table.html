@@ -1,0 +1,28 @@
+﻿<div class="table-container">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="table-content">
+                <table class="table bordered">
+                    <thead class="tableViewTableHead">
+                        <tr class="table-header">
+                            <th style="width: 5%;"></th>
+                            <th style="width: 40%;vertical-align:middle;" class="">Name</th>
+                            <th style="width: 15%;vertical-align:middle;" class="text-right">Price/Mile</th>
+                            <th style="width: 15%;vertical-align:middle;" class="text-right">Standing Charge</th>
+                            <th style="width: 15%;vertical-align:middle;" class="text-right">Minimum Charge</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="pricingmodel in pricingModels">
+                            <td style="width: 5%;vertical-align:middle;cursor:pointer;" class="text-center xlText bold"><a href="#/editor-view/{{pricingmodel.ID}}"><span class="icon-edit-sign" data-toggle="tooltip" data-placement="bottom" title="Edit Pricing Model" style="cursor:pointer;"></span></a></td>
+                            <td style="width: 45%;vertical-align:middle;"><span class="bold cyan">{{ pricingmodel.Name }}</span><br />{{ pricingmodel.Description }}</td>
+                            <td style="width: 15%;vertical-align:middle;" class="text-right bold">£{{ pricingmodel.PricePerMile | number:2}}</td>
+                            <td style="width: 15%;vertical-align:middle;" class="text-right bold">£{{ pricingmodel.StandingCharge | number:2}}</td>
+                            <td style="width: 15%;vertical-align:middle;" class="text-right bold">£{{ pricingmodel.MinimumCharge | number:2}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

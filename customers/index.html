@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="../includes/css/bootstrap.css" rel="stylesheet" />
+    <link href="../includes/css/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="../includes/css/style.css" rel="stylesheet" />
+    <link href='../includes/css/e9ineIconStyle.css' medium="screen, projection" rel="stylesheet" type="text/css" />
+    <link href="../includes/css/angular-bootstrap-datepicker.css" rel="stylesheet" />
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,900' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8" />
+    <script type="text/javascript">
+        var browser = navigator.userAgent;
+        var browserRegex = /(Android|BlackBerry|IEMobile|Nokia|iP(ad|hone|od)|Opera M(obi|ini))/;
+        var isMobile = false;
+        if (browser.match(browserRegex)) {
+            isMobile = true;
+            addEventListener("load", function () { setTimeout(hideURLbar, 0); }, false);
+            function hideURLbar() {
+                window.scrollTo(0, 1);
+            }
+        }
+    </script>
+
+</head>
+<body ng-app="Cab9" ng-controller="MasterController">
+
+    <div id="sidebar">
+        <ul class="mainMenu">
+            <li><a href="#"><span class="e9ine-icon-grid"></span><span class="menuName">Dashboard</span></a></li>
+            <li><a href="#"><span class="e9ine-icon-drawer"></span><span class="menuName">Bookings</span></a></li>
+            <li><a href="#"><span class="e9ine-icon-untitled-30"></span><span class="menuName">Invoicing</span></a></li>
+            <li><a href="#"><span class="e9ine-icon-untitled-56"></span><span class="menuName">Accounts</span></a></li>
+            <li><a href="/drivers/index.html"><span class="e9ine-icon-untitled-22"></span><span class="menuName">Drivers</span></a></li>
+            <li class="active"><a href="#"><span class="e9ine-icon-untitled-8"></span><span class="menuName">Customers</span></a></li>
+            <li><a href="#"><span class="e9ine-icon-untitled-17"></span><span class="menuName">Employees</span></a></li>
+            <li><a href="#"><span class="e9ine-icon-untitled-27"></span><span class="menuName">Settings</span></a></li>
+            <li><a href="#"><span class="e9ine-icon-untitled-33"></span><span class="menuName">Admin</span></a></li>
+            <li><a href="#"><span class="e9ine-icon-untitled-31"></span><span class="menuName">Data</span></a></li>
+        </ul>
+    </div>
+    <div id="topMenu">
+        <div class="applicationName">Codename Cab9</div>
+        <div class="applicationControls">
+            <ul>
+                <li><a href="#"><span class="e9ine-icon-untitled-22"></span>Profile</a></li>
+                <li><a href="#"><span class="e9ine-icon-untitled-60"></span>Messages</a></li>
+                <li><a href="#"><span class="e9ine-icon-untitled-27"></span>Settings</a></li>
+                <li><a href="#"><span class="e9ine-icon-untitled-17"></span>Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="mainContainer" ng-controller="CustomersController">
+<div class="container-fluid" style="padding-top: 20px;">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="pageBanner">
+                <div class="left">
+                    <h4 class="pageName">Customer Management
+                    </h4>
+                </div>
+                <div class="left pageViewOptions">
+                    <ul>
+                        <li ng-class="(currentView == 'CardsView') ? 'active' : ''"><a href="#/cards-view"><span class="e9ine-icon-icons" style="line-height: inherit"></span><span class="optionsName"></span></a></li>
+                        <li ng-class="(currentView == 'TableView') ? 'active' : ''"><a href="#/table-view"><span class="e9ine-icon-list" style="line-height: inherit"></span></a></li>
+                        <li class="dropdown" ng-class="(grouping.key != 'All') ? 'active' : ''" ng-hide="(currentView=='DriverView')">
+                            <span class="dropdown-toggle uppercase" data-toggle="dropdown"><span class="e9ine-icon-untitled-65"></span></span>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <li>
+                                    <a ng-click="sorting = { key: 'Name', reverse: true }; grouping = { key: 'Name', initials: true };">
+                                        Name
+                                    </a>          										
+                                </li>
+                                <li>
+                                    <a ng-click="sorting = { key: 'AccountType.Name', reverse: false }; grouping = { key: 'AccountType.Name', initials: false };">
+                                        Type
+                                    </a>
+                                </li>
+                                <li>
+                                    <a ng-click="sorting = { key: 'Name', reverse: false }; grouping = { key: 'All', initials: false };">
+                                        None
+                                    </a>           										
+                                </li>
+                            </ul>
+                        </li>                              
+                    </ul>
+                </div>
+                <div class="left uppercase">
+                </div>
+                <div class="right">
+                    <input ng-model="searchTerm" class="bannerSearchTextBox" placeholder="Search..." />
+                </div>
+                <br class="clear" />
+            </div>
+        </div>
+    </div>
+                <div class="row-fluid">
+                <div class="span12" style="height: auto;" ng-view>
+                </div>
+            </div>
+        </div>  
+        <div id="popoverContainer" ng-include src="popover.url" ng-click="dismiss($event)">
+	    </div>
+    </div>
+    <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
+    <script src="/includes/js/jquery-1.8.3.min.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+    <script src="//code.angularjs.org/1.1.5/angular-resource.min.js"></script>
+
+    <script src="/includes/js/jquery.dataTables.js"></script>
+    <script src="/includes/js/dataTables.bootstrap.js"></script>
+    <script src="/master/angular/dataTablesModule.js"></script>
+    
+    <script src="/includes/js/bootstrap.min.js"></script>
+
+    <script src="/includes/js/angular.bootstrap.js"></script>
+    <script src="/includes/js/angular.bootstrap.datepicker.js"></script>
+
+    <script src="/master/angular/masterModule.js"></script>
+    <script src="ClientModule.js"></script>
+    
+    <script src="/includes/js/jquery.easy-pie-chart.js"></script>
+    <script src="/includes/js/jQuery.flot.js" type="text/javascript"></script>
+    <script src="/includes/js/jQuery.flot.time.js" type="text/javascript"></script>
+
+</body>
+</html>

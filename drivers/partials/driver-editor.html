@@ -1,0 +1,122 @@
+﻿<form role="form">
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+        	<div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Picture</span>
+        	</div>
+        	<div class="editorPictureWrapper">
+                <div class="editorPicture" cardtext="{{Fullname}}" url="{{driver.ImageUrl}}" ng-show="Fullname" profile-hero>
+                </div>
+        		<div class="editorPictureOptions">
+        			<div class="file-input-wrapper">
+	        			<input type="button" class="orangeBG" value="{{(mode.main=='New') ? 'Add Picture' : 'Change Picture'}}" />
+	        			<input type="file" name="Profile" accept="image/*" file-upload />
+	        		</div>
+	        		<div class="file-input-wrapper" ng-show="mode.main!='New'">
+	        			<input type="button" class="btn-file-input redBG" value="Remove Picture" />
+	        		</div>
+        		</div>
+        	</div>
+        	<div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Basic Information</span>
+        	</div>
+	        <div class="form-group">
+			  <label for="driverFullNameTextBox">Name</label>
+			  <input type="text" ng-model="Fullname" id="driverFullNameTextBox" placeholder="e.g. John Doe"/>
+			</div>
+            <div class="form-group">
+	            <label for="driverCallSignTextBox">Call Sign</label>
+	            <input type="text" ng-model="driver.CallSign" id="driverCallSignTextBox" placeholder="e.g. A123"/>
+            </div>
+            <div class="form-group">
+	            <label for="driverTypeDropDown">Driver Type</label>
+	            <select ng-model="driver.DriverTypeID" id="driverTypeDropDown">
+	            	<option value="0">Select</option>
+	            	<option value="1">Own Car Driver</option>
+	            	<option value="2">Company Driver</option>
+	            	<option value="3">Sub Contractors</option>
+	            </select>
+            </div>
+            <div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Contact Information</span>
+        	</div>
+        	<div class="form-group">
+	        	<label for="driverMobileTextBox">Mobile</label>
+	        	<input type="text" ng-model="driver.Mobile" id="driverMobileTextBox" placeholder="e.g. 07513786537"/>
+        	</div>
+        	<div class="form-group">
+        	    <label for="driverTelephoneTextBox">Telephone</label>
+        	    <input type="text" ng-model="driver.Telephone" id="driverTelephoneTextBox" placeholder="e.g. 01494 567887"/>
+        	</div>
+        	<div class="form-group">
+        	    <label for="driverEmailTextBox">Email</label>
+            	<input type="text" ng-model="driver.Email" id="driverEmailTextBox" placeholder="e.g. john.doe@gmail.com"/>
+        	</div>
+            
+        </div>
+        <div class="col-md-6 col-sm-6">
+        	<div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Address Information</span>
+        	</div>
+            <div class="form-group">
+	            <label for="driverAddress1TextBox">Address 1</label>
+	            <input type="text" ng-model="driver.Address1" id="driverAddress1TextBox"  placeholder="e.g. 10 St Johns Street"/>
+            </div>
+            <div class="form-group">
+	            <label for="driverAddress2TextBox">Address 2</label>
+	            <input type="text" ng-model="driver.Address2" id="driverAddress2TextBox" placeholder=""/>
+            </div>
+            <div class="form-group">
+	            <label for="driverTownTextBox">Town</label>
+	            <input type="text" ng-model="driver.Town" id="driverTownTextBox" placeholder="e.g. High Wycombe"/>
+            </div>
+            <div class="form-group">
+	            <label for="driverCountyTextBox">County</label>
+	            <input type="text" ng-model="driver.County" id="driverCountyTextBox" placeholder="e.g. Bucks"/>
+            </div>
+            <div class="form-group">
+	            <label for="driverPostcodeTextBox">Postcode</label>
+	            <input type="text" ng-model="driver.Postcode" id="driverPostcodeTextBox" placeholder="e.g. AB1 2CD"/>
+            </div>
+
+        	<div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Other Information</span>
+        	</div>
+            <div class="form-group">
+	        	<label for="driverDOBTextBox">DOB</label>
+                <input type="text" ng-model="dates.DateOfBirth" id="driverDOBTextBox" data-date-format="dd/mm/yyyy" class="dateInput" placeholder="dd/MM/yyyy" bs-datepicker>
+            </div>
+            <div class="form-group">
+	        	<label for="driverStartDateTextBox">Start Date</label>
+                <input type="text" ng-model="dates.StartDate" id="driverStartDateTextBox" data-date-format="dd/mm/yyyy" class="dateInput" placeholder="dd/MM/yyyy" bs-datepicker>
+            </div>
+            <div class="form-group" ng-hide="mode.main=='New'">
+            	<label for="driverActiveDropDown">Active</label>
+            	<select ng-model="driver.Active" id="driverActiveDropDown" ng-options="boolval | BooleanValueFilter for boolval in boolValues" class="short">
+	            	
+            	</select>
+            </div>
+            <div ng-hide="driver.Active">
+	        	<div class="form-group" ng-hide="mode.main=='New'">
+	            	<label for="driverInactiveReasonTextBox">Reason</label>
+	                <input type="text" id="driverInactiveReasonTextBox" ng-model="driver.Reason" />
+	            </div>
+	        	<div class="form-group" ng-hide="mode.main=='New'">            
+                	<label for="driverFinishDateTextBox">Finish Date</label>
+	                <input type="text" id="driverFinishDateTextBox" ng-model="dates.FinishDate" data-date-format="dd/mm/yyyy" class="dateInput" bs-datepicker>
+                </div>
+            </div>
+            <div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Notes</span>
+        	</div>
+            <div class="form-group">
+            	<label for="driverNotesTextBox">Notes</label>
+                <textarea ng-model="driver.OfficeNotes" id="driverNotesTextBox" rows="4" style="height:50px;"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="formButtons">
+                <input type="button" class="btn cyanBG" ng-click="Save()" value="Save" />
+                <input type="button" class="btn orangeBG" value="Cancel" onclick="history.back(-1)" />
+            </div>
+</form>

@@ -1,0 +1,61 @@
+﻿<div style="position: fixed; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: #3d3d3d; opacity: 0.8; padding: 10px;">
+</div>
+<div ng-controller="BookingOfferController" style="position: fixed; top: 0px; left: 0px; right: 0px; bottom: 0px; opacity: 1; padding: 10px;">
+    <div class="row">
+        <div class="col-xs-12">
+            <h4>New Booking Offer</h4>
+            <p>Please review and respond:</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3" style="padding-right: 0px;">
+            <div class="well well-sm">When:</div>
+        </div>
+        <div class="col-xs-9">
+            <div class="well well-sm">{{ offer.Booking.BookedDateTime | date:'HH:mm' }}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3" style="padding-right: 0px;">
+            <div class="well well-sm">From:</div>
+        </div>
+        <div class="col-xs-9">
+            <div class="well well-sm">{{ offer.Booking.From }}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3" style="padding-right: 0px;">
+            <div class="well well-sm">To:</div>
+        </div>
+        <div class="col-xs-9">
+            <div class="well well-sm">{{ offer.Booking.To }}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3" style="padding-right: 0px;">
+            <div class="well well-sm">Fare:</div>
+        </div>
+        <div class="col-xs-9">
+            <div class="well well-sm">{{ offer.Booking.Fare | currency:'£' }} By {{ offer.Booking.PaymentMethod }}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div 
+                id="acceptBtn"
+                ng-click="Accept()"
+                style="height:90px;width:90px;border-radius:90px;background:green;float:right;line-height:90px;text-align:center;color:white;font-weight:bold;font-size:18px;">
+                Accept
+
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div
+                ng-click="Reject()" 
+                style="height:55px;width:55px;border-radius:55px;background:red;float:left;margin-top:35px;line-height:55px;text-align:center;color:white;font-weight:bold;font-size:16px;">
+                Reject
+            </div>
+        </div>
+
+    </div>
+</div>

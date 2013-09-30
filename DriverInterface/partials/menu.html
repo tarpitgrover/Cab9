@@ -1,0 +1,39 @@
+﻿<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-success" style="height: 80px;">
+                <div style="width:100%; text-align:center" >20 / 09 / 2013 15:04</div>
+                <div style="width:100%; text-align:center" >{{ current.driver.Forename + ' ' + current.driver.Surname}}</div>                
+                <div style="width:100%; text-align:center" >{{ (current.shift) ? 'On Shift' : 'Off Duty' }}</div>                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <input type="button" class="btn btn-lg btn-block" style="height: 80px;" value="Shifts" ng-click="SubMenu('shifts')" />
+        </div>
+        <div class="col-xs-6">
+            <input type="button" class="btn btn-lg btn-block" style="height: 80px;" value="Bookings" ng-click="SubMenu('bookings')" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-6">
+            <input type="button" class="btn btn-lg btn-block" style="height: 80px;" value="Vehicle" ng-click="SubMenu('vehicle')" />
+        </div>
+        <div class="col-xs-6">
+            <input type="button" class="btn btn-lg btn-block" style="height: 80px;" value="Messages" ng-click="SubMenu('messages')" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-6">
+            <input type="button" class="btn btn-lg btn-block" style="height: 80px;" value="Settings" ng-click="SubMenu('settings')" />
+        </div>
+        <div class="col-xs-6">
+            <input type="button" class="btn btn-lg btn-block" style="height: 80px;" value="Logout" ng-click="Logout()" />
+        </div>
+    </div>
+</div>
+

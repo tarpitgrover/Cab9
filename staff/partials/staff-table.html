@@ -1,0 +1,44 @@
+﻿<div class="table-container">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="table-content">
+                    <table class="table bordered">
+                        <thead class="tableViewTableHead">
+                            <tr class="table-header">
+                                <th ng-click="ChangeSorting('Forename','',sorting);" class="{{(sorting.key == 'Forename') ? 'ordered' : ''}}" style="min-width:25%;">
+                                    Name
+                                    <div class="{{(sorting.reverse) ? 'desc' : 'asc'}}"></div>
+                                </th>
+                                <th ng-click="ChangeSorting('Position','',sorting);" class="{{(sorting.key == 'Position') ? 'ordered' : ''}}" style="width:25%;">
+                                    Position
+                                    <div class="{{(sorting.reverse) ? 'desc' : 'asc'}}"></div>
+                                </th>
+                                <th ng-click="ChangeSorting('Mobile','',sorting);" class="{{(sorting.key == 'Mobile') ? 'ordered' : ''}}" style="width:25%;">
+                                    Mobile
+                                    <div class="{{(sorting.reverse) ? 'desc' : 'asc'}}"></div>
+                                </th>
+                                <th ng-click="ChangeSorting('Status','',sorting);" class="{{(sorting.key == 'Status') ? 'ordered' : ''}}" style="width:25%;">
+                                    Status
+                                    <div class="{{(sorting.reverse) ? 'desc' : 'asc'}}"> </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="group in groups">
+                                <tr class="{{ 'group-' + group|RemoveSpaces}} tableGroupRow">
+                                    <td colspan="5"><span class="groupName">{{group}}</span></td>
+                                </tr>
+                                <tr ng-repeat="staff in filteredStaff | ItemsForGroup:group:grouping:sorting">
+                                    <td style="width:25%;">{{ staff.Forename + " " + staff.Surname }}</td>
+                                    <td style="width:25%;">{{ staff.Position }}</td>
+                                    <td style="width:25%;">{{ staff.Mobile }}</td>
+                                    <td style="width:25%;" class="staffStatus {{staff.Status}}">{{ staff.Status }}</td>
+                                </tr>
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

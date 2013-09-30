@@ -1,0 +1,33 @@
+﻿<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12" id="journeyMap" style="height: 600px"></div>
+    </div>
+    <br />
+    <div class="row-fluid">
+        <div class="span6">
+            From
+            <input id="from" type="text" />
+            <br />
+            To
+            <input id="to" type="text" />
+            <br />
+            Car Type
+            <input ng-model="quote.cartype" type="text" /><br />
+            Company
+            <input ng-model="quote.customerid" type="text" /><br />
+            Pricing Model
+            <input ng-model="quote.pricingmodel" type="text" /><br />
+            Booking Time
+            <input ng-model="quote.bookingtime" type="time" /><br />
+
+            <input type="button" value="Quote" ng-click="MapAndQuote()" />
+            <label>{{ price | currency:'£' }}</label>
+        </div>
+        <div class="span6">
+            Estimated Distance: {{ journey.distance }} <br />
+            Estimated Time: {{ journey.time }} (without traffic) <br />
+            Estimated Fare: {{ result.fare | currency:'£' }} <br />
+            Quote Type: {{ result.type }} <br />
+        </div>
+    </div>
+</div>

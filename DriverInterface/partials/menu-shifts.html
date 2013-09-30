@@ -1,0 +1,32 @@
+﻿<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-success" style="height: 80px;">
+                <div style="width:100%; text-align:center" >20 / 09 / 2013 15:04</div>
+                <div style="width:100%; text-align:center" >{{ current.driver.Forename + ' ' + current.driver.Surname}}</div>                
+                <div style="width:100%; text-align:center" >{{ (current.shift) ? 'On Shift' : 'Off Duty' }}</div>                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <input type="button" class="btn btn-success btn-lg btn-block" style="height: 80px;" value="Start Shift" ng-hide="current.shift" ng-click="StartShift()"/>
+            <input type="button" class="btn btn-danger btn-lg btn-block" style="height: 80px;" value="End Shift" ng-show="current.shift" ng-click="EndShift()"/>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-6">
+            <input type="button" class="btn btn-lg btn-block" style="height: 80px;" value="Current Shift" />
+        </div>
+        <div class="col-xs-6">
+            <input type="button" class="btn btn-lg btn-block" style="height: 80px;" value="Past Shifts" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-12">
+        </div>
+    </div>
+</div>

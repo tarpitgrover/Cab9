@@ -1,0 +1,49 @@
+﻿<div class="table-container">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="table-content">
+                    <table class="table bordered">
+                        <thead class="tableViewTableHead">
+                            <tr class="table-header">
+                                <th ng-click="ChangeSorting('CallSign','',sorting);" class="{{(sorting.key == 'CallSign') ? 'ordered' : ''}}" style="width:5%;">
+                                    Sign
+                                    <div class="{{(sorting.reverse) ? 'desc' : 'asc'}}"></div>
+                                </th>
+                                <th ng-click="ChangeSorting('Forename','',sorting);" class="{{(sorting.key == 'Forename') ? 'ordered' : ''}}" style="min-width:25%;">
+                                    Name
+                                    <div class="{{(sorting.reverse) ? 'desc' : 'asc'}}"></div>
+                                </th>
+                                <th ng-click="ChangeSorting('Mobile','',sorting);" class="{{(sorting.key == 'Mobile') ? 'ordered' : ''}} hidden-phone" style="width:25%;">
+                                    Mobile
+                                    <div class="{{(sorting.reverse) ? 'desc' : 'asc'}}"></div>
+                                </th>
+                                <th ng-click="ChangeSorting('DriverType','Name',sorting);" class="{{(sorting.key == 'DriverType') ? 'ordered' : ''}} hidden-phone" class="" style="width:20%;">
+                                    Driver Type
+                                    <div class="{{(sorting.reverse) ? 'desc' : 'asc'}}"></div>
+                                </th>
+                                <th ng-click="ChangeSorting('Status','',sorting);" class="{{(sorting.key == 'Status') ? 'ordered' : ''}}" style="width:20%;">
+                                    Status
+                                    <div class="{{(sorting.reverse) ? 'desc' : 'asc'}}"> </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="group in groups">
+                                <tr class="{{ 'group-' + group|RemoveSpaces}} tableGroupRow">
+                                    <td colspan="5"><span class="groupName">{{group}}</span></td>
+                                </tr>
+                                <tr ng-repeat="driver in filteredDrivers | ItemsForGroup:group:grouping:sorting">
+                                    <td style="width:5%;">{{ driver.CallSign }}</td>
+                                    <td style="width:25%;">{{ driver.Forename + " " + driver.Surname }}</td>
+                                    <td style="width:25%;" class="hidden-phone">{{ driver.Mobile }}</td>
+                                    <td style="width:20%;" class="hidden-phone">{{ driver.DriverType.Name }}</td>
+                                    <td style="width:20%;" class="driverStatus {{driver.Status}}">{{ driver.Status }}</td>
+                                </tr>
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

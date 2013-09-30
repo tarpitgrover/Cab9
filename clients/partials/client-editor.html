@@ -1,0 +1,132 @@
+﻿<form role="form">
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+        	<div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Picture</span>
+        	</div>
+        	<div class="editorPictureWrapper">
+                <div class="editorPicture" cardtext="{{client.Name}}" url="{{client.LogoURL}}" ng-show="client.Name" profile-hero>
+                </div>
+        		<div class="editorPictureOptions">
+        			<div class="file-input-wrapper">
+	        			<input type="button" class="orangeBG" value="{{(mode.main=='New') ? 'Add Picture' : 'Change Picture'}}" />
+	        			<input type="file" name="Profile" accept="image/*" file-upload />
+	        		</div>
+	        		<div class="file-input-wrapper" ng-show="mode.main!='New'">
+	        			<input type="button" class="btn-file-input redBG" value="Remove Picture" />
+	        		</div>
+        		</div>
+        	</div>
+        	<div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Basic Information</span>
+        	</div>
+	        <div class="form-group">
+			  <label for="clientFullNameTextBox">Name</label>
+			  <input type="text" ng-model="client.Name" id="clientFullNameTextBox" placeholder="e.g. ABC Ltd"/>
+			</div>
+            <div class="form-group">
+			  <label for="clientContactNameTextBox">Contact Name</label>
+			  <input type="text" ng-model="client.ContactName" id="clientContactNameTextBox" placeholder="e.g. John Doe"/>
+			</div>
+            <div class="form-group">
+	            <label for="clientTypeDropDown">Client Type</label>
+	            <select ng-model="client.ClientTypeID" id="clientTypeDropDown">
+	            	<option value="0">Select</option>
+	            	<option value="218">Airlines</option>
+	            	<option value="219">Hotels</option>
+	            	<option value="220">Business</option>
+                    <option value="221">Gold Member</option>
+                    <option value="222">Silver Member</option>
+	            </select>
+            </div>
+            <div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Contact Information</span>
+        	</div>
+        	<div class="form-group">
+	        	<label for="clientPhoneTextBox">Telephone</label>
+	        	<input type="text" ng-model="client.Phone" id="clientMobileTextBox" placeholder="e.g. 020 8952 0010"/>
+        	</div>
+        	<div class="form-group">
+        	    <label for="clientTelephoneTextBox">Fax</label>
+        	    <input type="text" ng-model="client.Fax" id="clientTelephoneTextBox" placeholder="e.g. 020 8952 8810"/>
+        	</div>
+        	<div class="form-group">
+        	    <label for="clientEmailTextBox">Email</label>
+            	<input type="text" ng-model="client.Email" id="clientEmailTextBox" placeholder="e.g. john.doe@gmail.com"/>
+        	</div>
+            
+        </div>
+        <div class="col-md-6 col-sm-6">
+        	<div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Address Information</span>
+        	</div>
+            <div class="form-group">
+	            <label for="clientAddress1TextBox">Address 1</label>
+	            <input type="text" ng-model="client.Address1" id="clientAddress1TextBox"  placeholder="e.g. 10 St Johns Street"/>
+            </div>
+            <div class="form-group">
+	            <label for="clientAddress2TextBox">Address 2</label>
+	            <input type="text" ng-model="client.Address2" id="clientAddress2TextBox" placeholder=""/>
+            </div>
+            <div class="form-group">
+	            <label for="clientTownTextBox">Town</label>
+	            <input type="text" ng-model="client.Town" id="clientTownTextBox" placeholder="e.g. High Wycombe"/>
+            </div>
+            <div class="form-group">
+	            <label for="clientCountyTextBox">County</label>
+	            <input type="text" ng-model="client.County" id="clientCountyTextBox" placeholder="e.g. Bucks"/>
+            </div>
+            <div class="form-group">
+	            <label for="clientPostcodeTextBox">Postcode</label>
+	            <input type="text" ng-model="client.Postcode" id="clientPostcodeTextBox" placeholder="e.g. AB1 2CD"/>
+            </div>
+
+        	<div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Financials</span>
+        	</div>
+            <div class="form-group">
+	        	<label for="clientInvoicePeriodDropDown">Invoice Period</label>
+                <select ng-model="client.InvoicePeriod" id="clientInvoicePeriodDropDown">
+	            	<option value="-1">Unspecified</option>
+                    <option value="0">Manually</option>
+                    <option value="1">Daily</option>
+                    <option value="2">Weekly</option>
+                    <option value="3">BiWeekly</option>
+                    <option value="4">Monthly</option>
+	            </select>
+
+            </div>
+            <div class="form-group">
+	        	<label for="clientStartDateTextBox">Invoice Method</label>
+                <select ng-model="client.InvoiceMethod" id="clientInvoiceMethodDropDown">
+	            	<option value="-1">Unspecified</option>
+	            	<option value="0">Other</option>
+	            	<option value="1">EmailOnly</option>
+	            	<option value="2">PostOnly</option>
+	            	<option value="3">Both</option>
+	            </select>
+            </div>
+            <div class="form-group" ng-hide="mode.main=='New'">
+            	<label for="clientActiveDropDown">Active</label>
+            	<select ng-model="client.Active" id="clientActiveDropDown" ng-options="boolval | BooleanValueFilter for boolval in boolValues" class="short">
+	            	
+            	</select>
+            </div>
+            <div class="formSectionHeader">
+	        	<span class="formSectionHeaderName">Other Info</span>
+        	</div>
+            <div class="form-group">
+            	<label for="clientEmailConfirmationTextBox">Booking Confirmation Emails</label>
+                <textarea ng-model="client.EmailConfirmations" id="clientEmailConfirmationTextBox" rows="4" style="height:50px;" placeholder="Please enter the email addresses seperated by commas."></textarea>
+            </div>
+            <div class="form-group">
+            	<label for="clientNotesTextBox">Notes</label>
+                <textarea ng-model="client.OfficeNotes" id="clientNotesTextBox" rows="4" style="height:50px;"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="formButtons">
+                <input type="button" class="btn cyanBG" ng-click="Save()" value="Save" />
+                <input type="button" class="btn orangeBG" value="Cancel" onclick="history.back(-1)" />
+            </div>
+</form>

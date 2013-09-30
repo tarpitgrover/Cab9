@@ -1,0 +1,31 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <br />
+            <br />
+            <h2>Welcome</h2>
+            <p>Log in to get started.</p>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="input-group">
+                <span class="input-group-addon">Email:</span>
+                <input type="text" class="form-control" placeholder="Email" ng-model="credentials.email">
+            </div>
+            <br />
+            <div class="input-group">
+                <span class="input-group-addon">Password:</span>
+                <input type="text" class="form-control" placeholder="Password" ng-model="credentials.pwd">
+            </div>
+            <br />
+            <div class="btn-group pull-right">
+                <input type="button" class="btn btn-info btn-lg" value="Forgot" ng-click="ForgotDetails()"/>
+                <input type="button" class="btn btn-success btn-lg" value="&nbsp;Login&nbsp;" ng-click="SubmitLogin()"/>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div ng-bind-html="feedback"></div>
+</div>

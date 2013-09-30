@@ -1,0 +1,23 @@
+﻿<div class="container">
+    <div class="row">
+        <br />
+        <div class="col-xs-12">
+            <div class="input-group">
+                <span class="input-group-addon">Vehicle</span>
+                <select class="form-control" ng-options="v.ID as v.Registration for v in vehicles" ng-model="shift.VehicleID">
+                    <option value="" label="Select Vehicle"></option>
+                </select>
+            </div>
+            <br />
+            <div class="input-group">
+                <span class="input-group-addon">Mileage</span>
+                <input class="form-control" type="text" placeholder="(in miles)" ng-model="shift.MileageStart" />
+            </div>
+            <br />
+            <div class="btn-group pull-right">
+                <input type="button" class="btn btn-danger btn-lg" value="Cancel" ng-click="Cancel()"/>
+                <input type="button" class="btn btn-success btn-lg" value="&nbsp;Start&nbsp;" ng-click="Submit()"/>
+            </div>
+        </div>
+    </div>
+</div>

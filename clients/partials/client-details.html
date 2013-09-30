@@ -1,0 +1,424 @@
+<div id="modalContentContainer" ng-controller="ClientsBirdsEyeViewController">
+    <div class="animated-card">
+        <div class="card-front">
+            <ul class="nav nav-tabs hidden-sm" id="modalTabs">
+                <li class="active"><a href="#/cards-view#birdsEye" data-toggle="tab">Birds Eye</a></li>
+                <li><a href="#/cards-view#documents" data-toggle="tab">Documents</a></li>
+                <li><a href="#/cards-view#notes" data-toggle="tab">Notes</a></li>
+                <li><a href="#/cards-view#bookings" data-toggle="tab">Bookings</a></li>
+                <li><a href="#/cards-view#accounts" data-toggle="tab">Accounts</a></li>
+                <li class="chat9"><a href="#/cards-view#messaging" data-toggle="tab">Chat9</a></li>
+            </ul>
+            <div class="tab-content" id="modalTabsContents">
+                <!--Tab Select Box--->
+                <div class="tabHeading hidden-md hidden-lg">
+                    <div class="pull-left uppercase selectStyle">
+                        <select class="white uppercase" id="tabViewSelect">
+                            <option selected="true" value="birdsEye">Birds Eye</option>
+                            <option value="notes">Notes</option>
+                            <option value="documents">Documents</option>
+                            <option value="bookings">Bookings</option>
+                            <option value="accounts">Accounts</option>
+                            <option value="chat9">Chat9</option>
+                        </select>
+                    </div>
+                    <div class="pull-right mText">
+                        <span class="glyphicon glyphicon-remove-sign red closePopOver"></span>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+                <!--Tab Select Box--->
+                <!--Tabs--->
+                <div class="tab-pane active" id="birdsEye">
+                    <div class="row" style="margin-bottom: 10px;">
+                        <div class="col-md-4">
+
+                            <div class="row" style="margin-bottom: 5px;">
+                                <div class="pull-left" style="text-align: center; margin-right: 5px; max-width: 38%">
+                                    <div class="modalHero" cardtext="{{selectedClient.Name}}" url="{{selectedClient.LogoURL}}" profile-hero></div>
+
+                                </div>
+                                <div class="pull-left modalHeroName" style="margin-right: 0px;">
+                                    <span class="white">{{ selectedClient.CallSign }}</span><br />
+                                    <br />
+                                    {{ selectedClient.Name }}
+                                </div>
+                            </div>
+                            <span class="glyphicon glyphicon-map-marker cyan mText"></span>&nbsp; <span>{{ selectedClient.Address1 + ', ' + selectedClient.Postcode }}</span><br />
+                            <span class="glyphicon glyphicon-phone-alt cyan mText"></span>&nbsp; {{ selectedClient.Phone }}<br />
+                            <span class="glyphicon glyphicon-send cyan mText"></span>&nbsp; {{ selectedClient.Email }}<br />
+                        </div>
+                        <div class="col-md-8">
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Business Trend</span>
+                            </div>
+                            <div class="text-center">
+                                <div class="chartTimelineButton">
+                                    <input type="button" class="btn btn-sm cyanBG bold" ng-click="NewRange('1wk')" value="1W"></input>
+                                    <input type="button" class="btn btn-sm cyanBG bold" ng-click="NewRange('1m')" value="1M"></input>
+                                    <input type="button" class="btn btn-sm cyanBG bold" ng-click="NewRange('3m')" value="3M"></input>
+                                    <input type="button" class="btn btn-sm cyanBG bold" ng-click="NewRange('6m')" value="&#189;Y"></input>
+                                    <input type="button" class="btn btn-sm cyanBG bold" ng-click="NewRange('1yr')" value="Y"></input>
+                                </div>
+                                <div chart graphdata="graphdata" range="range" xfield="'Grouping.From'" yfield="'BookingStats.TotalBookings'" nullzeros="false" id="chartPlaceHolder" datasets="2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Scorecard</span>
+                            </div>
+                            <div style="display: block; text-align: center;">
+                                <div class="xlText cyan bold" style="margin: 10px auto;" data-percent="70.8" trackcolor="#131313" scalecolor="#f9f9f9" barcolor="auto" size="130" doughnut>3.7</div>
+                            </div>
+                            <div class="text-center">
+                                <span class="cyan bold">Total Jobs:</span> {{ '1240' }}<br />
+                                <span class="cyan bold">Job Share:</span> {{ '3.5%' }}<br />
+                                <span class="cyan bold">Total Value:</span> {{ '£24320' }}<br />
+                                <span class="cyan bold">Value Share:</span> {{ '6.2%' }}
+                           
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Popular Locations</span>
+                            </div>
+                            <div>
+                                <span class="cyan bold">{{ 'Heathow Terminal 4' }}</span>
+                                <br />
+                                {{ '8 pickups, 4 dropoffs' }} 
+                           
+                            </div>
+                            <div style="text-align: right;">
+                                <span class="cyan bold">{{ 'Park Inn Hotel' }}</span>
+                                <br />
+
+                                {{ '7 pickups, 2 dropoffs' }} 
+                           
+                            </div>
+                            <div>
+                                <span class="cyan bold">{{ 'Reading Station' }}</span>
+                                <br />
+                                {{ '2 pickups, 6 dropoffs' }} 
+                           
+                            </div>
+                            <div style="text-align: right;">
+                                <span class="cyan bold">{{ 'Gatwick South' }}</span>
+                                <br />
+                                {{ '1 pickups, 2 dropoffs' }} 
+                           
+                            </div>
+
+                            <br />
+                            <div class="cardSectionHead">
+                                Notes
+                           
+                            </div>
+                            <span class="accent2 bold">DB: (12/06/2013)</span> {{ selectedCustomer.OfficeNotes }}
+                        </div>
+                        <div class="col-md-4">
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Invoices</span>
+                            </div>
+                            <table class="modalTable">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>12/06/2013</td>
+                                        <td>£322.45</td>
+                                        <td>Pending</td>
+                                    </tr>
+                                    <tr>
+                                        <td>29/05/2013</td>
+                                        <td>£256.74</td>
+                                        <td>Overdue (2d)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>15/05/2013</td>
+                                        <td>£304.25</td>
+                                        <td>Paid</td>
+                                    </tr>
+                                    <tr>
+                                        <td>01/05/2013</td>
+                                        <td>£166.06</td>
+                                        <td>Paid</td>
+                                    </tr>
+                                    <tr>
+                                        <td>12/04/2013</td>
+                                        <td>£405.46</td>
+                                        <td>Paid</td>
+                                    </tr>
+                                    <tr>
+                                        <td>01/04/2013</td>
+                                        <td>£456.06</td>
+                                        <td>Paid</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-pane" id="documents">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="pull-left" style="text-align: center; margin-right: 5px; max-width: 38%">
+                                    <div class="modalHero" cardtext="{{selectedClient.Name}}" url="{{selectedClient.LogoURL}}" profile-hero></div>
+                                </div>
+                                <div class="pull-left modalHeroName" style="margin-right: 0px;">
+                                    <br />
+                                    <br />
+                                    {{ selectedClient.Name }}
+                                </div>
+                            </div>
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Documents</span>
+                            </div>
+                            <div ng-repeat="document in selectedDocuments" class="stackedBox">
+                                <div class="box revertFlip" ng-click="setSelectedDocument(document.DocumentURL)">
+                                    <span class="bold">{{document.Name}}</span>
+                                    <br>
+                                    <div class="pull-left bold">{{document.IdentificationNo}}</div>
+                                    <div class="pull-right bold">Ex. {{document.ExpiryDate | Countdown}}</div>
+                                </div>
+                                <div class="options">
+                                    <div class="edit mText flipActive1"  ng-click="editDocument(document)">
+                                        <span class="icon-edit"></span>
+                                    </div>
+                                    <div class="delete mText" ng-click="deleteDocument(document.ID)">
+                                        <span class="icon-remove"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mText bold cyan stackedBoxAddNew flipActive" ng-click="newDocument()">+ Add New</div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="flipContainer">
+                                <div class="flip">
+                                    <div class="flipFront face" style="cursor: crosshair;">
+                                        <div id="documentViewer" class="documentViewer">
+                                            <img src="{{selectedDocumentUrl}}" /><br />
+                                            <br />
+                                            <span class="cyan bold">Click here to Download...</span>
+                                        </div>
+                                    </div>
+                                    <div class="flipBack face" style="cursor: e-resize;">
+                                        <div class="modalSectionHead">
+                                            <span class="modalSectionHeadName">Add New Document</span>
+                                        </div>
+                                        <form style="width: 75%; margin: auto;">
+                                            <div class="form-group full">
+                                                <label for="documentNameTextBox">Name</label>
+                                                <input type="text" ng-model="documentInformation.Name" id="documentNameTextBox" placeholder="e.g. Driving License" />
+                                            </div>
+
+                                            <div class="form-group full">
+                                                <label for="documentTypeTextBox">Document Type</label>
+                                                <input type="text" id="documentTypeTextBox" ng-model="documentInformation.DocumentType" />
+                                            </div>
+                                            <div class="form-group full">
+                                                <label for="documentTypeTextBox">ID Number</label>
+                                                <input type="text" id="documentIdTextBox" ng-model="documentInformation.IdentificationNo" placeholder="e.g. DL2134567TSG" />
+                                            </div>
+                                            <div class="form-group full">
+                                                <label for="documentExpiryDateTextBox">Expiry Date</label>
+                                                <input type="text" ng-model="dates.ExpiryDate" id="documentExpiryDateTextBox" data-date-format="dd/mm/yyyy" placeholder="dd/MM/yyyy" bs-datepicker>
+                                            </div>
+                                            <div class="form-group full">
+                                                <label for="documentDescriptionTextBox">Description</label>
+                                                <textarea id="documentDescriptionTextBox" ng-model="documentInformation.Description" placeholder="" rows="4" style="height: 50px;" />
+                                            </div>
+                                            <div class="file-input-wrapper">
+                                                <input type="button" class="cyanBG" value="Attach Document" />
+                                                <input type="file" name="Upload" accept="image/*, application/pdf" file-upload />
+                                            </div>
+                                            <div class="formButtons">
+                                                <input type="submit" class="btn cyanBG" value="{{(documentmode=='New' ) ? 'Submit' : 'Update'}}" ng-click="SubmitFile()" />
+                                                <input type="reset" class="btn orangeBG revertFlip" value="Cancel" ng-click="CancelFile()" />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br class="clear" />
+                    </div>
+                </div>
+                <div class="tab-pane" id="notes">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row" style="margin-bottom: 5px;">
+                                <div class="pull-left" style="text-align: center; margin-right: 5px; max-width: 38%">
+                                    <div class="modalHero" cardtext="{{selectedClient.Name}}" url="{{selectedClient.LogoURL}}" profile-hero></div>
+
+                                </div>
+                                <div class="pull-left modalHeroName" style="margin-right: 0px;">
+                                    <br />
+                                    <br />
+                                    {{ selectedClient.Name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="boxContainer" style="height:380px;">
+                                <div ng-repeat="note in selectedNotes | orderBy:'-ID'"  ng-click="editNote(note)" class="cyanBG white box shadow">
+                                    <div class="pull-left xsText white"><span ng-hide="note.EditedByID">Posted by dbeech</span><span ng-show="note.EditedByID">Edited by dbeech</span></div>
+                                    <div class="pull-right xsText white">{{note.TimeStamp | date:'MM/dd/yyyy h:mma'}}</div>
+                                    <br class="clearfix" />
+                                    <span class="bold">{{note.Body}}</span>
+                                </div>
+                            </div>
+                            <div class="shadowFadeBottom"></div>
+                            <br />
+                            <div class="form-group">
+	        	                <label for="addNewNoteTextBox">{{(notemode=='New') ? 'Add New Note':'Edit Note Below'}}</label>
+	        	                <textarea ng-model="newNote.Body" class="inline" id="addNewNoteTextBox" placeholder="Type anything...." rows="4" style="height:50px;"/>
+                                <input type="button" class="btn white cyanBG inline" style="height:50px" ng-click="SubmitNote()" value="{{(notemode=='New') ? 'Submit':'Update'}}" />
+        	                </div>
+                            
+                        </div>
+                        <br class="clearfix" />
+                    </div>
+                </div>
+                <div class="tab-pane" id="bookings">
+                    <div class="row">
+                        <div class="col-md-4">
+                            
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="pull-left" style="text-align: center; margin-right: 5px; max-width: 38%">
+                                    <div class="modalHero" cardtext="{{selectedClient.Name}}" url="{{selectedClient.LogoURL}}" profile-hero></div>
+                                </div>
+                                <div class="pull-left modalHeroName" style="margin-right: 0px;">
+                                    <br />
+                                    <br />
+                                    {{ selectedClient.Name }}
+                                </div>
+                            </div>
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Quick Stats</span>
+                            </div>
+                            <div class="cyan bold pull-left sText" style="margin: 5px auto 10px auto;"
+                                data-percent="{{(stats.alltime.selected.Result[0].BookingStats.TotalBookings / stats.alltime.max.Result[0].BookingStats.TotalBookings * 100) || 0 }}"
+                                trackcolor="#131313" scalecolor="#f9f9f9" size="50" linewidth="4" barcolor="auto" doughnut>
+                                {{stats.alltime.selected.Result[0].BookingStats.TotalBookings | AbbrValue}}                          
+                            </div>
+                            <div class="pull-left mText white" style="margin: 5px auto 0; padding: 15px 5px;">Bookings (All)</div>
+                            <br class="clearfix" />
+                            <div class="cyan bold pull-left sText" style="margin: 5px auto 10px auto;"
+                                data-percent="{{(stats.month.selected.Result[0].BookingStats.TotalBookings / stats.month.max.Result[0].BookingStats.TotalBookings * 100) || 0 }}"
+                                trackcolor="#131313" scalecolor="#f9f9f9" size="50" linewidth="4" barcolor="auto" doughnut>
+                                {{stats.month.selected.Result[0].BookingStats.TotalBookings | AbbrValue}}
+                           
+                            </div>
+                            <div class="pull-left mText white" style="margin: 5px auto 0; padding: 15px 5px;">Bookings (Month)</div>
+                            <br class="clearfix" />
+                            <div class="cyan bold pull-left sText" style="margin: 5px auto 10px auto;"
+                                data-percent="{{(stats.alltime.selected.Result[0].BookingStats.BookingsValue / stats.alltime.max.Result[0].BookingStats.BookingsValue * 100) || 0 }}"
+                                trackcolor="#131313" scalecolor="#f9f9f9" size="50" linewidth="4" barcolor="auto" doughnut>
+                                {{stats.alltime.selected.Result[0].BookingStats.BookingsValue | AbbrValue}}
+                           
+                            </div>
+                            <div class="pull-left mText white" style="margin: 5px auto 0; padding: 15px 5px;">Revenue (All)</div>
+                            <br class="clearfix" />
+                            <div class="cyan bold pull-left sText" style="margin: 5px auto 10px auto;"
+                                data-percent="{{(stats.month.selected.Result[0].BookingStats.BookingsValue / stats.month.max.Result[0].BookingStats.BookingsValue * 100) || 0 }}"
+                                trackcolor="#131313" scalecolor="#f9f9f9" size="50" linewidth="4" barcolor="auto" doughnut>
+                                {{stats.month.selected.Result[0].BookingStats.BookingsValue | AbbrValue}}
+                           
+                            </div>
+                            <div class="pull-left mText white" style="margin: 5px auto 0; padding: 15px 5px;">Revenue (Month)</div>
+                            <br class="clearfix" />
+                            <div class="cyan bold pull-left sText" style="margin: 5px auto 10px auto;"
+                                data-percent="{{(stats.alltime.selected.Result[0].BookingStats.AvgValuePerBooking / stats.alltime.max.Result[0].BookingStats.AvgValuePerBooking * 100) || 0}}" trackcolor="#131313" scalecolor="#f9f9f9" size="50" linewidth="4" barcolor="auto" doughnut>
+                                {{stats.alltime.selected.Result[0].BookingStats.AvgValuePerBooking | number:2}}
+                           
+                            </div>
+                            <div class="pull-left mText white" style="margin: 5px auto 0; padding: 15px 5px;">Avg £/Booking</div>
+                            <br class="clearfix" />
+                        </div>
+                        <div class="col-md-8 dualTable" style="overflow: hidden; height: 500px;">
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Last Month Bookings</span>
+                            </div>
+                            <div class="primaryTable">
+                                <table class="modalTable shadow">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%">#</th>
+                                            <th width="25%">Date / Time</th>
+                                            <th width="25%">Origin</th>
+                                            <th width="25%">Destin</th>
+                                            <th width="15%">£</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div class="tableContent" style="height: 420px;">
+                                    <table class="modalTable">
+                                        <tbody>
+                                            <tr ng-repeat="booking in selectedBookings">
+                                                <td width="10%">{{ booking.ID }}</td>
+                                                <td width="25%">{{ booking.BookedDateTime | date:'dd/MM/yyyy HH:mm' }}</td>
+                                                <td width="25%">{{ booking.From }}</td>
+                                                <td width="25%">{{ booking.To }}</td>
+                                                <td width="15%" class="cyan bold" style="text-align:right;">{{ booking.ActualFare | currency:"£"}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="shadowFadeBottom"></div>
+                            </div>
+                            <br class="clearfix" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="tab-pane" id="accounts"></div>
+                <div class="tab-pane" id="messaging"></div>
+                <!--Tabs--->
+            </div>
+        </div>
+        <div class="card-back" style="background: black;">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(".showSecondaryTable").live("click", function () {
+            $(this).closest(".primaryTable").slideUp();
+            $(this).closest(".dualTable").find(".secondaryTable").slideDown();
+        });
+        $(".showPrimaryTable").live("click", function () {
+            $(this).closest(".secondaryTable").slideUp();
+            $(this).closest(".dualTable").find(".primaryTable").slideDown();
+        });
+
+        $(".flipActive").live("click", function () {
+            $(this).closest(".row").find(".flipContainer .flip").addClass("flipCardBack");
+            $(this).closest(".row").find(".flipContainer .flip .front").hide();
+        });
+
+        $(".flipActive1").live("click", function () {
+            $(".flipContainer .flip").addClass("flipCardBack");
+            $(".flipContainer .flip .front").hide();
+        });
+
+        $(".revertFlip").live("click", function () {
+            $(this).closest(".row").find(".flipContainer .flip").removeClass("flipCardBack");
+            $(this).closest(".row").find(".flipContainer .flip .front").show();
+        });
+
+        $(".closePopOver").live("click", function () {
+            $('#myModal').modal('hide');
+        });
+
+    });
+</script>

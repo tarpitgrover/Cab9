@@ -1,0 +1,27 @@
+﻿<div class="row-fluid" ng-repeat="custType in customerTypes">
+    <h4>{{ custType.Name }}</h4>
+        <div class="input-append" ng-init="groupedit=false" ng-hide="groupedit">
+            <input type="text" value="{{GetCurrentModel(custType)}}" readonly />
+            <input type="button" class="btn" ng-click="groupedit=true" value="Change" />
+        </div>
+        <div class="input-append" ng-show="groupedit">
+            <select ng-model="custType.DefaultPricingModel" ng-options="p.ID as p.Name for p in pricingModels">
+                <option value="" label="Company Default"></option>
+            </select>
+            <input type="button" class="btn" value="Update" ng-click="UpdateGroup(custType); groupedit=false;" />
+        </div>
+    <div class="row-fluid" ng-repeat="cust in customers | ItemsForGroup:custType.Name:groupingVal:sorting" style="padding-left: 30px;">
+        <h5>{{ cust.Name }}</h5>
+        <div class="input-append" ng-init="edit=false" ng-hide="edit">
+            <input type="text" value="{{GetCurrentModel(cust)}}" readonly />
+            <input type="button" class="btn" ng-click="edit=true" value="Change" />
+        </div>
+        <div class="input-append" ng-show="edit">
+            <select ng-model="cust.DefaultPricingModel" ng-options="p.ID as p.Name for p in pricingModels">
+                <option value="" label="Group Default"></option>
+            </select>
+            <input type="button" class="btn" value="Update" ng-click="UpdateCustomer(cust); edit=false;" />
+        </div>
+    </div>
+    <hr />
+</div>

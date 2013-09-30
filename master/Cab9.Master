@@ -1,0 +1,320 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Cab9.master.cs" Inherits="Cab9.master.Cab9" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="Cab9" ng-controller="MasterController">
+<head runat="server">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="/includes/stylesheets/bootstrap.css" rel="stylesheet" />
+    <link href="/includes/stylesheets/bootstrap-theme.css" rel="stylesheet" />
+    <link href="/includes/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="/includes/stylesheets/style.css" rel="stylesheet" />
+    <link href='http://fonts.googleapis.com/css?family=Montserrat|Titillium+Web:400,300,600,700|Raleway:400,600' rel='stylesheet' type='text/css'>
+    <script type="text/javascript">
+        var browser = navigator.userAgent;
+        var browserRegex = /(Android|BlackBerry|IEMobile|Nokia|iP(ad|hone|od)|Opera M(obi|ini))/;
+        var isMobile = false;
+        if (browser.match(browserRegex)) {
+            isMobile = true;
+            addEventListener("load", function () { setTimeout(hideURLbar, 0); }, false);
+            function hideURLbar() {
+                window.scrollTo(0, 1);
+            }
+        }
+    </script>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body onload="startclock()">
+    <form id="form1" runat="server">
+        <div>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-click="dismiss($event)">
+                <div class="modal-dialog">
+                    <div class="modal-content" ng-include="modal.url">
+                        
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+            <div id="sidebarLeft">
+                <div id="cab9Time">
+                    <img src="/includes/img/cab9LogoSmall.png" alt="Cab9" />
+                    <span id="dateTime"></span>
+                </div>
+
+                <div class="menuWrapper">
+                    <ul class="mainMenu">
+                        <li>
+                            <span class="menuIcon glyphicon glyphicon-dashboard"></span><span class="menuName">Dashboard</span>
+                        </li>
+                        <li>
+                            <a href="/bookings"><span class="menuIcon glyphicon glyphicon-list"></span><span class="menuName">Bookings</span></a>
+                        </li>
+                        <li>
+                            <a href="/drivers"><span class="menuIcon glyphicon glyphicon-user"></span><span class="menuName">Drivers</span></a>
+                        </li>
+                        <li>
+                            <a href="/clients"><span class="menuIcon glyphicon glyphicon-tower"></span><span class="menuName">Customers</span></a>
+                        </li>
+                        <li>
+                            <a href="/vehicles"><span class="menuIcon glyphicon glyphicon-road"></span><span class="menuName">Vehicles</span></a>
+                        </li>
+                        <li>
+                            <span class="menuIcon glyphicon glyphicon-hand-right"></span><span class="menuName">Staff</span>
+                        </li>
+                        <li>
+                            <span class="menuIcon glyphicon glyphicon-gbp"></span><span class="menuName">Invoicing</span>
+                        </li>
+                        <li>
+                            <a href="/pricing"><span class="menuIcon glyphicon glyphicon-indent-right"></span><span class="menuName">Pricing</span></a>
+                        </li>
+                        <li>
+                            <span class="menuIcon glyphicon glyphicon-wrench"></span><span class="menuName">Settings</span>
+                        </li>
+                        <li>
+                            <span class="menuIcon glyphicon glyphicon-eye-close"></span><span class="menuName">Users</span>
+                        </li>
+                        <li>
+                            <span class="menuIcon glyphicon glyphicon-unchecked"></span><span class="menuName">Utilities</span>
+                        </li>
+                        <li class="e9ine" style="display: none;">
+                            <img src="/includes/img/e9ineLogoSmall.jpg" alt="e9ine" /><span class="menuName">e9ine</span>
+                        </li>
+                    </ul>
+                </div>
+                <div id="credits">
+                    Handcrafted By
+            <img src="/includes/img/e9ineLogoSmall.jpg" alt="e9ine" />
+                    <h5>e9ine</h5>
+                    111 Buckingham Palace Road<br />
+                    London SW1W 0SR<br />
+                    United Kingdom<br />
+                    <br />
+                    <span class="glyphicon glyphicon-earphone"></span>0843 515 8868<br />
+                    <span class="glyphicon glyphicon-inbox"></span>0843 515 8869<br />
+                    <br />
+                    <span class="glyphicon glyphicon-send"></span>info@e9ine.com<br />
+                    <span class="glyphicon glyphicon-globe"></span>www.e9ine.com
+                </div>
+            </div>
+            <div id="content">
+                <div id="topBar">
+                    <div class="expandCollapseLeft" data-toggle="tooltip" data-placement="bottom" title="Hide Left Sidebar"><span class="glyphicon glyphicon-chevron-left"></span></div>
+                    <div class="expandCollapseRight" data-toggle="tooltip" data-placement="bottom" title="Hide Right Sidebar"><span class="glyphicon glyphicon-chevron-right"></span></div>
+                    <div class="expandCollapsePhoneLeft"><span class="glyphicon glyphicon-align-justify"></span></div>
+                    <div class="expandCollapsePhoneRight"><span class="glyphicon glyphicon-record"></span></div>
+                    <h1 class="pageTitle">CODENAME CAB9</h1>
+                </div>
+                <div id="pageContent">
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+            </div>
+            <div id="sidebarRight">
+                <!--<div class="expandCollapseRight"><span class="glyphicon glyphicon-chevron-right"></span></div>-->
+                <div id="loggedInUser">
+                    <div id="userIcon">
+                        <img src="/includes/images/anthony.jpg" alt="User Image" />
+                    </div>
+                    <div id="userInfo">
+                        Welcome <span id="userName">Anthony!</span><br />
+                        <span class="badge">12</span> new messages
+                    </div>
+                    <div id="userMenu">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                        <ul id="userMenuList">
+                            <li><a href="#"><span class="userMenuListIcon glyphicon glyphicon-user"></span><span class="userMenuListName">Profile</span></a></li>
+                            <li><a href="#"><span class="userMenuListIcon glyphicon glyphicon-envelope"></span><span class="userMenuListName">Messages</span></a></li>
+                            <li><a href="#"><span class="userMenuListIcon glyphicon glyphicon-tasks"></span><span class="userMenuListName">Shifts</span></a></li>
+                            <li><a href="#"><span class="userMenuListIcon glyphicon glyphicon-log-out"></span><span class="userMenuListName">Logout</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="header">
+                        <div class="sectionIcon">
+                            <div class="todayWrapper">
+                                <span class="today"><span class="day">03</span><span class="month">Sep</span></span>
+                            </div>
+                        </div>
+                        <span class="sectionName">Today
+                        </span>
+                    </div>
+                    <div class="body">
+                        <div class="sectionBodyClose">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </div>
+                        <div class="row" style="margin-top: 3px;">
+                            <div class="col-md-6 col-sm-6 col-xs-6 tile">
+                                <div id="bookingsTile" class="tileContent purpleBG">
+                                    <div class="tileTitle">Bookings</div>
+                                    <div class="fontRaleway tileInfo">
+                                        <span class="pull-left xlText textShadowBlack">67/<br />
+                                            <span class="xsText textShadowBlack">to go</span></span><span class="pull-left">128<br />
+                                                <span class="xsText">total</span></span><br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6 tile">
+                                <div id="driversTile" class="tileContent blueBG">
+                                    <div class="tileTitle">Drivers</div>
+                                    <div class="fontRaleway tileInfo">
+                                        <span class="pull-left xlText textShadowBlack">12/<br />
+                                            <span class="xsText textShadowBlack">on duty</span></span><span class="pull-left">32<br />
+                                                <span class="xsText">total</span></span><br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 3px;">
+                            <div class="col-md-12 col-sm-12 col-xs-12 tile">
+                                <div id="revenuesTile" class="tileContent skyBG">
+                                    <div class="tileTitle">Revenues</div>
+                                    <div class="fontRaleway tileInfo">
+                                        <span class="pull-left xlText textShadowBlack ">£2.34K<br />
+                                            <span class="xsText">in revenues</span></span><br />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="header">
+                        <div class="sectionIcon blueBG">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                        </div>
+                        <span class="sectionName">Bookings
+                        </span>
+                    </div>
+                    <div class="body">
+                        <div class="sectionBodyClose">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </div>
+                        <div class="bookingSectionContent">
+                            <table id="bookingRightSidebarTable" width="100%">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 30px; text-align: center;"><span class="bookingRightSidebarStatus lightGreenBG"></span></td>
+                                        <td style="width: 150px">Heathrow T3 to Sherat...</td>
+                                        <td style="width: 40px;">15:53</td>
+                                        <td style="width: 30px;">
+                                            <img src="/includes/images/rashid.jpg" width="100%" alt="Rashid Riaz" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 30px; text-align: center;"><span class="bookingRightSidebarStatus redBG"></span></td>
+                                        <td style="width: 150px">Ibis to Heathrow...</td>
+                                        <td style="width: 40px;">16:00</td>
+                                        <td style="width: 30px;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 30px; text-align: center;"><span class="bookingRightSidebarStatus lightGreenBG"></span></td>
+                                        <td style="width: 150px">16 Tower Street...</td>
+                                        <td style="width: 40px;">16:30</td>
+                                        <td style="width: 30px;">
+                                            <img src="/includes/images/shane.jpg" width="100%" alt="Rashid Riaz" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 30px; text-align: center;"><span class="bookingRightSidebarStatus orangeBG"></span></td>
+                                        <td style="width: 150px">HA7 9NP to 23 Wigm...</td>
+                                        <td style="width: 40px;">16:34</td>
+                                        <td style="width: 30px;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 30px; text-align: center;"><span class="bookingRightSidebarStatus lightGreenBG"></span></td>
+                                        <td style="width: 150px">Lemington Station...</td>
+                                        <td style="width: 40px;">16:50</td>
+                                        <td style="width: 30px;">
+                                            <img src="/includes/images/majid.jpg" width="100%" alt="Rashid Riaz" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+
+                    <div class="header">
+                        <div class="sectionIcon redBG">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </div>
+                        <span class="sectionName">Notifications
+                        </span>
+                    </div>
+                    <div class="body">
+                        <div class="sectionBodyClose">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </div>
+                        <div class="notificationSectionContent">
+                            <table id="notificationRightSidebarTable">
+                                <tr>
+                                    <td style="width: 30px; text-align: center;"><span class="notificationRightSidebarStatus redBG"></span></td>
+                                    <td style="width: 40px;">MOT</td>
+                                    <td style="width: 120px">Expired 1 day ago</td>
+                                    <td style="width: 60px;">DK003 6YH</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30px; text-align: center;"><span class="notificationRightSidebarStatus orangeBG"></span></td>
+                                    <td style="width: 40px;">DL</td>
+                                    <td style="width: 120px">Expiring in 2 days</td>
+                                    <td style="width: 60px;">Daniel Skamas</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width: 30px; text-align: center;"><span class="notificationRightSidebarStatus blueBG"></span></td>
+                                    <td style="width: 50px;">Invoice</td>
+                                    <td style="width: 110px">Due in 1 week</td>
+                                    <td style="width: 60px;">Holiday Inn</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width: 30px; text-align: center;"><span class="notificationRightSidebarStatus redBG"></span></td>
+                                    <td style="width: 40px;">DL</td>
+                                    <td style="width: 120px">Not Found</td>
+                                    <td style="width: 60px;">Alex Stewart</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30px; text-align: center;"><span class="notificationRightSidebarStatus skyBG"></span></td>
+                                    <td style="width: 50px;">Invoice</td>
+                                    <td style="width: 110px">Due in 5 days</td>
+                                    <td style="width: 60px;">Holiday Inn</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30px; text-align: center;"><span class="notificationRightSidebarStatus yellowBG"></span></td>
+                                    <td style="width: 40px;">DL</td>
+                                    <td style="width: 120px">Expiring in 55 days</td>
+                                    <td style="width: 60px;">John Day</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script src="/includes/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+    <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js" type="text/javascript"></script>
+    <script src="/includes/js/jquery.signalR-2.0.0-rc1.js" type="text/javascript"></script>
+    <script src="/signalr/hubs" type="text/javascript"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSjg13rvyaC145WmGcf1FInYT3dUebzOg&sensor=false&libraries=drawing,geometry,places" type="text/javascript"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js" type="text/javascript"></script>
+    <script src="//code.angularjs.org/1.1.5/angular-resource.min.js" type="text/javascript"></script>
+    <script src="/includes/js/angular.bootstrap.js" type="text/javascript"></script>
+    <script src="/includes/javascripts/bootstrap.js" type="text/javascript"></script>
+    <script src="/includes/js/chart.js" type="text/javascript"></script>
+    <script src="/includes/js/jquery.easy-pie-chart.js" type="text/javascript"></script>
+    <script src="/includes/js/jQuery.flot.js" type="text/javascript"></script>
+    <script src="/includes/js/jQuery.flot.time.js" type="text/javascript"></script>
+    <script src="/includes/js/angular.bootstrap.datepicker.js" type="text/javascript"></script>
+    <script src="/master/angular/masterModule.js" type="text/javascript"></script>
+    <script src="/includes/javascripts/pageScript.js" type="text/javascript"></script>
+    <asp:ContentPlaceHolder ID="customModuleScripts" runat="server">
+    </asp:ContentPlaceHolder>
+</body>
+</html>

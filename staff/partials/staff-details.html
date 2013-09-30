@@ -1,0 +1,339 @@
+<div id="popOver" ng-controller="StaffBirdsEyeViewController" style="display: none;">
+    <div class="animated-card">
+        <div class="card-front">
+            <ul class="nav nav-tabs hidden-phone" id="popOverTabs">
+                <li class="active"><a href="#/cards-view#birdsEye" data-toggle="tab">Birds Eye</a></li>
+                <li><a href="#/cards-view#notes" data-toggle="tab">Notes</a></li>
+                <li><a href="#/cards-view#documents" data-toggle="tab">Documents</a></li>
+                <li><a href="#/cards-view#shifts" data-toggle="tab">Shifts</a></li>
+                <li><a href="#/cards-view#payroll" data-toggle="tab">Payroll</a></li>
+                <li class="chat9"><a href="#/cards-view#messaging" data-toggle="tab">Chat9</a></li>
+            </ul>
+            <div class="tab-content" id="popOverTabContents">
+            	<!--Tab Select Box--->
+            	<div class="tabHeading hidden-desktop hidden-tablet">
+		        	<div class="fleft uppercase selectStyle">
+		        		<select class="white uppercase" id="tabViewSelect">
+		        			<option selected="true" value="birdsEye">Birds Eye</option>
+                            <option value="notes">Notes</option>
+		        			<option value="documents">Documents</option>
+		        			<option value="shifts">Shifts</option>
+		        			<option value="payroll">PayRoll</option>
+		        			<option value="chat9">Chat9</option>
+		        		</select>
+		        	</div>
+		            <div class="fright bigText">
+		            	<span class="e9ine-icon-untitled-68 accent1 closePopOver" ng-click="dismiss($event)"></span>
+		            </div>
+		            <div style="clear:both"></div>
+	            </div>
+            	<!--Tab Select Box--->     
+            	<!--Tabs--->       	
+                <div class="tab-pane active" id="birdsEye">
+                    <div class="row-fluid">
+                        <div class="span4">
+                        	<div class="cardSectionHead">
+                            	Basic Information
+                            </div>
+                            <div class="row-fluid">
+                                <div class="fleft" style="text-align: center;margin-right:10px;max-width:47%">
+                                    <img src="{{ selectedStaff.ImageURL }}" class="cardHeroPic" />
+                                </div>
+                                <div class="fleft cardHeroName" style="margin-right:0px;">
+                                    <span class="white">{{ selectedStaff.Position }}</span><br />{{ selectedStaff.Forename }}<br />{{ selectedStaff.Surname }}
+                                </div>
+                            </div><br />
+                            <span class="e9ine-icon-untitled-50 accent2 bigText"></span> &nbsp; {{ selectedStaff.Address1 + ', ' + selectedStaff.Postcode }}<br />
+                            <span class="e9ine-icon-untitled-59 accent2 bigText"></span> &nbsp; {{ selectedStaff.Telephone }}, {{ selectedStaff.Mobile }}<br />
+                            <span class="e9ine-icon-untitled-60 accent2 bigText"></span> &nbsp; {{ selectedStaff.Email }}<br />
+                        </div>
+                        <div class="span8">
+                        	<div class="cardSectionHead">
+	                        	Staff Hours Worked
+                            </div>
+	                        <div class="center">	
+	                        	<div class="btn-group">
+								  <button class="btn-small btnCyanSmall active bold" ng-click="NewRange('1wk')">1W</button>
+								  <button class="btn-small btnCyanSmall bold" ng-click="NewRange('1m')">1M</button>
+								  <button class="btn-small btnCyanSmall bold" ng-click="NewRange('3m')">3M</button>
+								  <button class="btn-small btnCyanSmall bold" ng-click="NewRange('6m')">&#189;Y</button>
+								  <button class="btn-small btnCyanSmall bold" ng-click="NewRange('1yr')">Y</button>							  
+								</div>
+	                            <br />
+	                            <div chart graphdata="graphdata" range="range" xfield="'Grouping.From'" yfield="'ShiftStats.TotalTimeOnShift'" nullzeros="true" id="chartPlaceHolder" datasets="2"></div>
+	                        </div>
+	                    </div>
+                    </div>
+                    <div class="row-fluid" style="display:none;">
+                    	<div class="span4">
+	                    	<div class="cardSectionHead">
+                            	Scorecard
+                            </div>
+                            <div style="display:block; text-align:center;">
+                            	<div class="bigText accent2 bold" style="margin:15px auto;" data-percent="70.8" trackcolor="#131313" scalecolor="#f9f9f9" barcolor="auto" size="130" doughnut>3.7</div>
+                            </div>
+                            <div class="center">
+                            	<span class="accent2 bold">Total Jobs:</span> {{ '1240' }}</span><br />
+                                <span class="accent2 bold">Job Share:</span> <span>{{ '3.5%' }}</span><br />
+                                <span class="accent2 bold">Total Value:</span> <span class="info-value">{{ '£24320' }}</span><br />
+                                <span class="accent2 bold">Value Share:</span> <span class="info-value">{{ '6.2%' }}</span>
+                            </div>
+                    	</div>
+                        <div class="span4">
+                                 <div class="cardSectionHead">
+                                    	Currently
+                                </div>
+                        </div>
+                    	<div class="span4">
+                        	<div class="cardSectionHead">
+                            	<b>Invoices</b>
+                            </div>
+                    	</div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="documents">
+	                <div class="row-fluid">
+	                	<div class="span4">
+	                		<div class="cardSectionHead">
+                            	Documents
+                            </div>
+	                		<div class="row-fluid">
+                                <div class="fleft" style="text-align: center;margin-right:10px;max-width:47%">
+                                    <img src="{{ selectedStaff.ImageURL }}" class="cardHeroPic" />
+                                </div>
+                                <div class="fleft cardHeroName" style="margin-right:0px;">
+                                    <span class="white">{{ selectedStaff.Position }}</span><br />{{ selectedStaff.Forename }}<br />{{ selectedStaff.Surname }}
+                                </div>
+                            </div><br />
+	                		<div ng-repeat="document in selectedDocuments"  ng-click="$parent.selectedDocument = document" class="documentBox revertFlip">
+	                			<div>
+		                			<span class="bold">{{document.Name}}</span>
+		                			<br>
+		                			<div class="fleft mediumText">{{document.Identification}}</div>
+		                			<div class="fright bold">Ex. {{document.ExpiryDate | Countdown}}</div>
+	                			</div>
+	                		</div>
+	                		<div class="center mediumText bold accent2 documentBoxAddNew">+ Add New</div>
+	                	</div>
+	                	<div class="span8">
+	                		<div class="flipContainer">
+	                			<div class="flip">
+	                				<div class="flipFront face" style="cursor:crosshair;">
+	                					<div id="documentViewer" class="documentViewer">
+					                		<img src="{{selectedDocument.DocumentUrl}}" /><br /><br /> <span class="accent2 bold">Click here to Download...</span>
+					                	</div>
+	                				</div>
+	                				<div class="flipBack face" style="cursor:e-resize;">
+	                					<div class="cardSectionHead">
+			                            	Add New Document
+			                            </div>
+	                					<form class="center" novalidate>
+						                	<div class="input-prepend">
+								                <span class="add-on">Name</span>
+							                	<input type="text" ng-model="documentInformation.Name" placeholder="e.g. Driving License"/>
+						                	</div>
+								            <div class="input-prepend">
+									            <span class="add-on">Description</span>
+									            <input type="text" ng-model="documentInformation.Description" placeholder=""/>
+								            </div>
+								            <div class="input-prepend">
+								            	<span class="add-on">Type</span>
+								            	<input type="text" ng-model="documentInformation.TypeID" />
+								            </div>
+								            <div class="input-prepend">
+								            	<span class="add-on">ID Number</span>
+									            <input type="text" ng-model="documentInformation.Identification" placeholder="e.g. DL2134567TSG"/>
+								            </div>
+								            <div class="input-prepend input-append">
+								            	<span class="add-on">Expiry Date</span>
+								                <input type="text" ng-model="dates.ExpiryDate" data-date-format="dd/mm/yyyy" placeholder="dd/MM/yyyy" bs-datepicker>
+								                <button type="button" class="btn" data-toggle="datepicker"><i class="icon-calendar icon-white"></i></button>
+								            </div>
+								            <div class="file-input-wrapper accent2b" style="margin:10px auto;">
+							        			<button class="btn-file-input accent2b">Attach Document</button>
+							        			<input type="file" name="Upload" accept="image/*, application/pdf" file-upload />
+							        		</div>
+							        		<input type="submit" class="btnCyan" value="Submit" ng-click="SubmitFile()" />
+							        		<input type="reset" class="btnRed revertFlip" value="Cancel" ng-click="CancelFile()" />
+					                	</form>	
+	                				</div>
+	                			</div>
+	                		</div>
+	                	</div>
+	                	<br class="clear" />
+	                </div>
+                </div>
+                <div class="tab-pane" id="notes">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <div class="cardSectionHead">
+                                Notes
+                            </div>
+                            <div class="row-fluid">
+                                <div class="fleft" style="text-align: center;margin-right:10px;max-width:47%">
+                                    <img src="{{ selectedStaff.ImageURL }}" class="cardHeroPic" />
+                                </div>
+                                <div class="fleft cardHeroName" style="margin-right:0px;">
+                                    <span class="white">{{ selectedStaff.Position }}</span><br />{{ selectedStaff.Forename }}<br />{{ selectedStaff.Surname }}
+                                </div>
+                            </div>
+                            <br />
+                            <div ng-repeat="note in selectedNotes" ng-click="$parent.selectedNote = note" class="documentBox revertFlip">
+                                <div>
+                                    <span class="bold">{{note.Title}}</span>
+                                    <br>
+                                    <div class="fleft mediumText">{{note.PostedByID}}</div>
+                                    <div class="fright bold">{{note.PostedDateTime | Countdown}}</div>
+                                </div>
+                            </div>
+                            <div class="center mediumText bold accent2 documentBoxAddNew">+ Add New</div>
+                        </div>
+                        <div class="span8">
+                            <div class="flipContainer">
+                                <div class="flip">
+                                    <div class="flipFront face">
+                                        <div id="noteViewer" class="documentViewer">
+                                            <h4>{{selectedNote.Title}}</h4>
+                                            <p>{{selectedNote.Body}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flipBack face">
+                                        <div class="cardSectionHead">
+                                            Add New Note
+                                        </div>
+                                        <form class="center" novalidate>
+                                            <div class="input-prepend">
+                                                <span class="add-on">Name</span>
+                                                <input type="text" ng-model="newNote.Title" placeholder="e.g. Credit Form" />
+                                            </div>
+                                            <div class="input-prepend">
+                                                <span class="add-on">Description</span>
+                                                <textarea rows="8" style="width: 280px !important" ng-model="newNote.Body" placeholder="" />
+                                            </div>
+                                            <input type="submit" class="btnCyan" value="Submit" ng-click="SubmitNote()" />
+                                            <input type="reset" class="btnRed revertFlip" value="Cancel" ng-click="CancelNote()" />
+                                        </form>
+                                    </div>                                </div>
+                            </div>
+                        </div>
+                        <br class="clear" />
+                    </div>
+                </div>
+                <div class="tab-pane" id="shifts">
+                	<div class="row-fluid">
+                		<div class="span4">
+                			<div class="cardSectionHead">
+                            	Quick Stats
+                            </div>
+                            <div class="row-fluid">
+                                <div class="fleft" style="text-align: center;margin-right:10px;max-width:47%">
+                                    <img src="{{ selectedStaff.ImageURL }}" class="cardHeroPic" />
+                                </div>
+                                <div class="fleft cardHeroName" style="margin-right:0px;">
+                                    <span class="white">{{ selectedStaff.Position }}</span><br />{{ selectedStaff.Forename }}<br />{{ selectedStaff.Surname }}
+                                </div>
+                            </div><br />
+	                		<div class="accent2 bold fleft" style="margin:5px auto 10px auto;" data-percent="{{stats.alltime.selected.Result[0].ShiftStats.TotalShifts / stats.alltime.max.Result[0].ShiftStats.TotalShifts * 100 | number:2 }}" trackcolor="#131313" scalecolor="#f9f9f9" size="50"  linewidth="4" barcolor="auto" doughnut>{{stats.alltime.selected.Result[0].ShiftStats.TotalShifts}}</div> <div class="fleft bigText white" style="margin: 5px auto 0;padding: 15px 5px;">Shifts in Total</div>
+	                		<br class="clearfix" />
+	                		<div class="accent2 bold fleft" style="margin:5px auto 10px auto;" data-percent="{{stats.month.selected.Result[0].ShiftStats.TotalShifts / stats.month.max.Result[0].ShiftStats.TotalShifts * 100 | number:2 }}" trackcolor="#131313" scalecolor="#f9f9f9" size="50"  linewidth="4" barcolor="auto" doughnut>{{stats.month.selected.Result[0].ShiftStats.TotalShifts}}</div> <div class="fleft bigText white" style="margin: 5px auto 0;padding: 15px 5px;">Shifts Last Month</div>
+	                		<br class="clearfix" />
+	                		<div class="accent2 bold fleft" style="margin:5px auto 10px auto;" data-percent="{{stats.month.selected.Result[0].ShiftStats.AverageLengthOfShift / stats.month.max.Result[0].ShiftStats.AverageLengthOfShift * 100 | number:2 }}" trackcolor="#131313" scalecolor="#f9f9f9" size="50"  linewidth="4" barcolor="auto" doughnut>{{stats.month.selected.Result[0].ShiftStats.AverageLengthOfShift | number:1}}hr</div> <div class="fleft bigText white" style="margin: 5px auto 0;padding: 15px 5px;">Avg. Time/Shift</div>
+	                		<br class="clearfix" />		                    	
+                		</div>
+                		<div class="span8 dualTable" style="overflow:hidden; height:500px;">
+	                		<div class="cardSectionHead">
+		                    	<b>Shift Details</b>
+		                    </div>
+		                    <div class="shiftTable primaryTable">
+				                <table class="cardTable shadow">
+			                	<thead>
+			                		<tr>
+			                			<th width="7%"></th>
+			                        	<th width="10%">#</th>
+			                        	<th width="29%">Started</th>
+			                            <th width="29%">Ended</th>
+			                            <th width="25%">Note</th>
+			                        </tr>	
+			                	</thead>
+			                </table>
+				                <div style="height:420px;overflow-y:auto;position:relative;">
+				                	<table class="cardTable">
+			                	<tbody>
+			                	<tr ng-repeat="shift in selectedShifts">
+			                		<td class="accent2 showSecondaryTable center" width="7%"><a href="" ng-click="BookingsForShiftFetch(shift.ID)"><span class="e9ine-icon-drawer accent2 bold mediumText"></span></a></td>
+				                	<td width="10%">{{shift.ID}}</td>
+				                	<td width="29%">{{shift.ShiftStart | date:'dd/MM/yyyy HH:mm'}}</td>
+				                	<td width="29%">{{shift.ShiftEnd | date:'dd/MM/yyyy HH:mm'}}</td>
+				                	<td width="25%">{{shift.ShiftNote}}</td>
+			                	</tr>
+			                	</tbody>
+			                </table>
+				                </div>
+				                <div class="shadowFadeBottom"></div>
+		                    </div>
+		                    <div class="bookingOnShiftTable secondaryTable" style="display:none">
+		                    	<div class="fleft bold accent2"><h5>Bookings for Shift ID {{bookingsDataForShift[0].ShiftID}}</h5></div>
+		                    	<div class="fright accent1 showPrimaryTable bold" style="cursor:pointer"><h5>Back</h5></div>
+		                    	<br class="clearfix" />
+		                    	<table class="cardTable shadow">
+			                	<thead>
+			                		<tr>
+			                        	<th width="10%">#</th>
+			                        	<th width="20%">For</th>
+			                        	<th width="30%">From</th>
+			                            <th width="30%">To</th>
+			                            <th width="10%">Fare</th>
+			                        </tr>	
+			                	</thead>
+			                	</table>
+		                    	<div style="height:420px;overflow-y:auto;position:relative;">
+				                <table class="cardTable">
+			                	<tbody>
+			                	<tr ng-repeat="booking in bookingsDataForShift">
+				                	<td width="10%">{{booking.ID}}</td>
+				                	<td width="20%">{{booking.Account.Name}}</td>
+				                	<td width="30%">{{booking.Origin}}</td>
+				                	<td width="30%">{{booking.Destination}}</td>
+				                	<td width="10%" class="accent2 right bold">£{{booking.ActualFare | number:2}}</td>
+			                	</tr>
+			                	</tbody>
+			                </table>
+				                </div>
+				                <div class="shadowFadeBottom"></div>
+		                    </div>
+		                    <br class="clearfix" />
+                		</div>
+                	</div>
+
+                </div>
+                <div class="tab-pane" id="payroll"></div>
+                <div class="tab-pane" id="messaging"></div>
+                <!--Tabs--->
+            </div>
+        </div>
+        <div class="card-back" style="background: black;">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(function () {
+		$(".showSecondaryTable").live("click",function () {
+		    	$(this).closest(".primaryTable").slideUp();
+		    	$(this).closest(".dualTable").find(".secondaryTable").slideDown();
+		});
+		$(".showPrimaryTable").live("click",function () {
+		    	$(this).closest(".secondaryTable").slideUp();
+		    	$(this).closest(".dualTable").find(".primaryTable").slideDown();
+		});
+		
+		$(".documentBoxAddNew").live("click", function(){
+			$(this).closest(".row-fluid").find(".flipContainer .flip").addClass("flipCardBack");
+		});
+		
+		$(".revertFlip").live("click", function(){
+			$(this).closest(".row-fluid").find(".flipContainer .flip").removeClass("flipCardBack");
+		});
+		
+});
+</script>

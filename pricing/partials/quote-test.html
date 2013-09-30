@@ -1,0 +1,50 @@
+﻿<div>
+    <div basic-map route-render options="mapOptions" map="mapObject" route="directions" style="height: 600px; width: 100%;"></div>
+    <div class="row-fluid">
+        <div class="span6">
+            <div ng-repeat="w in waypoints">
+                <span>{{ ($first) ? 'From:' : (($last) ? 'To:' : 'Via:') }}</span>
+                <span class="input-append">
+                    <input id="via{{$index}}" type="text" model="w" map="mapObject" location-search />
+                    <input type="text" class="add-on" ng-model="w.waitingTime" placeholder="waiting time (m)" ng-hide="($first || $last)" />
+                    <input type="button" value="/\" class="add-on" style="height: 30px;" ng-click="MoveWaypoint('UP', $index)" ng-hide="$first" />
+                    <input type="button" value="\/" class="add-on" style="height: 30px;" ng-click="MoveWaypoint('DOWN', $index)" ng-hide="$last" />
+                    <input type="button" value="X" class="add-on" style="height: 30px;" ng-click="RemoveWaypoint(w)" ng-hide="waypoints.length < 3" />
+                </span>
+                <br />
+                <input type="button" class="btn" value="Add Waypoint" ng-click="AddWaypoint()" ng-show="$index == waypoints.length - 2" />
+                <span ng-show="waypoints.length > 3 && $index == waypoints.length - 2">Auto-Order:
+                    <input type="checkbox" ng-model="quote.$$reorder" /></span>
+            </div>
+            <br />
+            <div>
+                <div>
+                    CarType:
+                    <input type="text" ng-model="quote.cartype" /><br />
+                    Customer:
+                    <input type="text" ng-model="quote.customerid" /><br />
+                    PricingModel:
+                    <input type="text" ng-model="quote.pricingmodel" />
+                </div>
+                <input type="button" class="btn" value="Get Quote" ng-click="GetRoute()" />
+            </div>
+        </div>
+        <div class="span6">
+            {{ response.TotalFare | currency:'£' }}
+            <pre>{{response.Charges | json:true}}</pre>
+        </div>
+    </div>
+    
+</div>
+
+<style type="text/css">
+    [basic-map] {
+        position: relative !important;
+        height: 600px;
+        width: 100%;
+    }
+
+        [basic-map] img {
+            max-width: none;
+        }
+</style>

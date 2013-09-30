@@ -1,0 +1,394 @@
+<div id="modalContentContainer" ng-controller="DriversBirdsEyeViewController">
+    <div class="animated-card">
+        <div class="card-front">
+            <ul class="nav nav-tabs hidden-sm" id="modalTabs">
+                <li class="active"><a href="#/cards-view#birdsEye" data-toggle="tab">Birds Eye</a></li>
+                <li><a href="#/cards-view#documents" data-toggle="tab">Documents</a></li>
+                <li><a href="#/cards-view#shifts" data-toggle="tab">Shifts</a></li>
+                <li><a href="#/cards-view#accounts" data-toggle="tab">Accounts</a></li>
+                <li class="chat9"><a href="#/cards-view#messaging" data-toggle="tab">Chat9</a></li>
+            </ul>
+            <div class="tab-content" id="modalTabsContents">
+                <!--Tab Select Box--->
+                <div class="tabHeading hidden-md hidden-lg">
+                    <div class="pull-left uppercase selectStyle">
+                        <select class="white uppercase" id="tabViewSelect">
+                            <option selected="true" value="birdsEye">Birds Eye</option>
+                            <option value="documents">Documents</option>
+                            <option value="shifts">Shifts</option>
+                            <option value="accounts">Accounts</option>
+                            <option value="chat9">Chat9</option>
+                        </select>
+                    </div>
+                    <div class="pull-right mText">
+                        <span class="glyphicon glyphicon-remove-sign red closePopOver"></span>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+                <!--Tab Select Box--->
+                <!--Tabs--->
+                <div class="tab-pane active" id="birdsEye">
+                    <div class="row" style="margin-bottom: 10px;">
+                        <div class="col-md-4">
+
+                            <div class="row" style="margin-bottom: 5px;">
+                                <div class="pull-left" style="text-align: center; margin-right: 5px; max-width: 38%">
+                                    <div class="modalHero" cardtext="{{selectedDriver.Forename + ' ' + selectedDriver.Surname}}" url="{{selectedDriver.ImageUrl}}" profile-hero></div>
+
+                                </div>
+                                <div class="pull-left modalHeroName" style="margin-right: 0px;">
+                                    <span class="white">{{ selectedDriver.CallSign }}</span><br />
+                                    <br />
+                                    {{ selectedDriver.Forename }}<br />
+                                    {{ selectedDriver.Surname }}
+                               
+                                </div>
+                            </div>
+                            <span class="glyphicon glyphicon-map-marker cyan mText"></span>&nbsp; <span>{{ selectedDriver.Address1 + ', ' + selectedDriver.Postcode }}</span><br />
+                            <span class="glyphicon glyphicon-phone-alt cyan mText"></span>&nbsp; {{ selectedDriver.Telephone }}, {{ selectedDriver.Mobile }}<br />
+                            <span class="glyphicon glyphicon-send cyan mText"></span>&nbsp; {{ selectedDriver.Email }}<br />
+                        </div>
+                        <div class="col-md-8">
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Driver Performance</span>
+                            </div>
+                            <div class="text-center">
+                                <div class="chartTimelineButton">
+                                    <input type="button" class="btn btn-sm cyanBG bold" ng-click="NewRange('1wk')" value="1W"></input>
+                                    <input type="button" class="btn btn-sm cyanBG bold" ng-click="NewRange('1m')" value="1M"></input>
+                                    <input type="button" class="btn btn-sm cyanBG bold" ng-click="NewRange('3m')" value="3M"></input>
+                                    <input type="button" class="btn btn-sm cyanBG bold" ng-click="NewRange('6m')" value="&#189;Y"></input>
+                                    <input type="button" class="btn btn-sm cyanBG bold" ng-click="NewRange('1yr')" value="Y"></input>
+                                </div>
+                                <div chart graphdata="graphdata" range="range" xfield="'Grouping.From'" yfield="'BookingStats.TotalBookings'" nullzeros="false" id="chartPlaceHolder" datasets="2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Scorecard</span>
+                            </div>
+                            <div style="display: block; text-align: center;">
+                                <div class="xlText cyan bold" style="margin: 10px auto;" data-percent="70.8" trackcolor="#131313" scalecolor="#f9f9f9" barcolor="auto" size="130" doughnut>3.7</div>
+                            </div>
+                            <div class="text-center">
+                                <span class="cyan bold">Total Jobs:</span> {{ '1240' }}<br />
+                                <span class="cyan bold">Job Share:</span> {{ '3.5%' }}<br />
+                                <span class="cyan bold">Total Value:</span> {{ '£24320' }}<br />
+                                <span class="cyan bold">Value Share:</span> {{ '6.2%' }}
+                           
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Currently</span>
+                            </div>
+                            <span class="cyan bold">Status:</span> {{ selectedDriver.Status }}  <span class="statusIcon cardStatus" ng-class="selectedDriver.Status"></span>
+                            <br />
+                            <span class="cyan bold">Started:</span> {{ '3 hrs 23mins ago' }}<br />
+                            <span class="cyan bold">Vehicle:</span> {{ 'S-Class, M12 3JJ' }}<br />
+                            <span class="cyan bold">Location:</span> {{ 'London, W4' }}<br />
+                            <span class="cyan bold">Next Pickup:</span> {{ 'London, W5' }}<br />
+                            <span class="cyan bold">Journey Time:</span> {{ '6mins' }}<br />
+                            <br />
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Documents</span>
+                            </div>
+                            <span class="cyan bold">License Expiry:</span> {{ '6 Months' }} <span class="statusIcon green"></span>
+                            <br />
+                            <span class="cyan bold">PCO Expiry:</span> {{ '4 Days' }} <span class="statusIcon red"></span>
+                            <br />
+                            <span class="cyan bold">Insurance Expiry:</span> {{ 'Missing' }} <span class="statusIcon grey"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Invoices</span>
+                            </div>
+                            <table class="modalTable">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>12/06/2013</td>
+                                        <td>£322.45</td>
+                                        <td>Pending</td>
+                                    </tr>
+                                    <tr>
+                                        <td>29/05/2013</td>
+                                        <td>£256.74</td>
+                                        <td>Overdue (2d)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>15/05/2013</td>
+                                        <td>£304.25</td>
+                                        <td>Paid</td>
+                                    </tr>
+                                    <tr>
+                                        <td>01/05/2013</td>
+                                        <td>£166.06</td>
+                                        <td>Paid</td>
+                                    </tr>
+                                    <tr>
+                                        <td>12/04/2013</td>
+                                        <td>£405.46</td>
+                                        <td>Paid</td>
+                                    </tr>
+                                    <tr>
+                                        <td>01/04/2013</td>
+                                        <td>£456.06</td>
+                                        <td>Paid</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="documents">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="pull-left" style="text-align: center; margin-right: 5px; max-width: 38%">
+                                    <div class="modalHero" cardtext="{{selectedDriver.Forename + ' ' + selectedDriver.Surname}}" url="{{selectedDriver.ImageUrl}}" profile-hero></div>
+                                </div>
+                                <div class="pull-left modalHeroName" style="margin-right: 0px;">
+                                    <span class="white">{{ selectedDriver.CallSign }}</span><br />
+                                    <br />
+                                    {{ selectedDriver.Forename }}<br />
+                                    {{ selectedDriver.Surname }}
+                               
+                                </div>
+                            </div>
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Documents</span>
+                            </div>
+                            <div ng-repeat="document in selectedDocuments" class="stackedBox">
+                                <div class="box revertFlip" ng-click="setSelectedDocument(document.DocumentURL)">
+                                    <span class="bold">{{document.Name}}</span>
+                                    <br>
+                                    <div class="pull-left bold">{{document.IdentificationNo}}</div>
+                                    <div class="pull-right bold">Ex. {{document.ExpiryDate | Countdown}}</div>
+                                </div>
+                                <div class="options">
+                                    <div class="edit mText flipActive1"  ng-click="editDocument(document)">
+                                        <span class="icon-edit"></span>
+                                    </div>
+                                    <div class="delete mText" ng-click="deleteDocument(document.ID)">
+                                        <span class="icon-remove"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mText bold cyan stackedBoxAddNew flipActive" ng-click="newDocument()">+ Add New</div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="flipContainer">
+                                <div class="flip">
+                                    <div class="flipFront face" style="cursor: crosshair;">
+                                        <div id="documentViewer" class="documentViewer">
+                                            <img src="{{selectedDocumentUrl}}" /><br />
+                                            <br />
+                                            <span class="cyan bold">Click here to Download...</span>
+                                        </div>
+                                    </div>
+                                    <div class="flipBack face" style="cursor: e-resize;">
+                                        <div class="modalSectionHead">
+                                            <span class="modalSectionHeadName">Add New Document</span>
+                                        </div>
+                                        <form style="width: 75%; margin: auto;">
+                                            <div class="form-group full">
+                                                <label for="documentNameTextBox">Name</label>
+                                                <input type="text" ng-model="documentInformation.Name" id="documentNameTextBox" placeholder="e.g. Driving License" />
+                                            </div>
+
+                                            <div class="form-group full">
+                                                <label for="documentTypeTextBox">Document Type</label>
+                                                <input type="text" id="documentTypeTextBox" ng-model="documentInformation.DocumentType" />
+                                            </div>
+                                            <div class="form-group full">
+                                                <label for="documentTypeTextBox">ID Number</label>
+                                                <input type="text" id="documentIdTextBox" ng-model="documentInformation.IdentificationNo" placeholder="e.g. DL2134567TSG" />
+                                            </div>
+                                            <div class="form-group full">
+                                                <label for="documentExpiryDateTextBox">Expiry Date</label>
+                                                <input type="text" ng-model="dates.ExpiryDate" id="documentExpiryDateTextBox" data-date-format="dd/mm/yyyy" placeholder="dd/MM/yyyy" bs-datepicker>
+                                            </div>
+                                            <div class="form-group full">
+                                                <label for="documentDescriptionTextBox">Description</label>
+                                                <textarea id="documentDescriptionTextBox" ng-model="documentInformation.Description" placeholder="" rows="4" style="height: 50px;" />
+                                            </div>
+                                            <div class="file-input-wrapper">
+                                                <input type="button" class="cyanBG" value="Attach Document" />
+                                                <input type="file" name="Upload" accept="image/*, application/pdf" file-upload />
+                                            </div>
+                                            <div class="formButtons">
+                                                <input type="submit" class="btn cyanBG" value="{{(documentmode=='New' ) ? 'Submit' : 'Update'}}" ng-click="SubmitFile()" />
+                                                <input type="reset" class="btn orangeBG revertFlip" value="Cancel" ng-click="CancelFile()" />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br class="clear" />
+                    </div>
+                </div>
+                <div class="tab-pane" id="shifts">
+                    <div class="row">
+                        <div class="col-md-4">
+
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="pull-left" style="text-align: center; margin-right: 5px; max-width: 38%">
+                                    <div class="modalHero" cardtext="{{selectedDriver.Forename + ' ' + selectedDriver.Surname}}" url="{{selectedDriver.ImageUrl}}" profile-hero></div>
+                                </div>
+                                <div class="pull-left modalHeroName" style="margin-right: 0px;">
+                                    <span class="white">{{ selectedDriver.CallSign }}</span><br />
+                                    <br />
+                                    {{ selectedDriver.Forename }}<br />
+                                    {{ selectedDriver.Surname }}
+                               
+                                </div>
+                            </div>
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Quick Stats</span>
+                            </div>
+                            <div class="cyan bold pull-left sText" style="margin: 5px auto 10px auto;" 
+                                data-percent="{{(stats.alltime.selected.Result[0].ShiftStats.TotalShifts / stats.alltime.max.Result[0].ShiftStats.TotalShifts * 100) || 0}}" trackcolor="#131313" scalecolor="#f9f9f9" size="50" linewidth="4" barcolor="auto" doughnut>
+                                {{stats.alltime.selected.Result[0].ShiftStats.TotalShifts | AbbrValue}}</div>
+                            <div class="pull-left mText white" style="margin: 5px auto 0; padding: 15px 5px;">Shifts in Total</div>
+                            <br class="clearfix" />
+                            <div class="cyan bold pull-left sText" style="margin: 5px auto 10px auto;" 
+                                data-percent="{{(stats.month.selected.Result[0].ShiftStats.TotalShifts / stats.month.max.Result[0].ShiftStats.TotalShifts * 100) || 0}}" trackcolor="#131313" scalecolor="#f9f9f9" size="50" linewidth="4" barcolor="auto" doughnut>
+                                {{stats.month.selected.Result[0].ShiftStats.TotalShifts | AbbrValue}}</div>
+                            <div class="pull-left mText white" style="margin: 5px auto 0; padding: 15px 5px;">Shifts Last Month</div>
+                            <br class="clearfix" />
+                            <div class="cyan bold pull-left sText" style="margin: 5px auto 10px auto;" 
+                                data-percent="{{(stats.alltime.selected.Result[0].BookingStats.TotalBookings / stats.alltime.max.Result[0].BookingStats.TotalBookings * 100) || 0}}" trackcolor="#131313" scalecolor="#f9f9f9" size="50" linewidth="4" barcolor="auto" doughnut>
+                                {{stats.alltime.selected.Result[0].BookingStats.TotalBookings | AbbrValue}}</div>
+                            <div class="pull-left mText white" style="margin: 5px auto 0; padding: 15px 5px;">Jobs in Total</div>
+                            <br class="clearfix" />
+                            <div class="cyan bold pull-left sText" style="margin: 5px auto 10px auto;" 
+                                data-percent="{{(stats.month.selected.Result[0].BookingStats.TotalBookings / stats.month.max.Result[0].BookingStats.TotalBookings * 100) || 0}}" trackcolor="#131313" scalecolor="#f9f9f9" size="50" linewidth="4" barcolor="auto" doughnut>
+                                {{stats.month.selected.Result[0].BookingStats.TotalBookings | AbbrValue}}</div>
+                            <div class="pull-left mText white" style="margin: 5px auto 0; padding: 15px 5px;">Jobs Last Month</div>
+                            <br class="clearfix" />
+                            <div class="cyan bold pull-left sText" style="margin: 5px auto 10px auto;" 
+                                data-percent="{{(stats.month.selected.Result[0].ShiftStats.AverageLengthOfShift / stats.month.max.Result[0].ShiftStats.AverageLengthOfShift * 100) || 0}}" trackcolor="#131313" scalecolor="#f9f9f9" size="50" linewidth="4" barcolor="auto" doughnut>
+                                {{(stats.month.selected.Result[0].ShiftStats.AverageLengthOfShift / 60) | number:1}}hr</div>
+                            <div class="pull-left mText white" style="margin: 5px auto 0; padding: 15px 5px;">Avg. Time/Shift</div>
+                            <br class="clearfix" />
+                        </div>
+                        <div class="col-md-8 dualTable" style="overflow: hidden; height: 500px;">
+                            <div class="modalSectionHead">
+                                <span class="modalSectionHeadName">Shift Details</span>
+                            </div>
+                            <div class="shiftTable primaryTable">
+                                <table class="modalTable shadow">
+                                    <thead>
+                                        <tr>
+                                            <th width="7%"></th>
+                                            <th width="10%">#</th>
+                                            <th width="29%">Started</th>
+                                            <th width="29%">Ended</th>
+                                            <th width="25%">Vehicle(s)</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div class="tableContent" style="height: 420px;">
+                                    <table class="modalTable">
+                                        <tbody>
+                                            <tr ng-repeat="shift in selectedShifts">
+                                                <td class="cyan showSecondaryTable text-center" width="7%"><a href="" ng-click="BookingsForShiftFetch(shift.ID)"><span class="glyphicon glyphicon-list cyan mText"></span></a></td>
+                                                <td width="10%">{{shift.ID}}</td>
+                                                <td width="29%">{{shift.ShiftStart | date:'dd/MM/yyyy HH:mm'}}</td>
+                                                <td width="29%">{{shift.ShiftEnd | date:'dd/MM/yyyy HH:mm'}}</td>
+                                                <td width="25%">{{shift.Vehicle.Model+ ' ' + shift.Vehicle.Registration}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="shadowFadeBottom"></div>
+                            </div>
+                            <div class="bookingOnShiftTable secondaryTable" style="display: none">
+                                <div class="pull-left bold cyan">
+                                    <h5>Bookings for Shift ID {{bookingsDataForShift[0].ShiftID}}</h5>
+                                </div>
+                                <div class="pull-right red showPrimaryTable mText bold glyphicon glyphicon-remove-sign" style="cursor: pointer; line-height: 30px;"></div>
+                                <br class="clearfix" />
+                                <table class="modalTable shadow">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%">#</th>
+                                            <th width="20%">For</th>
+                                            <th width="30%">From</th>
+                                            <th width="30%">To</th>
+                                            <th width="10%">Fare</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div class="tableContent" style="height: 400px;">
+                                    <table class="modalTable">
+                                        <tbody>
+                                            <tr ng-repeat="booking in bookingsDataForShift">
+                                                <td width="10%">{{booking.ID}}</td>
+                                                <td width="20%">{{booking.Client.Name}}</td>
+                                                <td width="30%">{{booking.From}}</td>
+                                                <td width="30%">{{booking.To}}</td>
+                                                <td width="10%" class="cyan text-right bold">£{{booking.ActualFare | number:2}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="shadowFadeBottom"></div>
+                            </div>
+                            <br class="clearfix" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="tab-pane" id="accounts"></div>
+                <div class="tab-pane" id="messaging"></div>
+                <!--Tabs--->
+            </div>
+        </div>
+        <div class="card-back" style="background: black;">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(".showSecondaryTable").live("click", function () {
+            $(this).closest(".primaryTable").slideUp();
+            $(this).closest(".dualTable").find(".secondaryTable").slideDown();
+        });
+        $(".showPrimaryTable").live("click", function () {
+            $(this).closest(".secondaryTable").slideUp();
+            $(this).closest(".dualTable").find(".primaryTable").slideDown();
+        });
+
+        $(".flipActive").live("click", function () {
+            $(this).closest(".row").find(".flipContainer .flip").addClass("flipCardBack");
+            $(this).closest(".row").find(".flipContainer .flip .front").hide();
+        });
+
+        $(".flipActive1").live("click", function () {
+            $(".flipContainer .flip").addClass("flipCardBack");
+            $(".flipContainer .flip .front").hide();
+        });
+
+        $(".revertFlip").live("click", function () {
+            $(this).closest(".row").find(".flipContainer .flip").removeClass("flipCardBack");
+            $(this).closest(".row").find(".flipContainer .flip .front").show();
+        });
+
+        $(".closePopOver").live("click", function () {
+            $('#myModal').modal('hide');
+        });
+
+    });
+</script>

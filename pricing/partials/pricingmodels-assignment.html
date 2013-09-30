@@ -1,0 +1,40 @@
+﻿    <div class="row-fluid">
+    <h4>{{ company.Name }}</h4>
+            <div class="input-append" ng-init="compedit=false" ng-hide="compedit">
+            <input type="text" value="{{GetCurrentModel(company)}}" readonly />
+            <input type="button" class="btn" ng-click="compedit=true" value="Change" />
+        </div>
+        <div class="input-append" ng-show="compedit">
+            <select ng-model="company.DefaultPricingModelID" ng-options="p.ID as p.Name for p in pricingModels">
+            </select>
+            <input type="button" class="btn" value="Update" ng-click="UpdateCompany(company); compedit=false;" />
+        </div>
+</div>
+
+<div class="row-fluid" ng-repeat="ct in clientTypes">
+    <h4>{{ ct.Name }}</h4>
+        <div class="input-append" ng-init="groupedit=false" ng-hide="groupedit">
+            <input type="text" value="{{GetCurrentModel(ct)}}" readonly />
+            <input type="button" class="btn" ng-click="groupedit=true" value="Change" />
+        </div>
+        <div class="input-append" ng-show="groupedit">
+            <select ng-model="ct.DefaultPricingModelID" ng-options="p.ID as p.Name for p in pricingModels">
+                <option value="" label="Company Default"></option>
+            </select>
+            <input type="button" class="btn" value="Update" ng-click="UpdateGroup(ct); groupedit=false;" />
+        </div>
+    <div class="row-fluid" ng-repeat="client in clients | ItemsForGroup:ct.Name:groupingVal:sorting" style="padding-left: 30px;">
+        <h5>{{ client.Name }}</h5>
+        <div class="input-append" ng-init="edit=false" ng-hide="edit">
+            <input type="text" value="{{GetCurrentModel(client)}}" readonly />
+            <input type="button" class="btn" ng-click="edit=true" value="Change" />
+        </div>
+        <div class="input-append" ng-show="edit">
+            <select ng-model="client.DefaultPricingModelID" ng-options="p.ID as p.Name for p in pricingModels">
+                <option value="" label="Group Default"></option>
+            </select>
+            <input type="button" class="btn" value="Update" ng-click="UpdateClient(client); edit=false;" />
+        </div>
+    </div>
+    <hr />
+</div>
