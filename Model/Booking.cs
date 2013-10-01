@@ -237,6 +237,10 @@ namespace Cab9.Model
 
             IHubContext Hub = GlobalHost.ConnectionManager.GetHubContext<DriverHub>();
 
+            var bo = new BookingOffer();
+            bo.OfferDateTime = DateTime.Now;
+            bo.BookingID = ID;
+
             Hub.Clients.All.offerBooking(driver.ID, new { 
                 BookingID = ID,
                 Booking = new { 
