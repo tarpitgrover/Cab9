@@ -12,7 +12,7 @@ namespace Cab9
 {
     public partial class Test : System.Web.UI.Page
     {
-        public static IHubContext Hub { get { return GlobalHost.ConnectionManager.GetHubContext<DriverHub>(); } }
+        public static IHubContext Hub { get { return GlobalHost.ConnectionManager.GetHubContext<OfficeHub>(); } }
 
 
         protected void Page_Load(object sender, EventArgs e)
