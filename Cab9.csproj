@@ -103,6 +103,7 @@
   <ItemGroup>
     <Content Include="bookings\bookingModule.js" />
     <Content Include="bookings\default.aspx" />
+    <Content Include="bookings\partials\new-booking1.html" />
     <Content Include="bookings\partials\map-view.html" />
     <Content Include="bookings\partials\new-booking.html" />
     <Content Include="bookings\partials\table-view.html" />
