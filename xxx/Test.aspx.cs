@@ -14,7 +14,6 @@ namespace Cab9
     {
         public static IHubContext Hub { get { return GlobalHost.ConnectionManager.GetHubContext<OfficeHub>(); } }
 
-
         protected void Page_Load(object sender, EventArgs e)
         {
 
