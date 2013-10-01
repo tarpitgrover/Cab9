@@ -356,7 +356,7 @@ app.directive('locationSearchAdv', function (Location, $filter) {
             selected: '='
         },
         template:
-              ' <input type="text" ng-model="searchText" placeholder="Search Postcodes, Stations, Airports.." style="width:100%"/>'
+              ' <input type="text" ng-model="searchText" placeholder="Postcodes, Stations, Airports etc" style="width:85%;display:inline-block;"/>'
             + ' <div></div>'
             + ' <div class="popover bottom" style="position:absolute; top: 20px; left:15px; right:15px; max-width: none">'
             + '     <div class="arrow"></div>'

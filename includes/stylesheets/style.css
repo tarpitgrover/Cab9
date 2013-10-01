@@ -156,7 +156,7 @@
 /*******************************************************MODAL*******************************************************/
 
 #newBookingModal .modal-dialog {
-    width:960px;
+    width:95%   ;
     border-radius:0;
     border: 5px solid #1d2826;
     padding: 0;
@@ -950,6 +950,12 @@
     margin-left: 10px;
     font-weight:800;
     font-family: 'Montserrat', sans-serif;
+}
+
+#newBookingModal .form-group label
+{
+    margin-left:0;
+    background:none;
 }
 
 .form-group input[type="text"], .form-group select, .form-group textarea{
