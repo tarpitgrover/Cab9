@@ -189,6 +189,7 @@ namespace Cab9.Model
                 routeLeg.Steps = new List<RouteStep>();
                 routeLeg.EnteredZones = new List<PricingZone>();
 
+                if ((decimal)model.WaitingPeriod != 0)
                 routeLeg.WaitingCost =
                     Math.Ceiling((decimal)routeLeg.WaitAtDestination / (decimal)model.WaitingPeriod)
                     *

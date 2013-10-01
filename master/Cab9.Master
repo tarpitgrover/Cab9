@@ -32,7 +32,7 @@
         <div>
             <div class="modal fade" id="newBookingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-click="dismissNewBooking($event)">
                 <div class="modal-dialog">
-                    <div class="modal-content" ng-include="'/bookings/partials/new-booking.html'" ng-controller="NewBookingController">
+                    <div class="modal-content" ng-include="'/bookings/partials/new-booking.html'" >
                        
                     </div>
                 </div>

@@ -129,7 +129,7 @@ namespace Cab9.Controller
             if (!CompanyID.HasValue) return Request.CreateResponse(HttpStatusCode.Unauthorized, "Could not get CompanyID from User");
 
             var company = Company.SelectByID(CompanyID.Value);
-            var drivers = Driver.Select(companyId: CompanyID.Value);
+            var drivers = Driver.Select(companyId: CompanyID.Value, active:true);
             drivers = drivers.Where(d => (d.Status == DriverStatus.Available || d.Status == DriverStatus.Clearing) && (d.CurrentShiftID.HasValue)).ToList();
 
             if (drivers.Count == 0) return Request.CreateResponse(HttpStatusCode.OK, new object[1]);
@@ -174,17 +174,17 @@ namespace Cab9.Controller
                     }
                 }
 
-                DriverShift shift = DriverShift.SelectByID(d.CurrentShiftID ?? 0);
-                if (shift != null)
-                {
-                    var count = shift.GetBookings().Count();
-                    PointsShift = count * company.ShiftBookingsModifier;
-                }
+                //DriverShift shift = DriverShift.SelectByID(d.CurrentShiftID ?? 0);
+                //if (shift != null)
+                //{
+                //    var count = shift.GetBookings().Count();
+                //    PointsShift = count * company.ShiftBookingsModifier;
+                //}
 
                 result.Add(new
                 {
                     driver = d,
-                    vehicle = (shift != null) ? ((shift.Vehicle != null) ? shift.Vehicle : null) : null,
+                    //vehicle = (shift != null) ? ((shift.Vehicle != null) ? shift.Vehicle : null) : null,
                     distance = distance,
                     total = PointsClearing + PointsDistance + PointsShift
                 });
@@ -192,7 +192,8 @@ namespace Cab9.Controller
 
             if (result.Count == 0) return Request.CreateResponse(HttpStatusCode.OK, new object[1]);
 
-            result = result.OrderBy(x => x.total).Where(x => (x.vehicle != null) ? (x.vehicle.PAX >= pax) : false).ToList();
+            //result = result.OrderBy(x => x.total).Where(x => (x.vehicle != null) ? (x.vehicle.PAX >= pax) : false).ToList();
+            result = result.OrderBy(x => x.total).ToList();
 
             if (result.Count == 0) return Request.CreateResponse(HttpStatusCode.OK, new object[1]);
 
