@@ -1,4 +1,5 @@
 ﻿/// <reference path='../includes/js/angular.js' />
+/// <reference path="../includes/js/jquery.signalR-2.0.0-rc1.js" />
 
 var app = angular.module('DriverInterface', ['ngResource', 'ngRoute', 'ngSanitize']);
 
