@@ -17,7 +17,6 @@ namespace Cab9.Model
     {
         #region Properties
 
-        public int MyProperty { get; set; }
         public long ID { get; set; }
         public int CompanyID { get; set; }
         public int Priority { get; set; }
