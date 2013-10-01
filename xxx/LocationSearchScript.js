@@ -1,4 +1,5 @@
-﻿/// <reference path="../master/angular/masterModule.js" />
+﻿/// Sample Change
+/// <reference path="../master/angular/masterModule.js" />
 /// <reference path="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSjg13rvyaC145WmGcf1FInYT3dUebzOg&sensor=false&libraries=drawing,geometry,places" />
 app.directive('locationSearchAdv', function (Location, $filter) {
     return {
