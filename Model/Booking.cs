@@ -240,8 +240,14 @@ namespace Cab9.Model
             var bo = new BookingOffer();
             bo.OfferDateTime = DateTime.Now;
             bo.BookingID = ID;
+            bo.DriverID = driverid;
+            bo.Insert();
 
-            Hub.Clients.All.offerBooking(driver.ID, new { 
+
+            Hub.Clients.All.offerBooking(driverid, new
+            { 
+                ID = bo.ID,
+                DriverID = driverid,
                 BookingID = ID,
                 Booking = new { 
                     From = this.From, 
