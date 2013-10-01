@@ -243,7 +243,6 @@ namespace Cab9.Model
             bo.DriverID = driverid;
             bo.Insert();
 
-
             Hub.Clients.All.offerBooking(driverid, new
             { 
                 ID = bo.ID,

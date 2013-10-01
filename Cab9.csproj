@@ -277,6 +277,7 @@
       <DependentUpon>angular.js</DependentUpon>
     </Content>
     <Content Include="includes\js\angular.bootstrap.timepicker.js" />
+    <Content Include="xxx\Test.aspx" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="pricing1\index.html" />
     <Content Include="pricing1\partials\journeyQuote.html" />
@@ -500,6 +501,13 @@
     </Compile>
     <Compile Include="vehicles\default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="xxx\Test.aspx.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="xxx\Test.aspx.designer.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
