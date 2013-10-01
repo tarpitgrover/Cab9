@@ -24,12 +24,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -113,6 +115,8 @@
     <Content Include="clients\partials\client-editor.html" />
     <Content Include="clients\partials\clients-table.html" />
     <Content Include="DriverInterface\default.aspx" />
+    <Content Include="DriverInterface\partials\booking.html" />
+    <Content Include="DriverInterface\partials\menu-bookings.html" />
     <Content Include="DriverInterface\partials\login.html" />
     <Content Include="DriverInterface\partials\menu-shifts.html" />
     <Content Include="DriverInterface\partials\menu.html" />
@@ -377,6 +381,7 @@
     <Compile Include="DataLayer\BookingDAL.cs" />
     <Compile Include="DataLayer\ClientTypeDAL.cs" />
     <Compile Include="DataLayer\CompanyDAL.cs" />
+    <Compile Include="DataLayer\BookingOfferDAL.cs" />
     <Compile Include="DataLayer\LocationDAL.cs" />
     <Compile Include="DataLayer\PricingZoneDAL.cs" />
     <Compile Include="DataLayer\PricingFixedDAL.cs" />
@@ -418,6 +423,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Hubs\Common\Common.cs" />
     <Compile Include="Hubs\OfficeHub.cs" />
     <Compile Include="Hubs\DispatchHub.cs" />
@@ -448,6 +454,7 @@
     <Compile Include="Model\ClientType.cs" />
     <Compile Include="Model\Common\OfficeHubEntity.cs" />
     <Compile Include="Model\Company.cs" />
+    <Compile Include="Model\BookingOffer.cs" />
     <Compile Include="Model\Location.cs" />
     <Compile Include="Model\Identity.cs" />
     <Compile Include="Model\PricingFixed.cs" />
@@ -526,7 +533,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>56980</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:50808/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

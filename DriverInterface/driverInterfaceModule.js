@@ -19,11 +19,23 @@ app.config(['$routeProvider', '$httpProvider', function (Routing, Http) {
             templateUrl: '/driverinterface/partials/menu-shifts.html',
             backText: 'Back'
         })
+        .when('/menu-bookings',
+        {
+            controller: 'BookingMenuController',
+            templateUrl: '/driverinterface/partials/menu-bookings.html',
+            backText: 'Back'
+        })
         .when('/shift-start',
         {
             controller: 'StartShiftController',
             templateUrl: '/driverinterface/partials/shift-start.html',
             backText: 'Back'
+        })
+        .when('/booking',
+        {
+            controller: 'BookingController',
+            templateUrl: '/driverinterface/partials/booking.html',
+            backText: 'Menu'
         })
         .when('/booking-offer',
         {
@@ -118,11 +130,12 @@ app.controller('DIController', ['$rootScope', '$scope', '$location', '$timeout',
     /// Hub
     var LocationPromise = null;
     var SendLocation = function () {
-            navigator.geolocation.getCurrentPosition(function (location) {
-                root.current.location = location;
-                Hub.SendUpdate(location)
-                LocationPromise = Delay(SendLocation, 8000);
-            });        
+        navigator.geolocation.getCurrentPosition(function (location) {
+            console.log("Position Fetched");
+            root.current.location = location;
+            Hub.SendUpdate(location)
+            LocationPromise = Delay(SendLocation, 15000);
+        });        
     };
 
     scope.$on('ShiftStarted', function (event) {
@@ -131,13 +144,13 @@ app.controller('DIController', ['$rootScope', '$scope', '$location', '$timeout',
    
     scope.$on('BookingOffered', function (event, offer) {
         if (root.current.driver.Status == 'Available') {
-            scope.$apply(function(){
+            //scope.$apply(function(){
                 root.current.offers.push(offer);
                 if (root.include != 'partials/offer.html') {
                     $('#content').css('-webkit-filter', 'blur(2px)')
                     root.include = 'partials/offer.html';
                 }
-            })
+            //})
         } else if (root.current.driver.Status == 'Clearing') {
 
         } else {
@@ -171,9 +184,12 @@ app.controller('DIController', ['$rootScope', '$scope', '$location', '$timeout',
                 scope.statusColors = {
                     'label-danger': (root.current.driver && root.current.driver.Status == 'OffDuty') ? true : false,
                     'label-warning': (root.current.driver && root.current.driver.Status == 'Unavailable') ? true : false,
-                    'label-info': (root.current.driver && (root.current.driver.Status == 'Clearing' || root.current.driver.Status == 'OnBreak')) ? true : false,
+                    'label-info': (root.current.driver && (root.current.driver.Status == 'Clearing' || root.current.driver.Status == 'OnBreak' || root.current.driver.Status == 'OnJob')) ? true : false,
                     'label-success': (root.current.driver && root.current.driver.Status == 'Available') ? true : false
                 };
+            }
+            if (newValue.Status != oldValue.Status) {
+                root.current.driver.$updateStatus({ driverid: newValue.ID, status: newValue.Status });
             }
         }
     }, true);
@@ -203,9 +219,9 @@ app.controller('LoginViewController', ['$rootScope', '$scope', '$location', 'Use
             function (user) {
                 //Success
                 root.user = user;
-                if (user.ObjectType == "Driver" && user.ObjectID)
+                if (user.EntityType == "DRIVER" && user.EntityID)
                     root.current.driver = Driver.get(
-                        { driverid: user.ObjectID },
+                        { driverid: user.EntityID },
                         function (data) {
                             if (data.CurrentShiftID)
                             {
@@ -304,7 +320,23 @@ app.controller('StartShiftController', ['$rootScope', '$scope', '$location', 'Dr
     }
 }]);
 
-app.controller('BookingOfferController', ['$rootScope', '$scope', '$timeout', 'HubService', function (root, scope, Delay, Hub) {
+app.controller('BookingMenuController', ['$rootScope', '$scope', '$location', 'DriverShift', function (root, scope, Location, DriverShift) {
+    scope.$on('BackClicked', function () {
+        Location.path('/menu');
+    });
+
+    scope.CurrentBooking = function () {
+        Location.path('/booking');
+    }
+}]);
+
+app.controller('BookingController', ['$rootScope', '$scope', '$location', 'DriverShift', function (root, scope, Location, DriverShift) {
+    scope.$on('BackClicked', function () {
+        Location.path('/menu');
+    });
+}]);
+
+app.controller('BookingOfferController', ['$rootScope', '$scope', '$timeout', 'HubService', 'Booking', function (root, scope, Delay, Hub, Booking) {
     scope.time = 30;
     scope.currentdelay = null;
 
@@ -335,6 +367,8 @@ app.controller('BookingOfferController', ['$rootScope', '$scope', '$timeout', 'H
         });
         root.current.booking = Booking.get({ id: scope.offer.BookingID });
         root.current.offers = [];
+        root.include = '';
+        root.current.driver.Status = 'OnJob';
     };
 
     scope.Reject = function () {
@@ -367,25 +401,25 @@ app.controller('BookingOfferController', ['$rootScope', '$scope', '$timeout', 'H
     };
 }]);
 
-app.factory('User', [function () {
+app.factory('User', ['$resource', function (Resource) {
     var result = {};
-    result.AttemptLogin = function (credentials, success, fail) {
-        if (credentials.email == 'test' && credentials.pwd == 'test') {
-            success({
-                ID: 1,
-                CompanyID: 1,
-                Name: 'David',
-                Email: 'davidscfc@gmail.com',
-                ObjectType: 'Driver',
-                ObjectID: '14'
-            })
-        } else {
-            fail({
-                Reason: 'Invalid Details'
-            })
+    var service = Resource('/api/user/:action', {}, {
+        attemptLogin: {
+            method: 'GET',
+            isArray: false,
+            params: {
+                action: 'AttemptLogin',
+            }
         }
-        
-    }
+    });
+
+    result.AttemptLogin = function (credentials, success, fail) {
+        service.attemptLogin({
+            username: credentials.email,
+            password: credentials.pwd
+        }, success, fail);
+    };
+
     return result;
 }]);
 
@@ -427,6 +461,12 @@ app.factory('Driver', ['$resource', function (Resource) {
             params: {
                 action: 'GetByID'
             }
+        },
+        updateStatus: {
+            method: 'POST',
+            params: {
+                action: 'UpdateStatus'
+            }
         }
     })
     return result;
@@ -434,6 +474,18 @@ app.factory('Driver', ['$resource', function (Resource) {
 
 app.factory('Vehicle', ['$resource', function (Resource) {
     var result = Resource('/api/vehicle/:action', {}, {
+        get: {
+            method: 'GET',
+            params: {
+                action: 'GetByID'
+            }
+        }
+    })
+    return result;
+}]);
+
+app.factory('Booking', ['$resource', function (Resource) {
+    var result = Resource('/api/booking/:action', {}, {
         get: {
             method: 'GET',
             params: {
@@ -541,7 +593,8 @@ app.factory('HubService', ['signalR', '$rootScope', function (signalR, root) {
             this.hub.server.rejectBookingOffer(offerId, reason)
         },
         SendUpdate: function (location) {
-            service.hub.server.sendUpdate(root.current.shift.ID, location.coords.latitude, location.coords.longitude, location.coords.accuracy, location.coords.speed, location.coords.heading);
+            if (service.running)
+                service.hub.server.sendUpdate(root.current.shift.ID, location.coords.latitude, location.coords.longitude, location.coords.accuracy, location.coords.speed, location.coords.heading);
         }
     }
     return service;

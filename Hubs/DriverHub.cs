@@ -87,8 +87,13 @@ namespace Cab9.Hubs
 
             var shift = DriverShift.SelectByID(shiftid);
 
-            if (shift != null && shift.CompanyID == user.CompanyID && latitude.HasValue && longitude.HasValue) 
+            if (shift != null && shift.CompanyID == user.CompanyID && latitude.HasValue && longitude.HasValue)
+            {
                 shift.AddNewPoint(new Point(latitude.Value, longitude.Value));
+                var driver = shift.Driver;
+                driver.LastKnownPosition = new Point(latitude.Value, longitude.Value);
+                driver.Update();
+            }
         }
 
         public void AcceptBookingOffer(long offerid)
