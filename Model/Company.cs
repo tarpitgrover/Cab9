@@ -85,7 +85,7 @@ namespace Cab9.Model
 #if DEBUG
             if (id == 1) return new Company() { 
                 ID = 1,
-                DefaultPricingModelID = 11,
+                DefaultPricingModelID = 7,
                 ClearingModifier = 100,
                 DistanceModifier = 50,
                 ShiftBookingsModifier = 15,
