@@ -24,12 +24,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,6 +45,7 @@
   <ItemGroup>
     <Reference Include="GoogleMapsApi">
       <HintPath>Z:\Desktop\GoogleMapsApi.dll</HintPath>
+      <HintPath>D:\Cab9\ProjectFile\Cab9\bin\GoogleMapsApi.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>packages\Microsoft.AspNet.SignalR.Core.2.0.0-rc1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
@@ -114,6 +117,8 @@
     <Content Include="clients\partials\client-editor.html" />
     <Content Include="clients\partials\clients-table.html" />
     <Content Include="DriverInterface\default.aspx" />
+    <Content Include="DriverInterface\partials\booking.html" />
+    <Content Include="DriverInterface\partials\menu-bookings.html" />
     <Content Include="DriverInterface\partials\login.html" />
     <Content Include="DriverInterface\partials\menu-shifts.html" />
     <Content Include="DriverInterface\partials\menu.html" />
@@ -273,6 +278,9 @@
       <DependentUpon>angular.js</DependentUpon>
     </Content>
     <Content Include="includes\js\angular.bootstrap.timepicker.js" />
+    <Content Include="xxx\LocationSearchScript.js" />
+    <Content Include="xxx\LocationSearchTextBox.aspx" />
+    <Content Include="xxx\Test.aspx" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="pricing1\index.html" />
     <Content Include="pricing1\partials\journeyQuote.html" />
@@ -377,6 +385,7 @@
     <Compile Include="DataLayer\BookingDAL.cs" />
     <Compile Include="DataLayer\ClientTypeDAL.cs" />
     <Compile Include="DataLayer\CompanyDAL.cs" />
+    <Compile Include="DataLayer\BookingOfferDAL.cs" />
     <Compile Include="DataLayer\LocationDAL.cs" />
     <Compile Include="DataLayer\PricingZoneDAL.cs" />
     <Compile Include="DataLayer\PricingFixedDAL.cs" />
@@ -418,15 +427,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Hubs\Common\MasterHub.cs" />
-    <Compile Include="Hubs\ClientHub.cs" />
-    <Compile Include="Hubs\BookingHub.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Hubs\Common\Common.cs" />
+    <Compile Include="Hubs\OfficeHub.cs" />
     <Compile Include="Hubs\DispatchHub.cs" />
-    <Compile Include="Hubs\TrackingHub.cs" />
-    <Compile Include="Hubs\DriverShiftHub.cs" />
-    <Compile Include="Hubs\NoteHub.cs" />
-    <Compile Include="Hubs\DocumentHub.cs" />
-    <Compile Include="Hubs\VehicleHub.cs" />
     <Compile Include="Hubs\DriverHub.cs" />
     <Compile Include="Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
@@ -452,7 +456,9 @@
     <Compile Include="Model\Client.cs" />
     <Compile Include="Model\Booking.cs" />
     <Compile Include="Model\ClientType.cs" />
+    <Compile Include="Model\Common\OfficeHubEntity.cs" />
     <Compile Include="Model\Company.cs" />
+    <Compile Include="Model\BookingOffer.cs" />
     <Compile Include="Model\Location.cs" />
     <Compile Include="Model\Identity.cs" />
     <Compile Include="Model\PricingFixed.cs" />
@@ -531,7 +537,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>56980</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:50808/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
