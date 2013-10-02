@@ -27,15 +27,25 @@ $('.expandCollapseRight').on('click', function () {
 });
 
 $('#newBookingToggle').on('click', function () {
-    $('#sidebarLeft').css("-webkit-filter", "blur(3px)");
-    $('#content').css("-webkit-filter", "blur(3px)");
-    $('#sidebarRight').css("-webkit-filter", "blur(3px)");
+    $('#sidebarLeft').css("-webkit-filter", "blur(2px)");
+    $('#content').css("-webkit-filter", "blur(2px)");
+    $('#sidebarRight').css("-webkit-filter", "blur(2px)");
+    setTimeout(function () {
+        if (window.maps)
+            window.maps.forEach(function (map) {
+                google.maps.event.trigger(map, 'resize');
+                map.setCenter(new google.maps.LatLng(51.4775, -0.4614));
+            });
+    }, 500)
+    
 });
 
-$('#newBookingModal').on('click', function () {
-    $('#sidebarLeft').css("-webkit-filter", "blur(0px)");
-    $('#content').css("-webkit-filter", "blur(0px)");
-    $('#sidebarRight').css("-webkit-filter", "blur(0px)");
+$('#newBookingModal').on('click', function (event) {
+    if (event.srcElement == $('#newBookingModal')[0]) {
+        $('#sidebarLeft').css("-webkit-filter", "blur(0px)");
+        $('#content').css("-webkit-filter", "blur(0px)");
+        $('#sidebarRight').css("-webkit-filter", "blur(0px)");
+    }
 });
 
 $('.expandCollapsePhoneLeft').on('click', function () {
