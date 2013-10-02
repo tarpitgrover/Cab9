@@ -21,7 +21,8 @@ namespace Cab9
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            Hub.Clients.All.BookingOffer(Booking.SelectByID(long.Parse(TextBox1.Text)));
+            var booking = Booking.SelectByID(Int64.Parse(TextBox1.Text));
+            booking.Push(Int32.Parse(TextBox2.Text));
         }
     }
 }
