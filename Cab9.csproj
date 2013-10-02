@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GoogleMapsApi">
-      <HintPath>Z:\Desktop\GoogleMapsApi.dll</HintPath>
+      <HintPath>..\Cab9Temp\Cab9\bin\GoogleMapsApi.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>packages\Microsoft.AspNet.SignalR.Core.2.0.0-rc1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>

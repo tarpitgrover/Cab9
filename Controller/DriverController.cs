@@ -218,5 +218,26 @@ namespace Cab9.Controller
             var i = DriverStatsFactory.Generate(driverid, CompanyID.Value, from, to, grouping, timeformat);
             return Request.CreateResponse(HttpStatusCode.OK, i);
         }
+
+        [HttpPost]
+        [ActionName("UpdateStatus")]
+        public HttpResponseMessage UpdateStatus(int driverid, string status)
+        {
+            if (!CompanyID.HasValue) return Request.CreateResponse(HttpStatusCode.Unauthorized, "Could not get CompanyID from User");
+
+            var driver = Driver.SelectByID(driverid);
+            if (driver == null || driver.CompanyID != CompanyID.Value) return Request.CreateResponse(HttpStatusCode.BadRequest, "DriverID value not valid, requires valid driver id, -1 for averages or -2 for ideals.");
+
+            try
+            {
+                driver.Status = (DriverStatus)Enum.Parse(typeof(DriverStatus), status, true);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Status not valid");
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
     }
 }

@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Web.Http;
 using Cab9.Controller.Common;
 using User9 = Cab9.Model.User;
+using System.Web;
+using System.Web.Security;
 
 namespace Cab9.Controller
 {
@@ -108,6 +110,16 @@ namespace Cab9.Controller
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "An error occured, please check your input and try again.");
             }
+        }
+
+        [HttpGet]
+        [ActionName("AttemptLogin")]
+        public HttpResponseMessage AttemptLogin(string username, string password)
+        {
+            var user = User9.SelectByEmail(username);
+            var response = Request.CreateResponse(HttpStatusCode.OK, user);
+            FormsAuthentication.SetAuthCookie(username, false);
+            return response;
         }
     }
 }

@@ -1498,14 +1498,21 @@ app.controller("NewBookingController", function ($scope, signalRLocationHub) {
     }, true);
 
     $scope.$watch('activeActiveBooking.selectedNumber', function (newValue) {
+<<<<<<< HEAD
         if (newValue && newValue.ContactNumber.length>3) {
+=======
+        if (newValue) {
+>>>>>>> 9a1a08c4ba3015204fff15d8ac742cc8ab53926a
             if (!$scope.activeActiveBooking.booking.PassengerName) $scope.activeActiveBooking.booking.PassengerName = newValue.PassengerName;
             $scope.activeActiveBooking.booking.ContactNumber = newValue.ContactNumber;
             $scope.previous = Booking.getPrevious({ name: null, number: newValue.ContactNumber })
             $scope.bookingsFor = newValue.ContactNumber;
 
         } else {
+<<<<<<< HEAD
             $scope.previous = [];
+=======
+>>>>>>> 9a1a08c4ba3015204fff15d8ac742cc8ab53926a
             $scope.activeActiveBooking.booking.ContactNumber = '';
         }
     });

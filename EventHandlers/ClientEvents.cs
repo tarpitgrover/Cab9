@@ -11,7 +11,7 @@ namespace Cab9.EventHandlers
 {
     public static class ClientEvents
     {
-        public static IHubContext Hub { get { return GlobalHost.ConnectionManager.GetHubContext<ClientHub>(); } }
+        public static IHubContext Hub { get { return GlobalHost.ConnectionManager.GetHubContext<OfficeHub>(); } }
 
         public static void SetupEvents()
         {
