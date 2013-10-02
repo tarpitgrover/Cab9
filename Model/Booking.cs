@@ -17,6 +17,7 @@ namespace Cab9.Model
     {
         #region Properties
 
+        public int Auto-Dispatch { get; set; }
         public long ID { get; set; }
         public int CompanyID { get; set; }
         public int Priority { get; set; }
@@ -238,6 +239,7 @@ namespace Cab9.Model
             IHubContext Hub = GlobalHost.ConnectionManager.GetHubContext<DriverHub>();
 
             var bo = new BookingOffer();
+            bo.CompanyID = CompanyID;
             bo.OfferDateTime = DateTime.Now;
             bo.BookingID = ID;
             bo.DriverID = driverid;
