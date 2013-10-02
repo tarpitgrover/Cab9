@@ -30,7 +30,7 @@
 <body onload="startclock()">
     <form id="form1" runat="server">
         <div>
-            <div class="modal fade" id="newBookingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-click="dismissNewBooking($event)">
+            <div class="modal fade" id="newBookingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content" ng-include="'/bookings/partials/new-booking.html'" >
                        
@@ -115,7 +115,7 @@
                     <div class="expandCollapsePhoneLeft"><span class="glyphicon glyphicon-align-justify"></span></div>
                     <div class="expandCollapsePhoneRight"><span class="glyphicon glyphicon-record"></span></div>
                     <h1 class="pageTitle">CODENAME CAB9</h1>
-                    <div id="newBookingToggle" data-toggle="modal" data-target="#newBookingModal"><i class="icon-plus-sign icon-large"></i> New Booking</div>
+                    <div id="newBookingToggle" data-toggle="modal" data-target="#newBookingModal" data-keyboard="false"><i class="icon-plus-sign icon-large"></i> New Booking</div>
                 </div>
                 <div id="pageContent">
                     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">

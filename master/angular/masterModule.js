@@ -105,7 +105,7 @@ var Company;
 app.run(function ($rootScope, $resource) {
     $rootScope.BoolValues = [true, false];
 
-    
+
 
     Company = $resource(apiEndPoint + 'company/:action', {}, {
         update: {
@@ -1158,6 +1158,11 @@ app.directive('basicMap', function () {
             };
             scope.options = mergeOptions(defaults, scope.options);
             scope.map = new google.maps.Map(elem[0], scope.options);
+            if (!window.maps)
+                window.maps = [scope.map];
+            else
+                window.maps.push(scope.map);
+
             scope.$emit("MapReady");
 
             //$('#map').css({ 'height': (($(window).height())) - $('#map').offset().top - 10 + 'px' });
@@ -1416,268 +1421,287 @@ function mergeOptions(defaults, overrides) {
 
 //////////////////NEW BOOKING CONTROLLER/////////////////////
 app.controller("NewBookingController", function ($scope, signalRLocationHub) {
-$scope.booking = new Booking();
-$scope.booking.CarType = 1;
-$scope.booking.date = new Date();
-$scope.booking.time = new Date().getHours() + ':' + new Date().getMinutes() + ' ' + ((new Date().getHours() > 11) ? 'PM' : 'AM');
-$scope.booking.PAX = 1;
-$scope.booking.BAX = 0;
-$scope.booking.PaymentMethod = 1;
-$scope.booking.Priority = 1;
-
-$scope.from = null;
-$scope.to = null;
-
-$scope.fromMarker = null;
-$scope.toMarker = null;
-
-$scope.mapObject = {};
-$scope.mapOptions = {
-    center: new google.maps.LatLng(51.4775, -0.4614),
-    zoom: 13
-};
-$scope.route = {};
-
-$scope.sideTab = '';
-$scope.previous = [];
-
-$scope.clients = Client.query();
-
-signalRLocationHub.initalise(function () { });
-
-//$scope.$watch('sideTab', function (newValue) {
-//    if (newValue == 'from' && $scope.fromMarker) {
-//        $scope.mapObject.setCenter($scope.fromMarker.getPosition());
-//        $scope.mapObject.setZoom(17);
-//    }
-//    else if (newValue == 'to' && $scope.toMarker) {
-//        $scope.mapObject.setCenter($scope.toMarker.getPosition());
-//        $scope.mapObject.setZoom(17);
-//    }
-//    else if (newValue == 'journey' && $scope.route.routes) {
-//        var bounds = $scope.route.routes[0].bounds;
-//        $scope.mapObject.fitBounds(bounds);
-//    }
-//});
-
-$scope.$watch('from', function (newValue) {
-    if (newValue) {
-        $scope.booking.From = newValue.Name;
-        if ($scope.fromMarker) {
-            $scope.fromMarker.setPosition(new google.maps.LatLng(newValue.Latitude, newValue.Longitude));
-            $scope.fromMarker.setMap($scope.mapObject);
-        } else {
-            $scope.fromMarker = new google.maps.Marker({
-                map: $scope.mapObject,
-                position: new google.maps.LatLng(newValue.Latitude, newValue.Longitude)
-            })
-        }
-        $scope.sideTab = 'from';
-    } else {
-        $scope.booking.From = '';
-        if ($scope.fromMarker) {
-            $scope.fromMarker.setMap(null);
-        }
-    }
-    $scope.GetRouteAndQuote();
-}, false);
-
-$scope.$watch('to', function (newValue) {
-    if (newValue) {
-        $scope.booking.To = newValue.Name;
-        if ($scope.toMarker) {
-            $scope.toMarker.setPosition(new google.maps.LatLng(newValue.Latitude, newValue.Longitude));
-            $scope.toMarker.setMap($scope.mapObject);
-        } else {
-            $scope.toMarker = new google.maps.Marker({
-                map: $scope.mapObject,
-                position: new google.maps.LatLng(newValue.Latitude, newValue.Longitude)
-            })
-        }
-        $scope.sideTab = 'to';
-    } else {
-        $scope.booking.To = '';
-        if ($scope.toMarker) {
-            $scope.toMarker.setMap(null);
-        }
-    }
-    $scope.GetRouteAndQuote();
-}, false);
-
-//$scope.$watch('selectedName', function (newValue) {
-//    if (newValue) {
-//        $scope.booking.PassengerName = newValue.PassengerName
-//        $scope.previous = Booking.getPrevious({ number: null, name: newValue.PassengerName })
-//        $scope.bookingsFor = newValue.PassengerName;
-
-//    } else {
-//        $scope.booking.PassengerName = '';
-//    }
-//});
-
-$scope.$watch('selectedNumber', function (newValue) {
-    if (newValue) {
-        if (!$scope.booking.PassengerName) $scope.booking.PassengerName = newValue.PassengerName;
-        $scope.booking.ContactNumber = newValue.ContactNumber;
-        $scope.previous = Booking.getPrevious({ name: null, number: newValue.ContactNumber })
-        $scope.bookingsFor = newValue.ContactNumber;
-
-    } else {
-        $scope.booking.ContactNumber = '';
-    }
-});
-
-$scope.CopyPrevious = function (previous) {
-    
-    var directionsService = new google.maps.DirectionsService();
-
-    var request = {
-        origin: previous.From,
-        destination: previous.To,
-        optimizeWaypoints: false,
-        travelMode: google.maps.DirectionsTravelMode.DRIVING
+    $scope.mapObject = {};
+    $scope.mapOptions = {
+        center: new google.maps.LatLng(51.4775, -0.4614),
+        zoom: 13
     };
+    $scope.clients = Client.query();
 
-    $('#fromTextbox').children('input')[0].value = previous.From;
-    $('#toTextbox').children('input')[0].value = previous.To;
-    $scope.booking.From = previous.From;
-    $scope.booking.To = previous.To;
+    signalRLocationHub.initalise(function () { });
 
-    directionsService.route(request, function (response, status) {
-        if (status == google.maps.DirectionsStatus.OK) {
-            $scope.safeApply(function () {
-                var start = response.routes[0].legs[0].start_location;
-                var end = response.routes[0].legs[0].end_location;
-                $scope.from = {
-                    Name: previous.From,
-                    Latitude: start.lat(),
-                    Longitude: start.lng()
-                };
-                $scope.to = {
-                    Name: previous.To,
-                    Latitude: end.lat(),
-                    Longitude: end.lng()
-                };
-            })
-                
+    var activeBooking = function () {
+        this.booking = new Booking();
+        this.booking.CarType = 1;
+        this.booking.date = new Date();
+        this.booking.time = ((new Date().getHours() > 9) ? new Date().getHours() : '0' + new Date().getHours()) + ':' + ((new Date().getMinutes() > 9) ? new Date().getMinutes() : '0' + new Date().getMinutes());
+        this.booking.PAX = 1;
+        this.booking.BAX = 0;
+        this.booking.PaymentMethod = 1;
+        this.booking.Priority = 1;
+
+        this.from = null;
+        this.to = null;
+
+        this.fromMarker = null;
+        this.toMarker = null;
+
+        this.route = null;
+
+        this.selectedNumber = null;
+    }
+
+    $scope.activeBookings = [];
+    $scope.activeActiveBooking = null;
+    $scope.previous = [];
+
+    $scope.$watch('activeActiveBooking.from', function (newValue) {
+        if (newValue) {
+            $scope.activeActiveBooking.booking.From = newValue.Name;
+            if ($scope.activeActiveBooking.fromMarker) {
+                $scope.activeActiveBooking.fromMarker.setPosition(new google.maps.LatLng(newValue.Latitude, newValue.Longitude));
+                $scope.activeActiveBooking.fromMarker.setMap($scope.mapObject);
+            } else {
+                $scope.activeActiveBooking.fromMarker = new google.maps.Marker({
+                    map: $scope.mapObject,
+                    position: new google.maps.LatLng(newValue.Latitude, newValue.Longitude)
+                })
+            }
+        } else {
+            $scope.activeActiveBooking.booking.From = '';
+            if ($scope.activeActiveBooking.fromMarker) {
+                $scope.activeActiveBooking.fromMarker.setMap(null);
+            }
+        }
+        $scope.GetRouteAndQuote();
+    }, true);
+
+    $scope.$watch('activeActiveBooking.to', function (newValue) {
+        if (newValue) {
+            $scope.activeActiveBooking.booking.To = newValue.Name;
+            if ($scope.activeActiveBooking.toMarker) {
+                $scope.activeActiveBooking.toMarker.setPosition(new google.maps.LatLng(newValue.Latitude, newValue.Longitude));
+                $scope.activeActiveBooking.toMarker.setMap($scope.mapObject);
+            } else {
+                $scope.activeActiveBooking.toMarker = new google.maps.Marker({
+                    map: $scope.mapObject,
+                    position: new google.maps.LatLng(newValue.Latitude, newValue.Longitude)
+                })
+            }
+        } else {
+            $scope.activeActiveBooking.booking.To = '';
+            if ($scope.activeActiveBooking.toMarker) {
+                $scope.activeActiveBooking.toMarker.setMap(null);
+            }
+        }
+        $scope.GetRouteAndQuote();
+    }, true);
+
+    $scope.$watch('activeActiveBooking.selectedNumber', function (newValue) {
+        if (newValue && newValue.ContactNumber.length>3) {
+            if (!$scope.activeActiveBooking.booking.PassengerName) $scope.activeActiveBooking.booking.PassengerName = newValue.PassengerName;
+            $scope.activeActiveBooking.booking.ContactNumber = newValue.ContactNumber;
+            $scope.previous = Booking.getPrevious({ name: null, number: newValue.ContactNumber })
+            $scope.bookingsFor = newValue.ContactNumber;
+
+        } else {
+            $scope.previous = [];
+            $scope.activeActiveBooking.booking.ContactNumber = '';
         }
     });
-};
 
-$scope.GetRouteAndQuote = function () {
-    if ($scope.from && $scope.to) {
+    $scope.CopyPrevious = function (previous) {
+
         var directionsService = new google.maps.DirectionsService();
 
         var request = {
-            origin: new google.maps.LatLng($scope.from.Latitude, $scope.from.Longitude),
-            destination: new google.maps.LatLng($scope.to.Latitude, $scope.to.Longitude),
+            origin: previous.From,
+            destination: previous.To,
             optimizeWaypoints: false,
             travelMode: google.maps.DirectionsTravelMode.DRIVING
         };
 
+        $('#fromTextbox').children('input')[0].value = previous.From;
+        $('#toTextbox').children('input')[0].value = previous.To;
+        $scope.activeActiveBooking.booking.From = previous.From;
+        $scope.activeActiveBooking.booking.To = previous.To;
+
         directionsService.route(request, function (response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
                 $scope.safeApply(function () {
-                    $scope.sideTab = 'journey';
-                    $scope.route = response;
-
-                    var points = [
-                        new google.maps.LatLng($scope.from.Latitude, $scope.from.Longitude),
-                        new google.maps.LatLng($scope.to.Latitude, $scope.to.Longitude)
-                    ]
-
-                    var line = new google.maps.Polyline({
-                        path: points,
-                        map: null
-                    });
-
-                    var quote = {
-                        encodedRoute: google.maps.geometry.encoding.encodePath(line.getPath()),
-                        waitingTimes: null,
-                        carType: $scope.booking.CarType,
-                        clientId: $scope.booking.ClientID,
-                        bookingtime: $scope.booking.BookedDateTime
-                    }
-
-                    $scope.quote = Booking.getQuote(quote, function (data) {
-                        $scope.booking.CalculatedFare = data.TotalFare;
-                        $scope.booking.ActualFare = data.TotalFare
-                    });
-
-                    angular.forEach($scope.driverOrder, function (driver) {
-                        driver.marker.setMap(null);
-                        delete driver.marker;
-                    });
-
-                    $scope.driverOrder = Booking.getDriverOrderForQuote({
-                        latitude: $scope.from.Latitude,
-                        longitude: $scope.from.Longitude,
-                        pax: $scope.booking.PAX
-                    }, function () {
-                        angular.forEach($scope.driverOrder, function (d) {
-                            d.marker = new google.maps.Marker({
-                                map: $scope.mapObject,
-                                position: new google.maps.LatLng(d.driver.LastKnownPosition.latitude, d.driver.LastKnownPosition.longitude),
-                                icon: {
-                                    url: '/api/image?imagetype=Google&ownertype=driver&ownerid=' + d.driver.ID,
-                                    scaledSize: new google.maps.Size(40, 40)
-                                }
-                            });
-                        });
-                    })
-
+                    var start = response.routes[0].legs[0].start_location;
+                    var end = response.routes[0].legs[0].end_location;
+                    $scope.activeActiveBooking.from = {
+                        Name: previous.From,
+                        Latitude: start.lat(),
+                        Longitude: start.lng()
+                    };
+                    $scope.activeActiveBooking.to = {
+                        Name: previous.To,
+                        Latitude: end.lat(),
+                        Longitude: end.lng()
+                    };
                 })
+
             }
         });
+    };
 
+    $scope.GetRouteAndQuote = function () {
+        if ($scope.activeActiveBooking.from && $scope.activeActiveBooking.to) {
+            var time = $scope.activeActiveBooking.booking.time; // HH:MM
+            var date = new Date();
+            date = new Date(date.setUTCHours(new Number(time[0].toString() + time[1].toString())));
+            date = new Date(date.setUTCMinutes(new Number(time[3].toString() + time[4].toString())));
+            $scope.activeActiveBooking.booking.BookedDateTime = date.toJSON();
+
+            var directionsService = new google.maps.DirectionsService();
+
+            var request = {
+                origin: new google.maps.LatLng($scope.activeActiveBooking.from.Latitude, $scope.activeActiveBooking.from.Longitude),
+                destination: new google.maps.LatLng($scope.activeActiveBooking.to.Latitude, $scope.activeActiveBooking.to.Longitude),
+                optimizeWaypoints: false,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            };
+
+            directionsService.route(request, function (response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    $scope.safeApply(function () {
+                        $scope.activeActiveBooking.route = response;
+
+                        var points = [
+                            new google.maps.LatLng($scope.activeActiveBooking.from.Latitude, $scope.activeActiveBooking.from.Longitude),
+                            new google.maps.LatLng($scope.activeActiveBooking.to.Latitude, $scope.activeActiveBooking.to.Longitude)
+                        ]
+
+                        var line = new google.maps.Polyline({
+                            path: points,
+                            map: null
+                        });
+
+                        var quote = {
+                            encodedRoute: google.maps.geometry.encoding.encodePath(line.getPath()),
+                            waitingTimes: null,
+                            carType: $scope.activeActiveBooking.booking.CarType,
+                            clientId: $scope.activeActiveBooking.booking.ClientID,
+                            bookingtime: $scope.activeActiveBooking.booking.BookedDateTime
+                        }
+
+                        $scope.activeActiveBooking.quote = Booking.getQuote(quote, function (data) {
+                            $scope.activeActiveBooking.booking.CalculatedFare = data.TotalFare;
+                            $scope.activeActiveBooking.booking.ActualFare = data.TotalFare
+                        });
+
+                        angular.forEach($scope.driverOrder, function (driver) {
+                            driver.marker.setMap(null);
+                            delete driver.marker;
+                        });
+
+                        $scope.driverOrder = Booking.getDriverOrderForQuote({
+                            latitude: $scope.activeActiveBooking.from.Latitude,
+                            longitude: $scope.activeActiveBooking.from.Longitude,
+                            pax: $scope.activeActiveBooking.booking.PAX
+                        }, function () {
+                            angular.forEach($scope.driverOrder, function (d) {
+                                d.marker = new google.maps.Marker({
+                                    map: $scope.mapObject,
+                                    position: new google.maps.LatLng(d.driver.LastKnownPosition.latitude, d.driver.LastKnownPosition.longitude),
+                                    icon: {
+                                        url: '/api/image?imagetype=Google&ownertype=driver&ownerid=' + d.driver.ID,
+                                        scaledSize: new google.maps.Size(40, 40)
+                                    }
+                                });
+                            });
+                        })
+
+                    })
+                }
+            });
+
+        }
+    };
+
+    $scope.AddBooking = function (auto) {
+        var time = $scope.activeActiveBooking.booking.time; // HH:MM
+        var date = new Date();
+        date = new Date(date.setUTCHours(new Number(time[0].toString() + time[1].toString())));
+        date = new Date(date.setUTCMinutes(new Number(time[3].toString() + time[4].toString())));
+        $scope.activeActiveBooking.booking.BookedDateTime = date.toJSON();
+        $scope.activeActiveBooking.booking.AutoDispatch = auto;
+        Booking.save($scope.activeActiveBooking.booking, function () {
+            alert('Booking Added');
+        })
     }
-};
 
-$scope.AddBooking = function (auto) {
-    $scope.booking.AutoDispatch = auto;
-    Booking.save($scope.booking, function () {
-        alert('Booking Added');
-    })
-}
+    $scope.TimeClicked = function (period) {
+        var date = new Date();
+        if (period == 'Asap') {
+        } else if (period == '15m') {
+            date = new Date().addPeriod(15, 'minutes');
+        }
+        else if (period == '30m') {
+            date = new Date().addPeriod(30, 'minutes');
+        } else if (period == '1hr') {
+            date = new Date().addPeriod(1, 'hours');
+        }
+        $scope.activeActiveBooking.booking.date = date;
+        $scope.activeActiveBooking.booking.time = ((date.getHours() > 9) ? date.getHours() : '0' + date.getHours()) + ':' + ((date.getMinutes() > 9) ? date.getMinutes() : '0' + date.getMinutes());
 
-$scope.TimeClicked = function (period) {
-    var date = new Date();
-    if (period == 'Asap') {
-    } else if (period == '15m') {
-        date = new Date().addPeriod(15, 'minutes');
-    }
-    else if (period == '30m') {
-        date = new Date().addPeriod(30, 'minutes');
-    } else if (period == '1hr') {
-        date = new Date().addPeriod(1, 'hours');
-    }
-    $scope.booking.date = date;
-    $scope.booking.time = date.getHours() + ':' + ((date.getMinutes() > 9) ? date.getMinutes() : '0' + date.getMinutes()) + ' ' + ((date.getHours() > 11) ? 'PM' : 'AM');
-    $scope.booking.BookedDateTime = date;
+        $scope.activeActiveBooking.booking.BookedDateTime = date;
+    };
 
-};
-
-$scope.DriversMaster = Driver.query({ active: true }, function () {
-    angular.forEach($scope.DriversMaster, function (driver) {
-        driver.$marker = new google.maps.Marker({
-            position: new google.maps.LatLng(driver.LastKnownPosition.latitude, driver.LastKnownPosition.longitude),
-            icon: {
-                url: '/api/image?imagetype=Google&ownertype=driver&ownerid=' + driver.ID,
-                scaledSize: new google.maps.Size(50, 50)
-            },
-            title: driver.CallSign,
-            map: $scope.mapObject
+    $scope.DriversMaster = Driver.query({ active: true }, function () {
+        angular.forEach($scope.DriversMaster, function (driver) {
+            driver.$marker = new google.maps.Marker({
+                position: new google.maps.LatLng(driver.LastKnownPosition.latitude, driver.LastKnownPosition.longitude),
+                icon: {
+                    url: '/api/image?imagetype=Google&ownertype=driver&ownerid=' + driver.ID,
+                    scaledSize: new google.maps.Size(50, 50)
+                },
+                title: driver.CallSign,
+                map: $scope.mapObject
+            });
         });
     });
-});
 
-$scope.$on('NewLocation', function (evt, item) {
-    $scope.DriversMaster.forEach(function (driver) {
-        if (driver.ID == item.DriverID) {
-            driver.$marker.setPosition(new google.maps.LatLng(item.Point.latitude, item.Point.longitude));
-        }
+    $scope.$on('NewLocation', function (evt, item) {
+        $scope.DriversMaster.forEach(function (driver) {
+            if (driver.ID == item.DriverID) {
+                driver.$marker.setPosition(new google.maps.LatLng(item.Point.latitude, item.Point.longitude));
+            }
+        });
     });
-});
+
+    $scope.addNewBooking = function () {
+        $scope.driverOrder = [];
+        $scope.previous = [];
+        var booking = new activeBooking();
+        $scope.activeBookings.push(booking);
+        $scope.activeActiveBooking = booking;
+    };
+
+    $scope.swapBooking = function (activeBooking) {
+        $scope.driverOrder = [];
+        $scope.previous = [];
+        var old = $scope.activeActiveBooking;
+
+        if (old.fromMarker) {
+            old.fromMarker.setMap(null);
+        }
+        if (old.toMarker) {
+            old.toMarker.setMap(null);
+        }
+
+        if (activeBooking.fromMarker) {
+            activeBooking.fromMarker.setMap($scope.mapObject);
+        }
+        if (activeBooking.toMarker) {
+            activeBooking.toMarker.setMap($scope.mapObject);
+        }
+        $scope.activeActiveBooking = activeBooking;
+    };
+
+    $scope.addNewBooking();
 
 });
 
@@ -1766,6 +1790,13 @@ app.directive('locationSearchAdv', function (Location, $filter) {
                 }
             });
 
+            scope.$watch('selected', function () {
+                if (scope.selected && scope.selected.Name) {
+                    searchText = scope.selected.Name;
+                    elem.children('input')[0].value = scope.selected.Name;
+                }
+            });
+
             scope.Select = function (location) {
                 if (location.Type == "Google Results") {
                     scope.gDetails.getDetails({
@@ -1800,7 +1831,7 @@ app.directive('locationSearchAdv', function (Location, $filter) {
                         });
                     }
                 }
-                
+
             }
 
             scope.highlighted = -1;
@@ -1915,6 +1946,10 @@ app.directive('phoneSearch', function ($filter) {
                 }
             });
 
+            scope.$watch('selected', function () {
+                elem.children('input')[0].value = (scope.selected && scope.selected.ContactNumber) ? scope.selected.ContactNumber : '';
+            }, true);
+
             scope.Select = function (number) {
                 elem.children('input')[0].value = number.ContactNumber;
                 elem.children('.popover').hide();
@@ -1962,7 +1997,7 @@ app.directive('phoneSearch', function ($filter) {
                 if (event.keyIdentifier == "Enter") {
                     scope.Select($('.repeaterItemCount.Selected').scope().n);
                 }
-                if (event.keyIdentifier == "U+001B"){
+                if (event.keyIdentifier == "U+001B") {
                     elem.children('.popover').hide();
                     if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
                         scope.numbers = [];
