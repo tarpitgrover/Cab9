@@ -278,7 +278,12 @@
             .modal-dialog .modal-content .modalSectionHead {
 	                padding:0px;
 	                border-bottom: 2px solid #26ae90;
+<<<<<<< HEAD
 	                margin: 10px 0 5px 0;
+=======
+	                margin: 5px 0;
+	                margin-bottom:10px;
+>>>>>>> 9a1a08c4ba3015204fff15d8ac742cc8ab53926a
 	                font-size: 14px;
                 }
             .modal-dialog .modal-content .modalSectionHead .modalSectionHeadName {
@@ -989,14 +994,21 @@
 }
 
 #newBookingModal .form-group {
+<<<<<<< HEAD
     margin-bottom:5px; 
+=======
+    margin-bottom:3px; 
+>>>>>>> 9a1a08c4ba3015204fff15d8ac742cc8ab53926a
 }
 
 #newBookingModal .form-group label
 {
     margin-left:0;
     background:none;
+<<<<<<< HEAD
     padding:0px;
+=======
+>>>>>>> 9a1a08c4ba3015204fff15d8ac742cc8ab53926a
 }
 
 .form-group input[type="text"], .form-group select, .form-group textarea{
@@ -2120,6 +2132,7 @@ input[type="text"].textBox.short {
         color: #F9F9F9;
         padding: 10px;
         padding-bottom: 5px;
+<<<<<<< HEAD
         opacity: 0.40;
          -webkit-transition: all 0.4s cubic-bezier(1.000, -0.530, 0.405, 1.425);
         -moz-transition: all 0.4s cubic-bezier(1.000, -0.530, 0.405, 1.425);
@@ -2131,6 +2144,11 @@ input[type="text"].textBox.short {
     opacity:0.95;
 }
 
+=======
+        opacity: 0.90;
+    }
+
+>>>>>>> 9a1a08c4ba3015204fff15d8ac742cc8ab53926a
 .addressList.Air {
     background: #e5bb14 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
     background: #e5bb14 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;

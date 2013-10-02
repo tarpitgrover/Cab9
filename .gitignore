@@ -4,6 +4,8 @@
 # User-specific files
 *.suo
 *.user
+*.csproj
+*.sln
 *.sln.docstates
 
 # Build results

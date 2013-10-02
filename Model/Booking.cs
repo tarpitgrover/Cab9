@@ -231,12 +231,32 @@ namespace Cab9.Model
 
         public void Push(int driverid)
         {
-            IHubContext Hub = GlobalHost.ConnectionManager.GetHubContext<DispatchHub>();
             var driver = Driver.SelectByID(driverid);
 
             if (driver == null || driver.CompanyID != CompanyID) throw new Exception("Driver not found within your company.");
 
-            Hub.Clients.Group(CompanyID.ToString()).NewBookingOffer(driverid, this);
+            IHubContext Hub = GlobalHost.ConnectionManager.GetHubContext<DriverHub>();
+
+            var bo = new BookingOffer();
+            bo.CompanyID = CompanyID;
+            bo.OfferDateTime = DateTime.Now;
+            bo.BookingID = ID;
+            bo.DriverID = driverid;
+            bo.Insert();
+
+            Hub.Clients.All.offerBooking(driverid, new
+            { 
+                ID = bo.ID,
+                DriverID = driverid,
+                BookingID = ID,
+                Booking = new { 
+                    From = this.From, 
+                    To = this.To, 
+                    Fare = this.ActualFare, 
+                    BookedDateTime = this.BookedDateTime,
+                    PaymentMethod = this.PaymentMethod
+                } 
+            });
         }
 
         #endregion
