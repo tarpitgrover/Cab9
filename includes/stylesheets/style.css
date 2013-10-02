@@ -154,7 +154,29 @@
 }
 
 /*******************************************************MODAL*******************************************************/
-.modal-dialog {
+
+#newBookingModal .modal-dialog {
+    width:95%;
+    max-width:1366px;
+    border-radius:0;
+    border: 5px solid #1d2826;
+    padding: 0;
+    margin-top:30px;
+     -webkit-overflow-scrolling: touch;
+}
+
+#newBookingModal .modal-dialog .modal-content {
+        border-radius:0;
+        border:0;
+        background:#2c3432;
+        color:#f9f9f9;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        line-height:18px;
+        -webkit-overflow-scrolling: touch;
+        padding:5px 10px;
+    }
+
+#birdsEyeModal .modal-dialog {
     width:750px;
     border-radius:0;
     border: 5px solid #1d2826;
@@ -253,26 +275,26 @@
                 font-weight: 800;
             }
 
-            .modal-dialog .modal-content .tab-content .modalSectionHead {
+            .modal-dialog .modal-content .modalSectionHead {
 	                padding:0px;
 	                border-bottom: 2px solid #26ae90;
 	                margin: 5px 0;
-	                font-weight: 700;
+	                margin-bottom:10px;
 	                font-size: 14px;
                 }
-            .modal-dialog .modal-content .tab-content .modalSectionHead .modalSectionHeadName {
+            .modal-dialog .modal-content .modalSectionHead .modalSectionHeadName {
                 margin: 0;
                 font-family: 'Montserrat', sans-serif;
                 margin-left: 10px;
                 background-color: #26AE90;
-                padding: 0 5px;
+                padding: 3px 5px 0 5px;
                 display: inline-block;
                 -moz-box-shadow: inset 0 1px 2px #3d3d3d;
                 -webkit-box-shadow: inset 0 1px 2px  #3D3D3D;
                 box-shadow: inset 0 1px 2px  #3D3D3D; 
             }
 
-            .modal-dialog .modal-content .tab-content .modalTable {
+            .modal-dialog .modal-content .modalTable {
 	            border-collapse: separate;
 	            *border-collapse: collapse;
 	            border-left: 0;
@@ -284,14 +306,14 @@
             .modal-dialog .modal-content .tab-content #chartPlaceHolder {
                 width:480px;height: 175px;margin-bottom:10px;
                 }
-.modal-dialog .modal-content .tab-content .modalTable thead {
+.modal-dialog .modal-content  .modalTable thead {
 	background-color:#28AE90;
 	color:white;
 	border:none;
 }
 
-.modal-dialog .modal-content .tab-content .modalTable th,
-.modal-dialog .modal-content .tab-content .modalTable td {
+.modal-dialog .modal-content .modalTable th,
+.modal-dialog .modal-content .modalTable td {
 	border-bottom:1px solid #26AE90;	
 	border-left: 1px solid #28AE90;
 	height: 30px;
@@ -299,11 +321,11 @@
 	text-align: left;
 }
 
-.modal-dialog .modal-content .tab-content .modalTable tbody tr > td:last-child { 
+ .modal-dialog .modal-content .modalTable tbody tr > td:last-child { 
 	border-right:1px solid #26AE90;
 }
 
-.modal-dialog .modal-content .tab-content .chartTimelineButton .btn{
+.modal-dialog .modal-content .chartTimelineButton .btn{
     color:#f9f9f9;
     border:0;
 }
@@ -397,6 +419,20 @@
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25),inset 0 -1px 0 rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25),inset 0 -1px 0 rgba(0, 0, 0, 0.1);
      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25),inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+#newBookingToggle {
+    float:right;
+    height: 40px;
+   font-size:16px;
+    background-color:#1d2826;
+    padding: 5px 10px;
+    line-height: 30px;
+    color: #FFF;
+    font-family: 'Montserrat', sans-serif;
+    text-transform:uppercase;
+    margin:5px;
+    cursor:pointer;
 }
 
 .expandCollapseLeft, .expandCollapseRight {
@@ -771,6 +807,43 @@
     background-color: #bbb;
 }
 
+.driverCircle {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    margin-right: 20px;
+    border-radius: 100px;
+    position:relative;
+}
+    .driverCircle .driverDistance {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        height: 20px;
+        text-align: center;
+        font-weight: bold;
+        line-height: 15px;
+        background-color:#1d2826;
+    }
+    
+.driverCircle img {
+    width: 100px;
+    height: 100px;
+    border-radius:100px;
+}
+
+.driverCircle.Available {
+    border:3px solid #18de33;
+
+}
+
+.driverCircle.Clearing {
+    border:3px solid #ef700e;
+
+}
+
+
 #pageContent .cardsContainer .card .cardInfo {
     text-align: center;
     color: #e1e1e1;
@@ -918,7 +991,17 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-.form-group input[type="text"],#pageContent .form-group select, .form-group textarea{
+#newBookingModal .form-group {
+    margin-bottom:3px; 
+}
+
+#newBookingModal .form-group label
+{
+    margin-left:0;
+    background:none;
+}
+
+.form-group input[type="text"], .form-group select, .form-group textarea{
     display: block;
     -webkit-appearance: none;
     border: 1px solid #26ae90;
@@ -1377,15 +1460,33 @@ form .formButtons {
 }
 
 .orangeBG {
-    background: #EE7951 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #EE7951 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #EE7951 -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
+    background: #EE7951 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #EE7951 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #EE7951 -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+}
+
+.darkOrangeBG {
+    background: #ef700e -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #ef700e -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #ef700e -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+}
+
+.lightOrangeBG{
+    background: #ed9615 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #ed9615 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #ed9615 -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+}
+
+.lighterOrangeBG{
+    background: #e5bb14 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #e5bb14 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #e5bb14 -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
 }
 
 .yellowBG {
-    background: #eed351 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #eed351 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #eed351 -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
+    background: #eed351 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #eed351 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #eed351 -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
 }
 
 .white {
@@ -1396,33 +1497,37 @@ form .formButtons {
     color: #26ae90;
 }
 .cyanBG {
-    background: #26AE90 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #26AE90 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #26AE90 -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
+    background: #26AE90 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #26AE90 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #26AE90 -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
 }
 
 .purpleBG {
-    background: #9f449b -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #9f449b -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #9f449b -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
+    background: #9f449b -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #9f449b -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #9f449b -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
 }
 
 .blueBG {
-    background: #365eab -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #365eab -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #365eab -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
+    background: #365eab -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #365eab -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #365eab -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
 }
 
 .skyBG {
-    background: #00c4d0 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #00c4d0 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #00c4d0 -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
+    background: #00c4d0 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #00c4d0 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #00c4d0 -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
 }
 
 .lightGreenBG {
-    background: #00ce9b -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #00ce9b -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
-    background: #00ce9b -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%);
+    background: #00ce9b -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #00ce9b -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #00ce9b -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+}
+
+.black {
+    color:#1d2826;
 }
 
 .shadowFadeBottom {
@@ -1672,22 +1777,22 @@ a:hover {
         height:120px;
     }
 
-    .modal-dialog .modal-content #modalTabs.nav-tabs {
+    #birdsEyeModal .modal-dialog .modal-content #modalTabs.nav-tabs {
         display:none !important;
     }
 
 
-    .modal-dialog {
+    #birdsEyeModal .modal-dialog {
         width:310px;
         margin-top:5px;
          -webkit-overflow-scrolling: touch;
     }
 
-    .modal-dialog .modal-content .tab-content #chartPlaceHolder {
+    #birdsEyeModal .modal-dialog .modal-content .tab-content #chartPlaceHolder {
                 width:280px;height: 175px;margin-bottom:0px;
                 }
 
-    .modal-dialog .modal-content .documentViewer {
+    #birdsEyeModal .modal-dialog .modal-content .documentViewer {
 	-moz-box-shadow:inset 0 0 20px #000000;
 	-webkit-box-shadow: inset 0 0 20px #000000;
 	box-shadow: inset 0 0 20px #000000;
@@ -1700,16 +1805,16 @@ a:hover {
     margin:10px 0;
     }
 
-    .modal-dialog .modal-content .flipContainer {
+    #birdsEyeModal .modal-dialog .modal-content .flipContainer {
         margin-top:20px;
         width:270px;
     }
 
-    .modal-dialog .modal-content .flip {
+    #birdsEyeModal .modal-dialog .modal-content .flip {
         width:270px;
     }
 
-    .modal-dialog .modal-content .flipContainer form {
+    #birdsEyeModal .modal-dialog .modal-content .flipContainer form {
         width:90% !important;
     }
 }
@@ -1937,7 +2042,7 @@ input[type="text"].textBox {
     padding-right:5px;
 }
 
-    input[type="text"].textBox.pound {
+    input[type="text"].pound {
         background-image: url('/includes/img/poundIcon.png');
         -moz-background-size: 20px 20px;
         -o-background-size: 20px 20px;
@@ -1945,6 +2050,54 @@ input[type="text"].textBox {
         background-size: 20px 20px;
         background-repeat:no-repeat;
         background-position:left center;
+    }
+     input[type="text"].baggage {
+        background-image: url('/includes/img/baggageIcon.png');
+        -moz-background-size: 20px 20px;
+        -o-background-size: 20px 20px;
+        -webkit-background-size: 20px 20px;
+        background-size: 20px 20px;
+        background-repeat:no-repeat;
+        background-position:left center;
+    }
+      input[type="text"].passengers {
+        background-image: url('/includes/img/passengersIcon.png');
+        -moz-background-size: 20px 20px;
+        -o-background-size: 20px 20px;
+        -webkit-background-size: 20px 20px;
+        background-size: 20px 20px;
+        background-repeat:no-repeat;
+        background-position:left center;
+    }
+
+      input[type="text"].time {
+        background-image: url('/includes/img/timeIcon.png');
+        -moz-background-size: 20px 20px;
+        -o-background-size: 20px 20px;
+        -webkit-background-size: 20px 20px;
+        background-size: 20px 20px;
+        background-repeat:no-repeat;
+        background-position:left center;
+    }
+
+      input[type="text"].location {
+        background-image: url('/includes/img/locationIcon.png');
+        -moz-background-size: 20px 20px;
+        -o-background-size: 20px 20px;
+        -webkit-background-size: 20px 20px;
+        background-size: 20px 20px;
+        background-repeat:no-repeat;
+        background-position:right center;
+    }
+
+      input[type="text"].mobile {
+        background-image: url('/includes/img/mobileIcon.png');
+        -moz-background-size: 20px 20px;
+        -o-background-size: 20px 20px;
+        -webkit-background-size: 20px 20px;
+        background-size: 20px 20px;
+        background-repeat:no-repeat;
+        background-position:right center;
     }
 
 input[type="text"].textBox.short {
@@ -1957,4 +2110,50 @@ input[type="text"].textBox.short {
 
 .overflowDiv::-webkit-scrollbar {
     display:none;
+}
+
+.newBookingsRecentBookings {
+        width: 300px;
+        display: inline-block;
+        position: absolute;
+        top: 40px;
+        right: 40px;
+        background-color: #2C3432;
+        color: #F9F9F9;
+        padding: 10px;
+        padding-bottom: 5px;
+        opacity: 0.90;
+    }
+
+.addressList.Air {
+    background: #e5bb14 -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #e5bb14 -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #e5bb14 -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    
+}
+
+.addressList.Tra {
+    background: #9f449b -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #9f449b -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #9f449b -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+}
+
+.addressList.Goo {
+     background: #365eab -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #365eab -ms-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+    background: #365eab -moz-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%) !important;
+}
+
+.activeBookingTabs {
+    display: inline-block;
+padding: 0 5px;
+height: 30px;
+line-height: 30px;
+background-color: #26AE90;
+margin-right: 10px;
+}
+
+.activeBookingTabs.active {
+
+background-color: #d21d1d;
 }

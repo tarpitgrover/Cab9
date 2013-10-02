@@ -17,8 +17,6 @@ namespace Cab9.Model
     {
         #region Properties
 
-        public string conflict { get; set; }
-        public int Auto-Dispatch { get; set; }
         public long ID { get; set; }
         public int CompanyID { get; set; }
         public int Priority { get; set; }

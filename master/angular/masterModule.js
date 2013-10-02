@@ -18,7 +18,7 @@ app.controller('MasterController', function ($scope, $q) {
     //$scope.company = Company.get();
 
     $scope.dismiss = function (e) {
-        if ($(e.srcElement)[0] == $('#myModal')[0] || $(e.srcElement)[0] == $('.closePopOver')[0]) {
+        if ($(e.srcElement)[0] == $('#birdsEyeModal')[0] || $(e.srcElement)[0] == $('.closePopOver')[0]) {
             $scope.modal = { name: '', url: null };
         };
     };
@@ -105,7 +105,7 @@ var Company;
 app.run(function ($rootScope, $resource) {
     $rootScope.BoolValues = [true, false];
 
-    
+
 
     Company = $resource(apiEndPoint + 'company/:action', {}, {
         update: {
@@ -336,12 +336,6 @@ app.run(function ($rootScope, $resource) {
             isArray: false,
             params: {
                 action: 'Quote'
-            }
-        },
-        pushTo: {
-            method: 'POST',
-            params: {
-                action: 'Push'
             }
         }
     });
@@ -1164,6 +1158,11 @@ app.directive('basicMap', function () {
             };
             scope.options = mergeOptions(defaults, scope.options);
             scope.map = new google.maps.Map(elem[0], scope.options);
+            if (!window.maps)
+                window.maps = [scope.map];
+            else
+                window.maps.push(scope.map);
+
             scope.$emit("MapReady");
 
             //$('#map').css({ 'height': (($(window).height())) - $('#map').offset().top - 10 + 'px' });
@@ -1419,3 +1418,770 @@ function mergeOptions(defaults, overrides) {
 }
 
 
+
+//////////////////NEW BOOKING CONTROLLER/////////////////////
+app.controller("NewBookingController", function ($scope, signalRLocationHub) {
+    $scope.mapObject = {};
+    $scope.mapOptions = {
+        center: new google.maps.LatLng(51.4775, -0.4614),
+        zoom: 13
+    };
+    $scope.clients = Client.query();
+
+    signalRLocationHub.initalise(function () { });
+
+    var activeBooking = function () {
+        this.booking = new Booking();
+        this.booking.CarType = 1;
+        this.booking.date = new Date();
+        this.booking.time = ((new Date().getHours() > 9) ? new Date().getHours() : '0' + new Date().getHours()) + ':' + ((new Date().getMinutes() > 9) ? new Date().getMinutes() : '0' + new Date().getMinutes());
+        this.booking.PAX = 1;
+        this.booking.BAX = 0;
+        this.booking.PaymentMethod = 1;
+        this.booking.Priority = 1;
+
+        this.from = null;
+        this.to = null;
+
+        this.fromMarker = null;
+        this.toMarker = null;
+
+        this.route = null;
+
+        this.selectedNumber = null;
+    }
+
+    $scope.activeBookings = [];
+    $scope.activeActiveBooking = null;
+    $scope.previous = [];
+
+    $scope.$watch('activeActiveBooking.from', function (newValue) {
+        if (newValue) {
+            $scope.activeActiveBooking.booking.From = newValue.Name;
+            if ($scope.activeActiveBooking.fromMarker) {
+                $scope.activeActiveBooking.fromMarker.setPosition(new google.maps.LatLng(newValue.Latitude, newValue.Longitude));
+                $scope.activeActiveBooking.fromMarker.setMap($scope.mapObject);
+            } else {
+                $scope.activeActiveBooking.fromMarker = new google.maps.Marker({
+                    map: $scope.mapObject,
+                    position: new google.maps.LatLng(newValue.Latitude, newValue.Longitude)
+                })
+            }
+        } else {
+            $scope.activeActiveBooking.booking.From = '';
+            if ($scope.activeActiveBooking.fromMarker) {
+                $scope.activeActiveBooking.fromMarker.setMap(null);
+            }
+        }
+        $scope.GetRouteAndQuote();
+    }, true);
+
+    $scope.$watch('activeActiveBooking.to', function (newValue) {
+        if (newValue) {
+            $scope.activeActiveBooking.booking.To = newValue.Name;
+            if ($scope.activeActiveBooking.toMarker) {
+                $scope.activeActiveBooking.toMarker.setPosition(new google.maps.LatLng(newValue.Latitude, newValue.Longitude));
+                $scope.activeActiveBooking.toMarker.setMap($scope.mapObject);
+            } else {
+                $scope.activeActiveBooking.toMarker = new google.maps.Marker({
+                    map: $scope.mapObject,
+                    position: new google.maps.LatLng(newValue.Latitude, newValue.Longitude)
+                })
+            }
+        } else {
+            $scope.activeActiveBooking.booking.To = '';
+            if ($scope.activeActiveBooking.toMarker) {
+                $scope.activeActiveBooking.toMarker.setMap(null);
+            }
+        }
+        $scope.GetRouteAndQuote();
+    }, true);
+
+    $scope.$watch('activeActiveBooking.selectedNumber', function (newValue) {
+        if (newValue) {
+            if (!$scope.activeActiveBooking.booking.PassengerName) $scope.activeActiveBooking.booking.PassengerName = newValue.PassengerName;
+            $scope.activeActiveBooking.booking.ContactNumber = newValue.ContactNumber;
+            $scope.previous = Booking.getPrevious({ name: null, number: newValue.ContactNumber })
+            $scope.bookingsFor = newValue.ContactNumber;
+
+        } else {
+            $scope.activeActiveBooking.booking.ContactNumber = '';
+        }
+    });
+
+    $scope.CopyPrevious = function (previous) {
+
+        var directionsService = new google.maps.DirectionsService();
+
+        var request = {
+            origin: previous.From,
+            destination: previous.To,
+            optimizeWaypoints: false,
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+
+        $('#fromTextbox').children('input')[0].value = previous.From;
+        $('#toTextbox').children('input')[0].value = previous.To;
+        $scope.activeActiveBooking.booking.From = previous.From;
+        $scope.activeActiveBooking.booking.To = previous.To;
+
+        directionsService.route(request, function (response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                $scope.safeApply(function () {
+                    var start = response.routes[0].legs[0].start_location;
+                    var end = response.routes[0].legs[0].end_location;
+                    $scope.activeActiveBooking.from = {
+                        Name: previous.From,
+                        Latitude: start.lat(),
+                        Longitude: start.lng()
+                    };
+                    $scope.activeActiveBooking.to = {
+                        Name: previous.To,
+                        Latitude: end.lat(),
+                        Longitude: end.lng()
+                    };
+                })
+
+            }
+        });
+    };
+
+    $scope.GetRouteAndQuote = function () {
+        if ($scope.activeActiveBooking.from && $scope.activeActiveBooking.to) {
+            var time = $scope.activeActiveBooking.booking.time; // HH:MM
+            var date = new Date();
+            date = new Date(date.setUTCHours(new Number(time[0].toString() + time[1].toString())));
+            date = new Date(date.setUTCMinutes(new Number(time[3].toString() + time[4].toString())));
+            $scope.activeActiveBooking.booking.BookedDateTime = date.toJSON();
+
+            var directionsService = new google.maps.DirectionsService();
+
+            var request = {
+                origin: new google.maps.LatLng($scope.activeActiveBooking.from.Latitude, $scope.activeActiveBooking.from.Longitude),
+                destination: new google.maps.LatLng($scope.activeActiveBooking.to.Latitude, $scope.activeActiveBooking.to.Longitude),
+                optimizeWaypoints: false,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            };
+
+            directionsService.route(request, function (response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    $scope.safeApply(function () {
+                        $scope.activeActiveBooking.route = response;
+
+                        var points = [
+                            new google.maps.LatLng($scope.activeActiveBooking.from.Latitude, $scope.activeActiveBooking.from.Longitude),
+                            new google.maps.LatLng($scope.activeActiveBooking.to.Latitude, $scope.activeActiveBooking.to.Longitude)
+                        ]
+
+                        var line = new google.maps.Polyline({
+                            path: points,
+                            map: null
+                        });
+
+                        var quote = {
+                            encodedRoute: google.maps.geometry.encoding.encodePath(line.getPath()),
+                            waitingTimes: null,
+                            carType: $scope.activeActiveBooking.booking.CarType,
+                            clientId: $scope.activeActiveBooking.booking.ClientID,
+                            bookingtime: $scope.activeActiveBooking.booking.BookedDateTime
+                        }
+
+                        $scope.activeActiveBooking.quote = Booking.getQuote(quote, function (data) {
+                            $scope.activeActiveBooking.booking.CalculatedFare = data.TotalFare;
+                            $scope.activeActiveBooking.booking.ActualFare = data.TotalFare
+                        });
+
+                        angular.forEach($scope.driverOrder, function (driver) {
+                            driver.marker.setMap(null);
+                            delete driver.marker;
+                        });
+
+                        $scope.driverOrder = Booking.getDriverOrderForQuote({
+                            latitude: $scope.activeActiveBooking.from.Latitude,
+                            longitude: $scope.activeActiveBooking.from.Longitude,
+                            pax: $scope.activeActiveBooking.booking.PAX
+                        }, function () {
+                            angular.forEach($scope.driverOrder, function (d) {
+                                d.marker = new google.maps.Marker({
+                                    map: $scope.mapObject,
+                                    position: new google.maps.LatLng(d.driver.LastKnownPosition.latitude, d.driver.LastKnownPosition.longitude),
+                                    icon: {
+                                        url: '/api/image?imagetype=Google&ownertype=driver&ownerid=' + d.driver.ID,
+                                        scaledSize: new google.maps.Size(40, 40)
+                                    }
+                                });
+                            });
+                        })
+
+                    })
+                }
+            });
+
+        }
+    };
+
+    $scope.AddBooking = function (auto) {
+        var time = $scope.activeActiveBooking.booking.time; // HH:MM
+        var date = new Date();
+        date = new Date(date.setUTCHours(new Number(time[0].toString() + time[1].toString())));
+        date = new Date(date.setUTCMinutes(new Number(time[3].toString() + time[4].toString())));
+        $scope.activeActiveBooking.booking.BookedDateTime = date.toJSON();
+        $scope.activeActiveBooking.booking.AutoDispatch = auto;
+        Booking.save($scope.activeActiveBooking.booking, function () {
+            alert('Booking Added');
+        })
+    }
+
+    $scope.TimeClicked = function (period) {
+        var date = new Date();
+        if (period == 'Asap') {
+        } else if (period == '15m') {
+            date = new Date().addPeriod(15, 'minutes');
+        }
+        else if (period == '30m') {
+            date = new Date().addPeriod(30, 'minutes');
+        } else if (period == '1hr') {
+            date = new Date().addPeriod(1, 'hours');
+        }
+        $scope.activeActiveBooking.booking.date = date;
+        $scope.activeActiveBooking.booking.time = ((date.getHours() > 9) ? date.getHours() : '0' + date.getHours()) + ':' + ((date.getMinutes() > 9) ? date.getMinutes() : '0' + date.getMinutes());
+
+        $scope.activeActiveBooking.booking.BookedDateTime = date;
+    };
+
+    $scope.DriversMaster = Driver.query({ active: true }, function () {
+        angular.forEach($scope.DriversMaster, function (driver) {
+            driver.$marker = new google.maps.Marker({
+                position: new google.maps.LatLng(driver.LastKnownPosition.latitude, driver.LastKnownPosition.longitude),
+                icon: {
+                    url: '/api/image?imagetype=Google&ownertype=driver&ownerid=' + driver.ID,
+                    scaledSize: new google.maps.Size(50, 50)
+                },
+                title: driver.CallSign,
+                map: $scope.mapObject
+            });
+        });
+    });
+
+    $scope.$on('NewLocation', function (evt, item) {
+        $scope.DriversMaster.forEach(function (driver) {
+            if (driver.ID == item.DriverID) {
+                driver.$marker.setPosition(new google.maps.LatLng(item.Point.latitude, item.Point.longitude));
+            }
+        });
+    });
+
+    $scope.addNewBooking = function () {
+        $scope.driverOrder = [];
+        $scope.previous = [];
+        var booking = new activeBooking();
+        $scope.activeBookings.push(booking);
+        $scope.activeActiveBooking = booking;
+    };
+
+    $scope.swapBooking = function (activeBooking) {
+        $scope.driverOrder = [];
+        $scope.previous = [];
+        var old = $scope.activeActiveBooking;
+
+        if (old.fromMarker) {
+            old.fromMarker.setMap(null);
+        }
+        if (old.toMarker) {
+            old.toMarker.setMap(null);
+        }
+
+        if (activeBooking.fromMarker) {
+            activeBooking.fromMarker.setMap($scope.mapObject);
+        }
+        if (activeBooking.toMarker) {
+            activeBooking.toMarker.setMap($scope.mapObject);
+        }
+        $scope.activeActiveBooking = activeBooking;
+    };
+
+    $scope.addNewBooking();
+
+});
+
+app.directive('locationSearchAdv', function (Location, $filter) {
+    return {
+        restrict: 'A',
+        scope: {
+            selected: '='
+        },
+        template:
+              ' <input type="text" ng-model="searchText" placeholder="Postcodes, Stations, Airports etc" style="width:100%;display:inline-block;" class="textBox location" />'
+            + ' <div></div>'
+            + ' <div class="popover bottom" style="position:absolute; top: 25px; left:15px; right:15px; max-width: none;border-radius:0px;border-radius:0px;background-color:#2C3432;opacity:0.98;border: 3px solid #1D2826;">'
+            + '     <div class="arrow"></div>'
+            + '     <div class="popover-content" style="padding:0px;border-radius:0px;">'
+            + '         <div ng-hide="locations">Searching...</div>'
+            + '         <div ng-show="locations" ng-repeat="t in types | customOrder:order">'
+            + '             <div class="addressList {{t | limitTo:3}}" style="height:30px; padding:0 5px; font-weight:600; width:100%;color:#f9f9f9;text-shadow: 0px 1px 2px rgba(0,0,0,0.5);line-height:30px;margin-bottom:3px;font-family: Montserrat, sans-serif;text-transform:uppercase;">{{ t }} <img class="pull-right" ng-src="{{GetTypeImage(t)}}" /></div>'
+            + '             <div ng-repeat="l in locations | ItemsForGroup:t:grouping:sorting" ng-click="Select(l)" class="repeaterItemCount bold" style="padding:2px 5px;margin:2px 0;">'
+            + '             {{ l.Name }}'
+            + '             </div>'
+            + '         </div>'
+            + '     </div>'
+            + ' </div>',
+        link: function (scope, elem, attrs) {
+            elem.css("position", "relative");
+            scope.gService = new google.maps.places.AutocompleteService();
+            scope.gDetails = new google.maps.places.PlacesService(elem.children('div')[0]);
+
+            scope.locations = [];
+            scope.types = [];
+            scope.grouping = { key: 'Type', initials: false };
+            scope.sorting = { key: 'Match', reverse: true };
+            scope.order = {
+                'Airport': 1,
+                'Train Station': 2,
+                'Underground': 3,
+                'Company': 4,
+                'Google Results': 10
+            }
+
+            scope.GetOrderIndex = function (type) {
+                return scope.order[type] ? scope.order[type] : 20;
+            };
+
+            scope.GetTypeImage = function (type) {
+                var lookup = {
+                    'Airport': '/includes/img/airports.png',
+                    'Train Station': '/includes/img/trainStations.png',
+                    'Company': '/includes/img/powered-by-google-on-white2.png',
+                    'Google Results': '/includes/img/powered-by-google-on-white2.png'
+                }
+                return lookup[type];
+            }
+
+            scope.searchText = "";
+            scope.$watch("searchText", function (newValue, oldValue) {
+                if (newValue && newValue.length > 2) {
+                    scope.highlighted = -1;
+                    elem.children('.popover').show();
+                    Location.search({ q: newValue }, function (data) {
+                        scope.locations = scope.locations.where(function (value) { return (value.Type == "Google Results") });
+                        angular.forEach(data, function (result) {
+                            scope.locations.push(result);
+                        });
+                        scope.types = $filter('GetGroupsForData')(scope.locations, scope.grouping, scope.sorting);
+                    });
+                    scope.gService.getPlacePredictions({ input: newValue, componentRestrictions: { country: 'gb' } }, function (data, status) {
+                        if (status = google.maps.places.PlacesServiceStatus.OK) {
+                            scope.locations = scope.locations.where(function (value) { return (value.Type != "Google Results") });
+                            angular.forEach(data, function (result) {
+                                scope.locations.push({
+                                    Name: result.description,
+                                    Type: "Google Results",
+                                    Reference: result.reference
+                                });
+                            });
+                            scope.types = $filter('GetGroupsForData')(scope.locations, scope.grouping, scope.sorting);
+                            scope.$digest();
+                        }
+                    })
+                } else {
+                    elem.children('.popover').hide();
+                    scope.locations = [];
+                    scope.selected = null;
+                }
+            });
+
+            scope.$watch('selected', function () {
+                if (scope.selected && scope.selected.Name) {
+                    searchText = scope.selected.Name;
+                    elem.children('input')[0].value = scope.selected.Name;
+                }
+            });
+
+            scope.Select = function (location) {
+                if (location.Type == "Google Results") {
+                    scope.gDetails.getDetails({
+                        reference: location.Reference,
+                        sensor: false,
+                        key: 'AIzaSyBG7ERZfOCGfUxgrB1aA7mdgt5aY3HzZvY'
+                    }, function (details) {
+                        elem.children('input')[0].value = location.Name;
+                        location.Latitude = details.geometry.location.lat();
+                        location.Longitude = details.geometry.location.lng();
+                        elem.children('.popover').hide();
+                        if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
+                            scope.locations = [];
+                            scope.selected = location;
+                        } else {
+                            scope.$root.$apply(function () {
+                                scope.locations = [];
+                                scope.selected = location;
+                            });
+                        }
+                    });
+                } else {
+                    elem.children('input')[0].value = location.Name;
+                    elem.children('.popover').hide();
+                    if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
+                        scope.locations = [];
+                        scope.selected = location;
+                    } else {
+                        scope.$root.$apply(function () {
+                            scope.locations = [];
+                            scope.selected = location;
+                        });
+                    }
+                }
+
+            }
+
+            scope.highlighted = -1;
+            elem.children('input')[0].onkeydown = function (event) {
+                if (event.keyIdentifier == "Down") {
+                    scope.highlighted += 1;
+                    if (scope.highlighted > scope.locations.length - 1)
+                        scope.highlighted = scope.locations.length - 1;
+                    $('.repeaterItemCount.Selected').removeClass('Selected');
+                    $('.repeaterItemCount').addClass(function (index) {
+                        if (index == scope.highlighted)
+                            return 'Selected';
+                    });
+                    event.preventDefault();
+                }
+                if (event.keyIdentifier == "Up") {
+                    scope.highlighted -= 1;
+                    if (scope.highlighted < 0)
+                        scope.highlighted = 0;
+                    $('.repeaterItemCount.Selected').removeClass('Selected');
+                    $('.repeaterItemCount').addClass(function (index) {
+                        if (index == scope.highlighted)
+                            return 'Selected';
+                    });
+                    event.preventDefault();
+                }
+                if (event.keyIdentifier == "Enter") {
+                    scope.Select($('.repeaterItemCount.Selected').scope().l);
+                }
+                if (event.keyIdentifier == "U+001B") {
+                    elem.children('.popover').hide();
+                    if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
+                        scope.locations = [];
+                        scope.selected = {
+                            Name: elem.children('input')[0].value
+                        };
+                    } else {
+                        scope.$root.$apply(function () {
+                            scope.locations = [];
+                            scope.selected = {
+                                Name: elem.children('input')[0].value
+                            };
+                        });
+                    }
+                }
+                if (event.keyIdentifier == "U+0009") {
+                    elem.children('.popover').hide();
+                    if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
+                        scope.locations = [];
+                        if (scope.selected && scope.selected.Name == elem.children('input')[0].value) {
+                        } else {
+                            scope.selected = {
+                                Name: elem.children('input')[0].value
+                            };
+                        }
+                    } else {
+                        scope.$root.$apply(function () {
+                            scope.locations = [];
+                            if (scope.selected && scope.selected.Name == elem.children('input')[0].value) {
+                            } else {
+                                scope.selected = {
+                                    Name: elem.children('input')[0].value
+                                };
+                            }
+                        });
+                    }
+                }
+            };
+        }
+    };
+});
+
+app.directive('phoneSearch', function ($filter) {
+    return {
+        restrict: 'A',
+        scope: {
+            selected: '='
+        },
+        template:
+              ' <input type="text" ng-model="searchText" placeholder="07720.." style="width:100%" class="textBox mobile" />'
+            + ' <div></div>'
+            + ' <div class="popover bottom" style="position:absolute; top: 20px; left:15px; right:15px; max-width: none;">'
+            + '     <div class="arrow"></div>'
+            + '     <div class="popover-content">'
+            + '         <div ng-show="searching">Searching...</div>'
+            + '         <div ng-show="!searching && !numbers.length">No Results Found</div>'
+            + '         <div ng-repeat="n in numbers" ng-click="Select(n)" class="repeaterItemCount black">'
+            + '             {{ n.ContactNumber }} <span class="cyan">({{ n.PassengerName | Truncate:10}})</span>'
+            + '         </div>'
+            + '     </div>'
+            + ' </div>',
+        link: function (scope, elem, attrs) {
+            elem.css("position", "relative");
+
+            scope.numbers = [];
+
+            scope.searchText = "";
+            scope.$watch("searchText", function (newValue, oldValue) {
+                if (newValue && newValue.length > 2) {
+                    scope.highlighted = -1;
+                    elem.children('.popover').show();
+                    scope.searching = true;
+                    Booking.getPrevious({ number: newValue }, function (data) {
+                        scope.searching = false;
+                        scope.numbers = data;
+                    })
+                    scope.selected = null;
+                } else {
+                    elem.children('.popover').hide();
+                    scope.numbers = [];
+                    scope.selected = null;
+                }
+            });
+
+            scope.$watch('selected', function () {
+                elem.children('input')[0].value = (scope.selected && scope.selected.ContactNumber) ? scope.selected.ContactNumber : '';
+            }, true);
+
+            scope.Select = function (number) {
+                elem.children('input')[0].value = number.ContactNumber;
+                elem.children('.popover').hide();
+                if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
+                    scope.numbers = [];
+                    scope.selected = {
+                        PassengerName: number.PassengerName,
+                        ContactNumber: number.ContactNumber
+                    };
+                } else {
+                    scope.$root.$apply(function () {
+                        scope.numbers = [];
+                        scope.selected = {
+                            PassengerName: number.PassengerName,
+                            ContactNumber: number.ContactNumber
+                        };
+                    });
+                }
+            }
+
+            scope.highlighted = -1;
+            elem.children('input')[0].onkeydown = function (event) {
+                if (event.keyIdentifier == "Down") {
+                    scope.highlighted += 1;
+                    if (scope.highlighted > scope.numbers.length - 1)
+                        scope.highlighted = scope.numbers.length - 1;
+                    $('.repeaterItemCount.Selected').removeClass('Selected');
+                    $('.repeaterItemCount').addClass(function (index) {
+                        if (index == scope.highlighted)
+                            return 'Selected';
+                    });
+                    event.preventDefault();
+                }
+                if (event.keyIdentifier == "Up") {
+                    scope.highlighted -= 1;
+                    if (scope.highlighted < 0)
+                        scope.highlighted = 0;
+                    $('.repeaterItemCount.Selected').removeClass('Selected');
+                    $('.repeaterItemCount').addClass(function (index) {
+                        if (index == scope.highlighted)
+                            return 'Selected';
+                    });
+                    event.preventDefault();
+                }
+                if (event.keyIdentifier == "Enter") {
+                    scope.Select($('.repeaterItemCount.Selected').scope().n);
+                }
+                if (event.keyIdentifier == "U+001B") {
+                    elem.children('.popover').hide();
+                    if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
+                        scope.numbers = [];
+                        scope.selected = {
+                            ContactNumber: elem.children('input')[0].value
+                        };
+                    } else {
+                        scope.$root.$apply(function () {
+                            scope.numbers = [];
+                            scope.selected = {
+                                ContactNumber: elem.children('input')[0].value
+                            };
+                        });
+                    }
+                }
+                if (event.keyIdentifier == "U+0009") {
+                    elem.children('.popover').hide();
+                    if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
+                        scope.numbers = [];
+                        scope.selected = {
+                            ContactNumber: elem.children('input')[0].value
+                        };
+                    } else {
+                        scope.$root.$apply(function () {
+                            scope.numbers = [];
+                            if (scope.selected && scope.selected.ContactNumber == elem.children('input')[0].value) {
+                            } else {
+                                scope.selected = {
+                                    ContactNumber: elem.children('input')[0].value
+                                };
+                            }
+                        });
+                    }
+                }
+            };
+        }
+    };
+});
+
+app.directive('nameSearch', function ($filter) {
+    return {
+        restrict: 'A',
+        scope: {
+            selected: '='
+        },
+        template:
+              ' <input type="text" ng-model="searchText" placeholder="Search previous passengers.." style="width:100%"/>'
+            + ' <div></div>'
+            + ' <div class="popover bottom" style="position:absolute; top: 20px; left:15px; right:15px; max-width: none">'
+            + '     <div class="arrow"></div>'
+            + '     <div class="popover-content">'
+            + '         <div ng-show="searching">Searching...</div>'
+            + '         <div ng-show="!searching && !names.length">No Results Found</div>'
+            + '         <div ng-repeat="n in names" ng-click="Select(n)" class="repeaterItemCount">'
+            + '             {{ n.PassengerName }} ({{ n.ContactNumber }})'
+            + '         </div>'
+            + '     </div>'
+            + ' </div>',
+        link: function (scope, elem, attrs) {
+            elem.css("position", "relative");
+
+            scope.names = [];
+
+            scope.searchText = "";
+            scope.$watch("searchText", function (newValue, oldValue) {
+                if (newValue && newValue.length > 2) {
+                    scope.highlighted = -1;
+                    elem.children('.popover').show();
+                    scope.searching = true;
+                    Booking.getPrevious({ name: newValue }, function (data) {
+                        scope.searching = false;
+                        scope.names = data;
+                    })
+                    scope.selected = null;
+                } else {
+                    elem.children('.popover').hide();
+                    scope.names = [];
+                    scope.selected = null;
+                }
+            });
+
+            scope.Select = function (name) {
+                elem.children('input')[0].value = name.PassengerName;
+                elem.children('.popover').hide();
+                if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
+                    scope.names = [];
+                    scope.selected = name;
+                } else {
+                    scope.$root.$apply(function () {
+                        scope.names = [];
+                        scope.selected = name;
+                    });
+                }
+            }
+
+            scope.highlighted = -1;
+            elem.children('input')[0].onkeydown = function (event) {
+                if (event.keyIdentifier == "Down") {
+                    scope.highlighted += 1;
+                    if (scope.highlighted > scope.names.length - 1)
+                        scope.highlighted = scope.names.length - 1;
+                    $('.repeaterItemCount.Selected').removeClass('Selected');
+                    $('.repeaterItemCount').addClass(function (index) {
+                        if (index == scope.highlighted)
+                            return 'Selected';
+                    });
+                    event.preventDefault();
+                }
+                if (event.keyIdentifier == "Up") {
+                    scope.highlighted -= 1;
+                    if (scope.highlighted < 0)
+                        scope.highlighted = 0;
+                    $('.repeaterItemCount.Selected').removeClass('Selected');
+                    $('.repeaterItemCount').addClass(function (index) {
+                        if (index == scope.highlighted)
+                            return 'Selected';
+                    });
+                    event.preventDefault();
+                }
+                if (event.keyIdentifier == "Enter") {
+                    scope.Select($('.repeaterItemCount.Selected').scope().n);
+                }
+                if (event.keyIdentifier == "U+001B") {
+                    elem.children('.popover').hide();
+                    if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
+                        scope.names = [];
+                        scope.selected = {
+                            PassengerName: elem.children('input')[0].value
+                        };
+                    } else {
+                        scope.$root.$apply(function () {
+                            scope.names = [];
+                            scope.selected = {
+                                PassengerName: elem.children('input')[0].value
+                            };
+                        });
+                    }
+                }
+                if (event.keyIdentifier == "U+0009") {
+                    elem.children('.popover').hide();
+                    if (scope.$root.$$phase == "$apply" || scope.$root.$$phase == "$digest") {
+                        scope.names = [];
+                        scope.selected = {
+                            PassengerName: elem.children('input')[0].value
+                        };
+                    } else {
+                        scope.$root.$apply(function () {
+                            scope.names = [];
+                            scope.selected = {
+                                PassengerName: elem.children('input')[0].value
+                            };
+                        });
+                    }
+                }
+            };
+        }
+    };
+});
+
+app.factory("Location", function ($resource) {
+    return $resource(apiEndPoint + 'location/:action', {}, {
+        get: {
+            method: 'GET',
+            isArray: false,
+            params: {
+                action: 'GetByID'
+            }
+        },
+        search: {
+            method: 'GET',
+            isArray: true,
+            params: {
+                action: 'Search'
+            }
+        },
+        update: {
+            method: 'PUT'
+        }
+    });
+});
+
+app.filter("customOrder", function () {
+    return function (array, order) {
+        return array.sort(SortBy(null, false, function (value) { return order[value]; }));
+    };
+});
+
+//////////////////NEW BOOKING CONTROLLER/////////////////////

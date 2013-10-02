@@ -26,6 +26,28 @@ $('.expandCollapseRight').on('click', function () {
     $('#sidebarRight').find('.section').css("border-bottom", ($("#sidebarRight").css("width") == "250px" ? "1px solid rgba(100, 100, 100, 0.5)" : "5px solid rgba(100, 100, 100, 0.5)"));
 });
 
+$('#newBookingToggle').on('click', function () {
+    $('#sidebarLeft').css("-webkit-filter", "blur(2px)");
+    $('#content').css("-webkit-filter", "blur(2px)");
+    $('#sidebarRight').css("-webkit-filter", "blur(2px)");
+    setTimeout(function () {
+        if (window.maps)
+            window.maps.forEach(function (map) {
+                google.maps.event.trigger(map, 'resize');
+                map.setCenter(new google.maps.LatLng(51.4775, -0.4614));
+            });
+    }, 500)
+    
+});
+
+$('#newBookingModal').on('click', function (event) {
+    if (event.srcElement == $('#newBookingModal')[0]) {
+        $('#sidebarLeft').css("-webkit-filter", "blur(0px)");
+        $('#content').css("-webkit-filter", "blur(0px)");
+        $('#sidebarRight').css("-webkit-filter", "blur(0px)");
+    }
+});
+
 $('.expandCollapsePhoneLeft').on('click', function () {
     $('#sidebarLeft').css("left", ($('#sidebarLeft').css("left") == "-200px" ? "0px" : "-200px"));
     $('#content').css("left", ($('#content').css("left") == "200px" ? "0px" : "200px"));
