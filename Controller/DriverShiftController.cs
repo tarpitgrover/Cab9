@@ -75,6 +75,7 @@ namespace Cab9.Controller
 
             value.CompanyID = CompanyID.Value;
             value.ShiftStart = DateTime.Now;
+            value.EncodedRoute = "";
 
             var success = value.Insert();
             if (success)

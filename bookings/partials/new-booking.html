@@ -124,8 +124,13 @@
                 <div basic-map route-render map="mapObject" route="activeActiveBooking.route" options="mapOptions" style="height: 500px;" />
             </div>
             <!--Journey History-->
+<<<<<<< HEAD
             <div class="newBookingsRecentBookings" ng-show="previous.length">
                 <div class="modalSectionHead" style="margin-top:0;">
+=======
+            <div class="newBookingsRecentBookings">
+                <div class="modalSectionHead">
+>>>>>>> 9a1a08c4ba3015204fff15d8ac742cc8ab53926a
                     <span class="modalSectionHeadName">Passenger History</span>
                 </div>
                 <div>
@@ -138,8 +143,13 @@
                         </thead>
                         <tbody>
                             <tr ng-click="CopyPrevious(b)" ng-repeat="b in previous" style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="{{b.BookedDateTime}}">
+<<<<<<< HEAD
                                 <td width="50%">{{ b.From | Truncate:18}}</td>
                                 <td width="50%">{{ b.To | Truncate:18}}</td>
+=======
+                                <td width="50%">{{ b.From }}</td>
+                                <td width="50%">{{ b.To }}</td>
+>>>>>>> 9a1a08c4ba3015204fff15d8ac742cc8ab53926a
                             </tr>
                         </tbody>
                     </table>

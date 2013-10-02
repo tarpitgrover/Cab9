@@ -20,21 +20,18 @@ namespace Cab9.Model
         public string Mobile { get; set; }
         public string Email { get; set; }
         
-        //[JsonIgnore]
         private string Hashword { get; set; }
-        public bool Active { get; set; }
-        public string InactiveReason { get; set; }
-        public DateTime? LastLogin { get; set; }
-        public int? LoginAttempts { get; set; }
-
-        //[JsonIgnore]
+        private bool Active { get; set; }
+        private string InactiveReason { get; set; }
+        private DateTime? LastLogin { get; set; }
+        private int? LoginAttempts { get; set; }
         private string UnlockCode { get; set; }
-        public string ImageURL { get; set; }
-        public string Address1 { get; set; }
-        public string Address2 { get; set; }
-        public string Area { get; set; }
-        public string Town { get; set; }
-        public string Postcode { get; set; }
+        private string ImageURL { get; set; }
+        private string Address1 { get; set; }
+        private string Address2 { get; set; }
+        private string Area { get; set; }
+        private string Town { get; set; }
+        private string Postcode { get; set; }
         public string[] Roles 
         {
             get { return new Cab9RoleProvider().GetRolesForUser(Email); }
