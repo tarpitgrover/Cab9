@@ -22,8 +22,8 @@
     this.modalBackdrop = options.modalBackdrop;
     this.secondStep = options.secondStep;
     this.showInputs = options.showInputs;
-    this.showMeridian = options.showMeridian;
-    this.showSeconds = options.showSeconds;
+    this.showMeridian = false; //options.showMeridian;
+    this.showSeconds = false; //options.showSeconds;
     this.template = options.template;
     this.appendWidgetTo = options.appendWidgetTo;
 

@@ -1,0 +1,147 @@
+﻿<div class="row">
+    <div class="col-md-8">
+        <div class="formSectionHeader" style="width: 100%">
+            <span class="formSectionHeaderName">Client Information</span>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="paxName">Passenger Name</label>
+            <!--            <div name-search selected="selectedName" />-->
+            <input type="text" ng-model="booking.PassengerName" id="paxName" style="width: 100%;" />
+        </div>
+        <div class="form-group col-md-6">
+            <label for="contactNumber">Contact Number</label>
+            <div phone-search selected="selectedNumber"/>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="paymentType">Payment Type</label>
+            <select ng-init="booking.PaymentMethod = 1" ng-model="booking.PaymentMethod" id="paymentType" style="width: 100%;">
+                <option value="1" selected>Cash</option>
+                <option value="2">On Account</option>
+                <option value="3">Credit Card</option>
+                <option value="4">Other</option>
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="client">Client</label>
+            <select ng-model="booking.ClientID" id="client" ng-options="c.ID as c.Name for c in clients" style="width: 100%;">
+                <!--                <option value="" selected>New Client</option>-->
+            </select>
+        </div>
+        <div class="form-group col-md-6" ng-show="booking.PaymentMethod == 2">
+            <label for="passPhrase">PassPhrase</label>
+            <input type="text" ng-model="booking.PassPhrase" id="passPhrase" style="width: 100%;" />
+        </div>
+        <div class="form-group col-md-6" ng-show="booking.PaymentMethod == 3">
+            <label for="paymentRef">Client</label>
+            <input type="text" ng-model="booking.PaymentRef" id="paymentRef" style="width: 100%;" />
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="formSectionHeader" style="width: 100%">
+            <span class="formSectionHeaderName">Journey History</span>
+        </div>
+        <div>
+            <table class="table table-bordered">
+                <tr>
+                    <th width="50%">From</th>
+                    <th width="50%">To</th>
+                </tr>
+                <tr ng-click="CopyPrevious(b)" ng-repeat="b in previous">
+                    <td>{{ b.From }}</td>
+                    <td>{{ b.To }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="formSectionHeader" style="width: 100%">
+            <span class="formSectionHeaderName">Journey Information</span>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="fromTextbox">Pickup Location</label>
+            <div location-search-adv selected="from" id="fromTextbox"></div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="toTextbox">Dropoff Location</label>
+            <div location-search-adv selected="to" id="toTextbox"></div>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Quick Times</label>
+            <div class="btn-group" style="height: 30px; display: block;">
+                <button class="btn btn-default" style="color: #333333; height: 30px; width: 33.33%;" ng-click="TimeClicked('Asap')">ASAP</button>
+                <button class="btn btn-default" style="color: #333333; height: 30px; width: 33.33%;" ng-click="TimeClicked('30m')">+30m</button>
+                <button class="btn btn-default" style="color: #333333; height: 30px; width: 33.33%;" ng-click="TimeClicked('1hr')">+1hr</button>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="date">Date</label>
+            <input type="text" ng-model="booking.date" id="date" format="dd/mm/yyyy" style="width: 100%;" bs-datepicker />
+        </div>
+        <div class="form-group col-md-3">
+            <label for="time">Time</label>
+            <input type="text" ng-model="booking.time" id="time" style="width: 100%;" bs-timepicker />
+        </div>
+        <div class="form-group col-md-3">
+            <label for="pax">Pax</label>
+            <input type="text" ng-model="booking.PAX" id="pax" style="width: 100%;" />
+        </div>
+        <div class="form-group col-md-3">
+            <label for="bax">Bags</label>
+            <input type="text" ng-model="booking.BAX" id="bax" style="width: 100%;" />
+        </div>
+        <div class="form-group col-md-6">
+            <label for="cartype">Car Type</label>
+            <select ng-model="booking.CarType" id="cartype" style="width: 100%;">
+                <option value="1" selected>Saloon</option>
+                <option value="2">MPV</option>
+                <option value="3">Multi</option>
+            </select>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="priority">Priority</label>
+            <select ng-model="booking.Priority" id="priority" style="width: 100%;">
+                <option value="1" selected>Normal</option>
+                <option value="2">High</option>
+                <option value="3">VIP</option>
+            </select>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="Fare">Fare:</label>
+            <input type="text" ng-model="booking.ActualFare" id="Fare" style="width: 100%;" />
+        </div>
+
+        <div class="form-group col-md-6 text-center" style="padding-top: 18px;">
+            <input type="button" class="btn cyanBG" value="Auto Dispatch" ng-click="AddBooking(true)" />
+            <input type="button" class="btn cyanBG" value="Manual Dispatch" ng-click="AddBooking(false)" />
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="formSectionHeader" style="width: 100%">
+            <span class="formSectionHeaderName" ng-click="sideTab = 'from'" ng-style="{ 'background-color': (sideTab == 'from') ? '#25A98C' : '' }">From</span>
+            <span class="formSectionHeaderName" ng-click="sideTab = 'to'" ng-style="{ 'background-color': (sideTab == 'to') ? '#25A98C' : '' }">To</span>
+            <span class="formSectionHeaderName" ng-click="sideTab = 'journey'" ng-style="{ 'background-color': (sideTab == 'journey') ? '#25A98C' : '' }">Journey</span>
+        </div>
+        <div id="mapSmall">
+            <div basic-map route-render map="mapObject" route="route" options="mapOptions" style="height: 263px;" />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 cardsContainer">
+        <div class="formSectionHeader" style="width: 100%">
+            <span class="formSectionHeaderName">Queue</span>
+        </div>
+        <div class="card" ng-repeat="order in driverOrder | orderBy:'distance'">
+            <div class="cardHero" style="height: 100px; background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1) 1%, rgba(0, 0, 0, 0.1) 100%), url(/api/image?imagetype=Profile&ownertype=driver&ownerid={{order.driver.ID}});">
+            </div>
+            <div class="cardStatus" ng-class="order.driver.Status"></div>
+            <div class="cardInfo" style="height: auto;">
+                <span class="cardName">{{order.driver.Forename + ' ' + order.driver.Surname | Truncate:12}}</span><br />
+                <span>{{ order.distance | number:1 }} miles</span><br />
+            </div>
+            <button class="btn btn-default" style="color: #333333;" ng-click="AssignDriver(driver)">Assign Driver</button>
+        </div>
+    </div>
+</div>
