@@ -277,6 +277,8 @@
       <DependentUpon>angular.js</DependentUpon>
     </Content>
     <Content Include="includes\js\angular.bootstrap.timepicker.js" />
+    <Content Include="xxx\LocationSearchScript.js" />
+    <Content Include="xxx\LocationSearchTextBox.aspx" />
     <Content Include="xxx\Test.aspx" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="pricing1\index.html" />
@@ -501,6 +503,13 @@
     </Compile>
     <Compile Include="vehicles\default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="xxx\LocationSearchTextBox.aspx.cs">
+      <DependentUpon>LocationSearchTextBox.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="xxx\LocationSearchTextBox.aspx.designer.cs">
+      <DependentUpon>LocationSearchTextBox.aspx</DependentUpon>
     </Compile>
     <Compile Include="xxx\Test.aspx.cs">
       <DependentUpon>Test.aspx</DependentUpon>
